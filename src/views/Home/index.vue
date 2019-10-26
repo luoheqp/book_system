@@ -44,6 +44,16 @@ export default {};
           margin-right: @defMargin;
         }
         .info {
+          .name {
+          }
+          .detail {
+            .author {
+            }
+            .date {
+            }
+            .press {
+            }
+          }
         }
       }
     }
