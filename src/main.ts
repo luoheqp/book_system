@@ -3,6 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+// reset style
+import "@/assets/styles/reset.less";
+
 Vue.config.productionTip = false;
 
 new Vue({
