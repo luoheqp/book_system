@@ -27,7 +27,9 @@ export default class App extends Vue {
 @import "./assets/styles/index.less";
 
 #app {
-  font-family: "SFNSRounded";
+  font-family: "SFNSRounded", -apple-system, system-ui, BlinkMacSystemFont,
+    Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100%;
