@@ -1,7 +1,17 @@
 <template>
   <div class="random-wrap">
     <div class="random">
-      <swiper :options="swiperOption">
+      <swiper
+        :options="swiperOption"
+        ref="swiper"
+        @click="
+          {
+            () => {
+              handleSwiperClick();
+            };
+          }
+        "
+      >
         <swiper-slide
           v-for="(item, index) in 10"
           :key="index"
@@ -13,12 +23,17 @@
         <div class="swiper-button-prev" slot="button-prev"></div>
         <div class="swiper-button-next" slot="button-next"></div>
       </swiper>
+      <ListItem></ListItem>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import { IListItem } from "@/types/info";
+
+// components
+import ListItem from "@/components/ListItem.vue";
 
 // vue-awesome-swiper
 import "swiper/dist/css/swiper.css";
@@ -26,28 +41,37 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 
 @Component({
   components: {
+    ListItem,
     swiper,
     swiperSlide
   }
 })
 export default class Random extends Vue {
-  // data
-  public nowIndex: number = -1;
-  private swiperOption: Object = {
+  // 选中书籍的信息 , 包括 swiper id 及其 slide id
+  public selectedBook: number[] = [];
+  // 获取到的所有列表信息
+  public randomInfo: Object = {};
+  // swiper 配置
+  public swiperOption: Object = {
     slidesPerView: 6,
     slidesPerGroup: 6,
     loopFillGroupWithBlank: true,
     navigation: {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev"
-    },
-    on: {
-      click: function(this: any): void {
-        let clickedIndex: number = this.clickedIndex;
-        nowIndex = this.clickedSlide.dataset.key;
-      }
     }
+    // on: {
+    //   click: function(this: any): void {
+    //     selectedBook = this.clickedSlide.dataset.key;
+    //   }
+    // }
   };
+
+  public handleSwiperClick(): void {
+    console.log(this);
+  }
+
+  mounted() {}
 
   // method
 }
