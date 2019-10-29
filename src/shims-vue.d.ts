@@ -9,5 +9,6 @@ declare module "vue-awesome-swiper" {
 }
 
 declare module "mockjs" {
+  let Mock: any;
   export default Mock;
 }

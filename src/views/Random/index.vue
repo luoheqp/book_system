@@ -61,12 +61,12 @@ export default class Random extends Vue {
     this.selectedBook[1] = swiperInstance.clickedSlide.dataset.id;
   }
 
-  @State(state => state.book.bookname) bookname!: string;
+  @State(state => state.book.bookinfo) bookinfo!: string;
 
   private created(): void {}
 
   private mounted(): void {
-    console.log(this.bookname);
+    console.log(this.bookinfo);
   }
 }
 </script>

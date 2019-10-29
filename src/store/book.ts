@@ -1,9 +1,16 @@
 import Mock from "mockjs";
-let bookinfo = Mock.mock({});
+let bookinfo: Array<Object> = Mock.mock({
+  "list|1-10": [
+    {
+      "id|+1": 1
+    }
+  ]
+});
 
 let book = {
   state: {
-    bookname: "this is bookname"
+    bookname: "this is bookname",
+    bookinfo: bookinfo
   }
 };
 
