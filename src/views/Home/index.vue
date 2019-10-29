@@ -15,7 +15,7 @@
 import { Vue, Component } from "vue-property-decorator";
 
 // components
-import ListItem from "./components/ListItem.vue";
+import ListItem from "@/components/ListItem.vue";
 
 @Component({
   components: {

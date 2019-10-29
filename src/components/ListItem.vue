@@ -2,35 +2,52 @@
   <div class="book-item">
     <div class="pic">200 * 200</div>
     <div class="info">
-      <p class="name">一本书读懂销售心理学（畅销书）</p>
+      <p class="name">{{ info.name }}</p>
       <p class="detail">
-        <span class="author">李昊轩著</span>
-        <span class="date">2012-10-01</span>
-        <span class="press">中国商业出版社</span>
+        <span class="author">{{ info.author }}著</span>
+        <span class="date">{{ info.date }}</span>
+        <span class="press">{{ info.press }}</span>
       </p>
-      <p class="desc">
-        本书正是从心理学角度解读销售活动，涉及心理学和营销学两个学科的内容，以销售活动为主线，配合相关的心理学术语，系统而科学地讲述了心理学在销售活动中的应用。对销售人员在销售过程中的不同阶段，消费者的不同心理，以及销售人员应该怎样去面对客户等方面都作了详细介绍，相信会对销售人员的工作有着很强的指导作用。
-      </p>
+      <p class="desc">{{ info.desc }}</p>
       <div class="other">
         <div class="operate">
-          <input type="button" value="详情" />
-          <input type="button" value="收藏" />
+          <input type="button" value="详情" :data-key="info.id" />
+          <input type="button" value="收藏" :data-key="info.id" />
         </div>
-        <div class="tag">#心理</div>
+        <div class="tag">
+          <span v-for="(item, index) in info.tag" :key="index"
+            >#{{ item }}</span
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
+import { IListItem } from "@/types/info";
 
 @Component
-export default class ListItem extends Vue {}
+export default class ListItem extends Vue {
+  @Prop({
+    default: () => ({
+      id: 0,
+      picPath: "null",
+      name: "book name",
+      author: "book author",
+      date: "publsh data",
+      press: "press",
+      desc: "book description",
+      tag: [""]
+    })
+  })
+  public info!: IListItem;
+}
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/styles/index.less";
+@import "../assets/styles/index.less";
 
 .book-item {
   padding: @defMargin;
