@@ -1,22 +1,8 @@
 <template>
   <div class="random-wrap">
     <div class="random">
-      <swiper
-        :options="swiperOption"
-        ref="swiper"
-        @click="
-          {
-            () => {
-              handleSwiperClick();
-            };
-          }
-        "
-      >
-        <swiper-slide
-          v-for="(item, index) in 10"
-          :key="index"
-          :data-key="index"
-        >
+      <swiper :options="swiperOption" ref="swiper" data-id="013">
+        <swiper-slide v-for="(item, index) in 10" :key="index" :data-id="index">
           <div class="content">Slide {{ item }}</div>
         </swiper-slide>
         <div class="swiper-pagination" slot="pagination"></div>
@@ -31,6 +17,8 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { IListItem } from "@/types/info";
+import { bindAndPassContext } from "@/utils/func_tool";
+import { State } from "vuex-class";
 
 // components
 import ListItem from "@/components/ListItem.vue";
@@ -55,25 +43,31 @@ export default class Random extends Vue {
   public swiperOption: Object = {
     slidesPerView: 6,
     slidesPerGroup: 6,
+    spaceBetween: 10,
     loopFillGroupWithBlank: true,
     navigation: {
       nextEl: ".swiper-button-next",
       prevEl: ".swiper-button-prev"
+    },
+    on: {
+      click: this.handleSwiperSlideClick
     }
-    // on: {
-    //   click: function(this: any): void {
-    //     selectedBook = this.clickedSlide.dataset.key;
-    //   }
-    // }
   };
 
-  public handleSwiperClick(): void {
-    console.log(this);
+  // 获取点击的 slide 中的书籍 id
+  @bindAndPassContext
+  handleSwiperSlideClick(swiperInstance: any): void {
+    this.selectedBook[0] = swiperInstance.dataset.id;
+    this.selectedBook[1] = swiperInstance.clickedSlide.dataset.id;
   }
 
-  mounted() {}
+  @State(state => state.book.bookname) bookname!: string;
 
-  // method
+  private created(): void {}
+
+  private mounted(): void {
+    console.log(this.bookname);
+  }
 }
 </script>
 
@@ -83,6 +77,8 @@ export default class Random extends Vue {
 .random-wrap {
   .random {
     .swiper-container {
+      margin-bottom: @defMargin;
+
       .swiper {
         &-wrapper {
           .swiper-slide {

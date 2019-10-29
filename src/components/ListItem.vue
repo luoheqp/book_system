@@ -54,6 +54,7 @@ export default class ListItem extends Vue {
   height: 230px;
   box-sizing: border-box;
   display: flex;
+  background-color: #fff;
 
   &:hover {
     background-color: @hoverGray;
