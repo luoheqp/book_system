@@ -1,16 +1,29 @@
-import Mock from "mockjs";
-let bookinfo: Array<Object> = Mock.mock({
-  "list|1-10": [
-    {
-      "id|+1": 1
-    }
-  ]
-});
+import axios from "axios";
 
 let book = {
   state: {
     bookname: "this is bookname",
-    bookinfo: bookinfo
+    bookInfo: []
+  },
+  mutations: {
+    setBookInfo(state: any, data: any) {
+      state.bookInfo = data;
+    }
+  },
+  actions: {
+    getBookInfo({ state, commit }: any) {
+      axios
+        .get(
+          "https://www.easy-mock.com/mock/5db80f643a19ea177648c646/api/testBookInfo"
+        )
+        .then(res => {
+          console.log(res.data.data);
+          commit("setBookInfo", res.data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 

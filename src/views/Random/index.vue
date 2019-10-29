@@ -18,7 +18,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import { IListItem } from "@/types/info";
 import { bindAndPassContext } from "@/utils/func_tool";
-import { State } from "vuex-class";
+import { State, Action } from "vuex-class";
 
 // components
 import ListItem from "@/components/ListItem.vue";
@@ -61,12 +61,15 @@ export default class Random extends Vue {
     this.selectedBook[1] = swiperInstance.clickedSlide.dataset.id;
   }
 
-  @State(state => state.book.bookinfo) bookinfo!: string;
+  @State(state => state.book.bookInfo) bookInfo!: string;
+  @Action("getBookInfo") getBookInfo!: Function;
 
-  private created(): void {}
+  private created(): void {
+    this.getBookInfo();
+  }
 
   private mounted(): void {
-    console.log(this.bookinfo);
+    console.log(this.bookInfo);
   }
 }
 </script>
