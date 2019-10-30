@@ -1,7 +1,12 @@
 <template>
   <div class="random-wrap">
     <div class="random">
-      <LineList :bookInfo="bookInfo"></LineList>
+      <LineList
+        v-for="item in randomBookGroupInfo"
+        :key="item.id"
+        :title="item.name"
+        :bookInfo="item.bookGroup"
+      ></LineList>
     </div>
   </div>
 </template>
@@ -9,7 +14,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
-import { IListItem } from "@/types/info";
+import { IListItem, ILineListItem } from "@/types/info";
 
 // components
 import LineList from "./components/LineList.vue";
@@ -20,7 +25,8 @@ import LineList from "./components/LineList.vue";
   }
 })
 export default class Random extends Vue {
-  @State(state => state.book.bookInfo) bookInfo!: IListItem[];
+  @State(state => state.book.randomBookGroupInfo)
+  randomBookGroupInfo!: ILineListItem[];
   @Action("getBookInfo") getBookInfo!: Function;
 }
 </script>

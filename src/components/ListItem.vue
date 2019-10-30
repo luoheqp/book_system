@@ -24,7 +24,7 @@
       </div>
     </div>
     <!-- cancel btn -->
-    <div class="cancel-btn"></div>
+    <div class="cancel-btn" @click="handleCancel"></div>
   </div>
 </template>
 
@@ -34,6 +34,7 @@ import { IListItem } from "@/types/info";
 
 @Component
 export default class ListItem extends Vue {
+  // ListItem 所展示的信息内容
   @Prop({
     default: () => ({
       id: 0,
@@ -47,8 +48,17 @@ export default class ListItem extends Vue {
     })
   })
   public info!: IListItem;
-  @Prop({ default: true }) private isCanHover!: boolean;
-  @Prop({ default: false }) private isShowCancel!: boolean;
+  // 是否有 hover 效果
+  @Prop({ default: true })
+  private isCanHover!: boolean;
+  // 是否显示 cancel 按钮
+  @Prop({ default: false })
+  private isShowCancel!: boolean;
+
+  // cancel 按钮事件
+  handleCancel() {
+    this.$emit("cancel");
+  }
 }
 </script>
 

@@ -1,14 +1,27 @@
 <template>
   <div class="line-list-wrap">
+    <div class="head">
+      <h3 class="title">{{ title }}</h3>
+      <span class="more">MORE></span>
+    </div>
     <swiper :options="swiperOption" data-key="013">
       <swiper-slide v-for="item in bookInfo" :key="item.id" :data-key="item.id">
-        <div class="content">{{ item.name }}</div>
+        <div
+          :class="[
+            'content',
+            item.id === selected.activeSlide ? 'selected' : ''
+          ]"
+        >
+          {{ item.name }}
+        </div>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
     </swiper>
     <ListItem
+      v-if="selected.activeSwiper !== -1 && selected.activeSlide !== -1"
+      class="mb"
       :info="selectedBookInfo"
       :isCanHover="false"
       :isShowCancel="true"
@@ -38,21 +51,11 @@ import ListItem from "@/components/ListItem.vue";
 })
 export default class LineList extends Vue {
   @Prop() public bookInfo!: IListItem[];
+  @Prop({ default: "group title" }) public title!: string;
   // 选中的 swiper id 及其 slide id
   public selected: ILineListSelected = {
     activeSwiper: -1,
     activeSlide: -1
-  };
-  // 选中书籍的信息
-  public selectedBookInfo: IListItem = {
-    id: 0,
-    picPath: "null",
-    name: "bookkkkkkkkkk name",
-    author: "book author",
-    date: "publsh data",
-    press: "press",
-    desc: "book description",
-    tag: [""]
   };
   // swiper 配置
   public swiperOption: Object = {
@@ -68,57 +71,105 @@ export default class LineList extends Vue {
       click: this.handleSwiperSlideClick
     }
   };
+  // 选中书籍的信息
+  get selectedBookInfo(): IListItem {
+    return this.bookInfo.filter(
+      (item: IListItem) => item.id === this.selected.activeSlide
+    )[0];
+  }
 
   // 获取点击的 slide 中的书籍 id
   @bindAndPassContext
   handleSwiperSlideClick(swiperInstance: any): void {
     this.selected.activeSwiper = swiperInstance.el.dataset.key;
-    this.selected.activeSlide = swiperInstance.clickedSlide.dataset.key;
-
-    // TODO: activeSwiper 判断
-    this.selectedBookInfo = this.$store.state.book.bookInfo.filter(
-      (item: IListItem) => item.id === this.selected.activeSlide
-    )[0];
+    // BUG: 点击左右的切换按钮也会触发这个 click 事件
+    if (swiperInstance.clickedSlide) {
+      this.selected.activeSlide = swiperInstance.clickedSlide.dataset.key;
+    }
   }
 
-  handleListItemCancel(): void {}
+  handleListItemCancel(): void {
+    this.selected.activeSwiper = -1;
+    this.selected.activeSlide = -1;
+  }
 }
 </script>
 
 <style lang="less" scoped>
 @import "../../../assets/styles/index.less";
 
-.swiper-container {
-  margin-bottom: @defMargin;
+.line-list-wrap {
+  .head {
+    .mb();
 
-  .swiper {
-    &-wrapper {
-      .swiper-slide {
-        .flex-center();
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      text-transform: capitalize;
+      letter-spacing: 3px;
+      padding-left: 5px;
+    }
 
-        .content {
+    .more {
+      font-size: 16px;
+      letter-spacing: 2px;
+    }
+  }
+
+  .swiper-container {
+    margin-bottom: @defMargin;
+
+    .swiper {
+      &-wrapper {
+        .swiper-slide {
           .flex-center();
-          height: 150px;
-          width: 150px;
-          background-color: #fff;
+
+          .content {
+            .flex-center();
+            height: 150px;
+            width: 150px;
+            background-color: #fff;
+            box-sizing: border-box;
+            transition: all 0.1s linear;
+            position: relative;
+
+            &.selected {
+              border: 5px solid @mainColor;
+
+              &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                left: 50%;
+                bottom: 0px;
+                -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
+                border: 12px solid transparent;
+                border-bottom-color: @mainColor;
+              }
+            }
+          }
         }
       }
-    }
 
-    &-pagination {
-    }
+      &-pagination {
+      }
 
-    &-button {
-      &-prev,
-      &-next {
-        opacity: 0.3;
-        transform: scale(0.5);
-        transition: all 0.2s linear;
-        // background-image
+      &-button {
+        &-prev,
+        &-next {
+          opacity: 0.3;
+          transform: scale(0.5);
+          transition: all 0.2s linear;
+          // background-image
 
-        &:hover {
-          transform: scale(0.8);
-          opacity: 1;
+          &:hover {
+            transform: scale(0.8);
+            opacity: 1;
+          }
         }
       }
     }
