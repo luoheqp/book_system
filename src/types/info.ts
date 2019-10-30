@@ -1,3 +1,11 @@
+export interface ILineListItem {
+  id: number;
+  name: string;
+  bookGroup: IListItem[];
+  // isShowDetail: boolean;
+  // detail: IListItem;
+}
+
 export interface IListItem {
   id: number;
   picPath: string;
@@ -7,4 +15,9 @@ export interface IListItem {
   press: string;
   desc: string;
   tag?: string[];
+}
+
+export interface ILineListSelected {
+  activeSwiper: number;
+  activeSlide: number;
 }

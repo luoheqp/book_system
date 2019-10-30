@@ -1,6 +1,8 @@
 <template>
-  <div class="book-item">
+  <div :class="['book-item', isCanHover ? 'hover' : '']">
+    <!-- pic -->
     <div class="pic">200 * 200</div>
+    <!-- info -->
     <div class="info">
       <p class="name">{{ info.name }}</p>
       <p class="detail">
@@ -21,6 +23,8 @@
         </div>
       </div>
     </div>
+    <!-- cancel btn -->
+    <div class="cancel-btn"></div>
   </div>
 </template>
 
@@ -43,6 +47,8 @@ export default class ListItem extends Vue {
     })
   })
   public info!: IListItem;
+  @Prop({ default: true }) private isCanHover!: boolean;
+  @Prop({ default: false }) private isShowCancel!: boolean;
 }
 </script>
 
@@ -55,8 +61,9 @@ export default class ListItem extends Vue {
   box-sizing: border-box;
   display: flex;
   background-color: #fff;
+  position: relative;
 
-  &:hover {
+  &.hover:hover {
     background-color: @hoverGray;
   }
 
@@ -131,6 +138,23 @@ export default class ListItem extends Vue {
         font-size: 12px;
         color: @lightText;
       }
+    }
+  }
+
+  .cancel-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    background-image: url("../assets/images/close.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: all 0.2s linear;
+
+    &:hover {
+      transform: scale(0.8);
     }
   }
 }
