@@ -4,7 +4,7 @@
       <h3 class="title">{{ title }}</h3>
       <span class="more">MORE></span>
     </div>
-    <swiper :options="swiperOption" data-key="013">
+    <swiper :options="swiperOption" :data-key="id">
       <swiper-slide v-for="item in bookInfo" :key="item.id" :data-key="item.id">
         <div
           :class="[
@@ -20,7 +20,7 @@
       <div class="swiper-button-next" slot="button-next"></div>
     </swiper>
     <ListItem
-      v-if="selected.activeSwiper !== -1 && selected.activeSlide !== -1"
+      v-if="selected.activeSwiper === nowSwiper && selected.activeSlide !== -1"
       class="mb"
       :info="selectedBookInfo"
       :isCanHover="false"
@@ -50,8 +50,12 @@ import ListItem from "@/components/ListItem.vue";
   }
 })
 export default class LineList extends Vue {
+  // 父组件传递的基础信息
   @Prop() public bookInfo!: IListItem[];
   @Prop({ default: "group title" }) public title!: string;
+  @Prop({ default: -1 }) public nowSwiper!: number;
+  @Prop({ default: 1 }) public id!: number;
+
   // 选中的 swiper id 及其 slide id
   public selected: ILineListSelected = {
     activeSwiper: -1,
@@ -73,6 +77,8 @@ export default class LineList extends Vue {
   };
   // 选中书籍的信息
   get selectedBookInfo(): IListItem {
+    console.log("object");
+    this.$emit("updateActiveSwiper", this.selected.activeSwiper);
     return this.bookInfo.filter(
       (item: IListItem) => item.id === this.selected.activeSlide
     )[0];

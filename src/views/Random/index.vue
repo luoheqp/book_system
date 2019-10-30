@@ -4,8 +4,11 @@
       <LineList
         v-for="item in randomBookGroupInfo"
         :key="item.id"
+        :id="item.id"
         :title="item.name"
         :bookInfo="item.bookGroup"
+        :nowSwiper="activeSwiper"
+        @updateActiveSwiper="handleUpdateActiveSwiper"
       ></LineList>
     </div>
   </div>
@@ -25,9 +28,17 @@ import LineList from "./components/LineList.vue";
   }
 })
 export default class Random extends Vue {
+  public activeSwiper: number = -1;
+
   @State(state => state.book.randomBookGroupInfo)
   randomBookGroupInfo!: ILineListItem[];
+
   @Action("getBookInfo") getBookInfo!: Function;
+
+  handleUpdateActiveSwiper(id: number): void {
+    console.log(id);
+    this.activeSwiper = id;
+  }
 }
 </script>
 
