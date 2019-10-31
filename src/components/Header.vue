@@ -38,6 +38,11 @@ export default class Header extends Vue {
       name: "random",
       content: "随机",
       path: "/random"
+    },
+    {
+      name: "read",
+      content: "阅读器",
+      path: "/read"
     }
   ];
 
