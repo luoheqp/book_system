@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 // views
 import Home from "../views/Home/index.vue";
 import Random from "../views/Random/index.vue";
+import Read from "../views/Read/index.vue";
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     path: "/random",
     name: "random",
     component: Random
+  },
+  {
+    path: "/read",
+    name: "read",
+    component: Read
   }
 ];
 

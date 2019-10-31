@@ -2,8 +2,11 @@ export interface ILineListItem {
   id: number;
   name: string;
   bookGroup: IListItem[];
-  // isShowDetail: boolean;
-  // detail: IListItem;
+}
+
+export interface ILineListSelected {
+  activeSwiper: number;
+  activeSlide: number;
 }
 
 export interface IListItem {
@@ -15,9 +18,4 @@ export interface IListItem {
   press: string;
   desc: string;
   tag?: string[];
-}
-
-export interface ILineListSelected {
-  activeSwiper: number;
-  activeSlide: number;
 }

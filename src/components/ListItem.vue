@@ -1,7 +1,7 @@
 <template>
   <div :class="['book-item', isCanHover ? 'hover' : '']">
     <!-- pic -->
-    <div class="pic">200 * 200</div>
+    <div class="pic"><img :src="info.picPath" alt="" /></div>
     <!-- info -->
     <div class="info">
       <p class="name">{{ info.name }}</p>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <!-- cancel btn -->
-    <div class="cancel-btn" @click="handleCancel"></div>
+    <div class="cancel-btn" @click="handleCancel" v-show="isShowCancel"></div>
   </div>
 </template>
 
@@ -83,6 +83,12 @@ export default class ListItem extends Vue {
     height: 200px;
     background-color: #eee;
     margin-right: @defMargin;
+    object-fit: contain;
+
+    img {
+      max-width: 100%;
+      min-height: 100%;
+    }
   }
 
   .info {

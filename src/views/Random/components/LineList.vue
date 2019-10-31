@@ -1,18 +1,25 @@
 <template>
   <div class="line-list-wrap">
     <div class="head">
-      <h3 class="title">{{ title }}</h3>
+      <h3 class="title">{{ listInfo.name }}</h3>
       <span class="more">MORE></span>
     </div>
-    <swiper :options="swiperOption" :data-key="id">
-      <swiper-slide v-for="item in bookInfo" :key="item.id" :data-key="item.id">
+    <swiper :options="swiperOption" :data-key="listInfo.id">
+      <swiper-slide
+        v-for="item in listInfo.bookGroup"
+        :key="item.id"
+        :data-key="item.id"
+      >
         <div
           :class="[
             'content',
-            item.id === selected.activeSlide ? 'selected' : ''
+            item.id === selected.activeSlide &&
+            selected.activeSwiper === nowSwiper
+              ? 'selected'
+              : ''
           ]"
         >
-          {{ item.name }}
+          <span class="name">{{ item.name }}</span>
         </div>
       </swiper-slide>
       <div class="swiper-pagination" slot="pagination"></div>
@@ -20,8 +27,12 @@
       <div class="swiper-button-next" slot="button-next"></div>
     </swiper>
     <ListItem
-      v-if="selected.activeSwiper === nowSwiper && selected.activeSlide !== -1"
-      class="mb"
+      :class="[
+        'list-item',
+        selected.activeSwiper === nowSwiper && selected.activeSlide !== -1
+          ? 'show'
+          : ''
+      ]"
       :info="selectedBookInfo"
       :isCanHover="false"
       :isShowCancel="true"
@@ -31,9 +42,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { bindAndPassContext } from "@/utils/func_tool";
-import { IListItem, ILineListSelected } from "@/types/info";
+import { IListItem, ILineListSelected, ILineListItem } from "@/types/info";
 
 // vue-awesome-swiper
 import "swiper/dist/css/swiper.css";
@@ -51,52 +62,54 @@ import ListItem from "@/components/ListItem.vue";
 })
 export default class LineList extends Vue {
   // 父组件传递的基础信息
-  @Prop() public bookInfo!: IListItem[];
-  @Prop({ default: "group title" }) public title!: string;
+  @Prop() public listInfo!: ILineListItem;
   @Prop({ default: -1 }) public nowSwiper!: number;
-  @Prop({ default: 1 }) public id!: number;
 
+  // swiper 配置 , 因为 this 指向原因 , 在 created 中进行初始化
+  public swiperOption!: Object;
   // 选中的 swiper id 及其 slide id
   public selected: ILineListSelected = {
     activeSwiper: -1,
     activeSlide: -1
   };
-  // swiper 配置
-  public swiperOption: Object = {
-    slidesPerView: 6,
-    slidesPerGroup: 6,
-    spaceBetween: 10,
-    loopFillGroupWithBlank: true,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev"
-    },
-    on: {
-      click: this.handleSwiperSlideClick
-    }
-  };
   // 选中书籍的信息
   get selectedBookInfo(): IListItem {
-    console.log("object");
-    this.$emit("updateActiveSwiper", this.selected.activeSwiper);
-    return this.bookInfo.filter(
-      (item: IListItem) => item.id === this.selected.activeSlide
-    )[0];
+    return this.listInfo.bookGroup.filter((item: IListItem) => {
+      return item.id === this.selected.activeSlide;
+    })[0];
   }
 
-  // 获取点击的 slide 中的书籍 id
-  @bindAndPassContext
-  handleSwiperSlideClick(swiperInstance: any): void {
-    this.selected.activeSwiper = swiperInstance.el.dataset.key;
-    // BUG: 点击左右的切换按钮也会触发这个 click 事件
-    if (swiperInstance.clickedSlide) {
-      this.selected.activeSlide = swiperInstance.clickedSlide.dataset.key;
-    }
-  }
-
+  // detail 关闭触发
   handleListItemCancel(): void {
     this.selected.activeSwiper = -1;
     this.selected.activeSlide = -1;
+    this.$emit("updateActiveSwiper", this.selected.activeSwiper);
+  }
+
+  private created() {
+    const self = this;
+
+    // 为了拿到正确的 this , 在 created 中初始化
+    this.swiperOption = {
+      slidesPerView: 6,
+      slidesPerGroup: 6,
+      spaceBetween: 10,
+      loopFillGroupWithBlank: true,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+      },
+      on: {
+        click(this: any) {
+          self.selected.activeSwiper = this.el.dataset.key;
+          // BUG: 点击左右的切换按钮也会触发这个 click 事件
+          if (this.clickedSlide) {
+            self.$emit("updateActiveSwiper", self.selected.activeSwiper);
+            self.selected.activeSlide = this.clickedSlide.dataset.key;
+          }
+        }
+      }
+    };
   }
 }
 </script>
@@ -120,8 +133,18 @@ export default class LineList extends Vue {
     }
 
     .more {
-      font-size: 16px;
+      background-color: @mainColor;
+      padding: 5px 10px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 12px;
       letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.1s linear;
+
+      &:hover {
+        transform: scale(0.8);
+      }
     }
   }
 
@@ -140,10 +163,37 @@ export default class LineList extends Vue {
             background-color: #fff;
             box-sizing: border-box;
             transition: all 0.1s linear;
+            transition: padding 0.05s linear;
             position: relative;
 
+            .name {
+              width: 100%;
+              position: absolute;
+              display: inline-block;
+              bottom: 0;
+              font-size: 16px;
+              padding: 5px 10px;
+              box-sizing: border-box;
+              line-height: 22px;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
+              transition: all 0.3s linear;
+            }
+
+            &:hover .name {
+              -webkit-line-clamp: inherit;
+            }
+
             &.selected {
-              border: 5px solid @mainColor;
+              // BUG: 样式有问题
+              // border: 5px solid @mainColor;
+
+              .name {
+                padding-bottom: 15px;
+                -webkit-line-clamp: inherit;
+              }
 
               &::before {
                 content: "";
@@ -178,6 +228,21 @@ export default class LineList extends Vue {
           }
         }
       }
+    }
+  }
+
+  .list-item {
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+
+    &.show {
+      transition: max-height 0.5s linear;
+      max-height: 1000px;
+      opacity: 1;
+      margin-bottom: 15px;
+      padding: @defMargin;
+      border-bottom: 3px solid @mainColor;
     }
   }
 }

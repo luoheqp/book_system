@@ -4,9 +4,7 @@
       <LineList
         v-for="item in randomBookGroupInfo"
         :key="item.id"
-        :id="item.id"
-        :title="item.name"
-        :bookInfo="item.bookGroup"
+        :listInfo="item"
         :nowSwiper="activeSwiper"
         @updateActiveSwiper="handleUpdateActiveSwiper"
       ></LineList>
