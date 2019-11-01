@@ -12,7 +12,19 @@
         <!-- 自动翻页 -->
         <li class="opt-item" @click="handleShowSet('auto')">Auto</li>
         <!-- 样式调整 -->
-        <li class="opt-item" @click="handleShowSet('m')">M</li>
+        <li
+          class="opt-item set-read-style"
+          @click="handleShowSet('read-style')"
+        >
+          <div
+            :class="[
+              'select',
+              'set-opt',
+              showSet === 'font-size' ? 'show' : ''
+            ]"
+          ></div>
+          M
+        </li>
         <!-- 字体调整 -->
         <li class="opt-item set-font-size" @click="handleShowSet('font-size')">
           <div
@@ -49,6 +61,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
+import { IThemeItem } from "@/types/read";
 import Epub from "epubjs";
 
 // hard code resource
@@ -76,6 +89,23 @@ export default class Read extends Vue {
   ];
   // 默认文字大小
   public defaultFontSize: number = 12;
+  // 阅读样式
+  public themeList: IThemeItem[] = [
+    {
+      name: "default",
+      style: { body: { color: "#000", background: "#fff" } }
+    },
+    {
+      name: "green",
+      style: { body: { color: "#000", background: "#ceeaba" } }
+    },
+    {
+      name: "night",
+      style: { body: { color: "#fff", background: "#000" } }
+    }
+  ];
+  // 默认阅读样式
+  public defaultTheme: string = "default";
 
   // 初始化解析电子书
   initEpub() {
@@ -91,6 +121,9 @@ export default class Read extends Vue {
     this.rendition.display();
     // 获取 theme 对象来控制文件的样式
     this.themes = this.rendition.themes;
+    // 注册样式并初始化
+    this.registerTheme();
+    this.setTheme("green");
   }
 
   // 向前翻页
@@ -115,13 +148,31 @@ export default class Read extends Vue {
     }
   }
 
+  // 设置阅读器样式
+  setTheme(name: string) {
+    this.defaultTheme = name;
+    this.themes.select(name);
+  }
+
   // 设置阅读设置显示
   handleShowSet(setting: string) {
+    if (this.showSet === setting) {
+      this.showSet = "";
+      return;
+    }
     this.showSet = setting;
+  }
+
+  // 注册样式
+  registerTheme() {
+    this.themeList.map(item => {
+      this.themes.register(item.name, item.style);
+    });
   }
 
   mounted() {
     this.initEpub();
+    this.setTheme("green");
   }
 }
 </script>
@@ -129,6 +180,7 @@ export default class Read extends Vue {
 <style lang="less" scoped>
 @import "../../assets/styles/index.less";
 
+// TODO: 样式有问题
 .read-wrap {
   position: absolute;
   height: 100%;
@@ -179,18 +231,19 @@ export default class Read extends Vue {
         .flex-center();
         flex-direction: column;
         width: 50px;
-        // height: 50px;
+        min-height: 50px;
         background: #fff;
         border-radius: 25px;
         padding: @defMargin;
         box-sizing: border-box;
-        transition: all 0.3s linear;
 
         &:not(:last-child) {
           margin-bottom: @defMargin;
         }
 
         .set-opt {
+          transition: max-height 0.5s linear;
+          transition: padding 0.3s linear;
           max-height: 0;
           overflow: hidden;
 
