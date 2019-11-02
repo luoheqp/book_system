@@ -10,23 +10,39 @@
     <div class="opt-wrap">
       <ul class="opt">
         <!-- 自动翻页 -->
-        <li class="opt-item" @click="handleShowSet('auto')">Auto</li>
+        <li class="opt-item">
+          <span class="opt-name" @click.self="toggleFSState">{{
+            ebookSet.isFull ? "less" : "full"
+          }}</span>
+        </li>
         <!-- 样式调整 -->
-        <li
-          class="opt-item set-read-style"
-          @click="handleShowSet('read-style')"
-        >
+        <li class="opt-item set-read-style">
           <div
             :class="[
               'select',
               'set-opt',
-              showSet === 'font-size' ? 'show' : ''
+              showSet === 'read-style' ? 'show' : ''
             ]"
-          ></div>
-          M
+          >
+            <ul class="theme-list">
+              <li
+                :class="[
+                  'theme-item',
+                  ebookSet.theme === item.name ? 'selected' : ''
+                ]"
+                v-for="item in themeList"
+                :style="{ backgroundColor: item.style.body.background }"
+                :key="item.name"
+                @click="() => setTheme(item.name)"
+              ></li>
+            </ul>
+          </div>
+          <span class="opt-name" @click.self="handleShowSet('read-style')"
+            >S</span
+          >
         </li>
         <!-- 字体调整 -->
-        <li class="opt-item set-font-size" @click="handleShowSet('font-size')">
+        <li class="opt-item set-font-size">
           <div
             :class="[
               'select',
@@ -45,14 +61,16 @@
             >
               <div class="line" v-if="index !== 0"></div>
               <div class="point-wrap">
-                <div class="point" v-show="defaultFontSize === item.fontSize">
+                <div class="point" v-show="ebookSet.fontSize === item.fontSize">
                   <div class="small-point"></div>
                 </div>
               </div>
               <div class="line" v-if="index !== fontSizeList.length - 1"></div>
             </div>
           </div>
-          <span class="opt-name">Aa</span>
+          <span class="opt-name" @click.self="handleShowSet('font-size')"
+            >Aa</span
+          >
         </li>
       </ul>
     </div>
@@ -61,7 +79,9 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { IThemeItem } from "@/types/read";
+import { toggleBrowserFullScreenState } from "@/utils/browser_tool";
+import { fontSizeList, themeList } from "./config";
+import { IEbookSet } from "@/types/read";
 import Epub from "epubjs";
 
 // hard code resource
@@ -69,43 +89,22 @@ const EPUB_ADDRESS = "/flipped.epub";
 
 @Component
 export default class Read extends Vue {
+  public fontSizeList: object[] = fontSizeList;
+  public themeList: object[] = themeList;
   // === 电子书相关 data ===
   public book!: any;
   public rendition!: any;
   public themes!: any;
 
   // === 电子书设置相关 ===
-  // 显示那个设置
+  // 显示哪个设置
   public showSet: string = "";
-  // 文字大小列表
-  public fontSizeList: Object[] = [
-    { fontSize: 24 },
-    { fontSize: 22 },
-    { fontSize: 20 },
-    { fontSize: 18 },
-    { fontSize: 16 },
-    { fontSize: 14 },
-    { fontSize: 12 }
-  ];
-  // 默认文字大小
-  public defaultFontSize: number = 12;
-  // 阅读样式
-  public themeList: IThemeItem[] = [
-    {
-      name: "default",
-      style: { body: { color: "#000", background: "#fff" } }
-    },
-    {
-      name: "green",
-      style: { body: { color: "#000", background: "#ceeaba" } }
-    },
-    {
-      name: "night",
-      style: { body: { color: "#fff", background: "#000" } }
-    }
-  ];
-  // 默认阅读样式
-  public defaultTheme: string = "default";
+  // 电子书默认设置
+  public ebookSet: IEbookSet = {
+    fontSize: 12,
+    theme: "default",
+    isFull: false
+  };
 
   // 初始化解析电子书
   initEpub() {
@@ -143,14 +142,14 @@ export default class Read extends Vue {
   // 设置文字大小
   setFontSize(fontSize: number) {
     if (this.themes) {
-      this.defaultFontSize = fontSize;
+      this.ebookSet.fontSize = fontSize;
       this.themes.fontSize(fontSize + "px");
     }
   }
 
   // 设置阅读器样式
   setTheme(name: string) {
-    this.defaultTheme = name;
+    this.ebookSet.theme = name;
     this.themes.select(name);
   }
 
@@ -163,9 +162,15 @@ export default class Read extends Vue {
     this.showSet = setting;
   }
 
+  // 切换全屏阅读模式
+  toggleFSState() {
+    toggleBrowserFullScreenState(this.ebookSet.isFull);
+    this.ebookSet.isFull = !this.ebookSet.isFull;
+  }
+
   // 注册样式
   registerTheme() {
-    this.themeList.map(item => {
+    themeList.map(item => {
       this.themes.register(item.name, item.style);
     });
   }
@@ -173,6 +178,13 @@ export default class Read extends Vue {
   mounted() {
     this.initEpub();
     this.setTheme("green");
+
+    // 页面缩放时改变大小
+    const ebook = this.$refs.ebook as any;
+    // TODO: 节流
+    window.addEventListener("resize", () => {
+      this.rendition.resize(ebook.offsetWidth, ebook.offsetHeight);
+    });
   }
 }
 </script>
@@ -186,6 +198,8 @@ export default class Read extends Vue {
   height: 100%;
   width: 100%;
   display: flex;
+  padding-bottom: @defMargin;
+  box-sizing: border-box;
 
   .ebook-wrap {
     background-color: #fff;
@@ -220,7 +234,7 @@ export default class Read extends Vue {
   }
 
   .opt-wrap {
-    flex: 0 0 100px;
+    flex: 0 0 80px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -234,7 +248,6 @@ export default class Read extends Vue {
         min-height: 50px;
         background: #fff;
         border-radius: 25px;
-        padding: @defMargin;
         box-sizing: border-box;
 
         &:not(:last-child) {
@@ -254,7 +267,48 @@ export default class Read extends Vue {
         }
 
         .opt-name {
-          // margin-top: @defMargin;
+          .flex-center();
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          border: 5px solid #fff;
+          box-sizing: border-box;
+          background: @mainColor;
+          color: #fff;
+          cursor: pointer;
+        }
+
+        &.set-read-style {
+          .select {
+            &.show {
+              padding-top: 0;
+            }
+
+            .theme-list {
+              display: flex;
+              flex-direction: column;
+
+              .theme-item {
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                background: #333;
+
+                &.selected {
+                  border: 3px solid @deepColor;
+                  box-sizing: border-box;
+                }
+
+                &:first-child {
+                  margin-top: @defMargin;
+                }
+
+                &:not(:last-child) {
+                  margin-bottom: 10px;
+                }
+              }
+            }
+          }
         }
 
         &.set-font-size {
@@ -270,23 +324,17 @@ export default class Read extends Vue {
               align-items: center;
 
               &:first-child {
-                .line {
-                  &:first-child {
-                    border-top: none;
-                  }
-                }
-              }
-              &:last-child {
-                .line {
-                  &:last-child {
-                    border-top: none;
-                  }
-                }
+                margin-top: @defMargin;
               }
 
               .line {
                 height: 10px;
                 border-left: 1px solid #ccc;
+
+                &:not(:first-child),
+                &:not(:last-child) {
+                  border-top: none;
+                }
               }
 
               .point-wrap {
