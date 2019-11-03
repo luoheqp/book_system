@@ -5,6 +5,9 @@ import VueRouter from "vue-router";
 import Home from "../views/Home/index.vue";
 import Random from "../views/Random/index.vue";
 import Read from "../views/Read/index.vue";
+import User from "../views/User/index.vue";
+import SignIn from "../views/SignIn/index.vue";
+import Register from "../views/Register/index.vue";
 
 Vue.use(VueRouter);
 
@@ -29,6 +32,21 @@ const routes = [
     path: "/read",
     name: "read",
     component: Read
+  },
+  {
+    path: "/user",
+    name: "user",
+    component: User
+  },
+  {
+    path: "/signIn",
+    name: "signIn",
+    component: SignIn
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: Register
   }
 ];
 

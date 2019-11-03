@@ -1,12 +1,9 @@
 <template>
   <div class="header-wrap">
     <div class="header">
-      <div class="logo-wrap">
-        <router-link to="/">
-          <span class="logo-icon"></span>
-          <span class="logo-text">MYBOOK</span>
-        </router-link>
-      </div>
+      <router-link to="/">
+        <Icon></Icon>
+      </router-link>
       <ul class="nav">
         <li
           v-for="item in nav"
@@ -25,7 +22,14 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 import { INavItem } from "@/types/header";
 import VueRouter from "vue-router";
 
-@Component
+// components
+import Icon from "@/components/Icon.vue";
+
+@Component({
+  components: {
+    Icon
+  }
+})
 export default class Header extends Vue {
   // data
   private nav: Array<INavItem> = [
@@ -43,6 +47,21 @@ export default class Header extends Vue {
       name: "read",
       content: "阅读器",
       path: "/read"
+    },
+    {
+      name: "user",
+      content: "用户中心",
+      path: "/user"
+    },
+    {
+      name: "signIn",
+      content: "登录",
+      path: "/signIn"
+    },
+    {
+      name: "register",
+      content: "注册",
+      path: "/register"
     }
   ];
 
@@ -68,49 +87,6 @@ export default class Header extends Vue {
     box-sizing: border-box;
     display: flex;
     align-items: center;
-
-    .logo-wrap {
-      display: flex;
-      align-items: center;
-
-      .logo-icon {
-        width: 15px;
-        height: 15px;
-        display: inline-block;
-        margin-right: 5px;
-        background-color: #333;
-        position: relative;
-
-        &::after,
-        &::before {
-          content: "";
-          display: block;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background-color: #333;
-        }
-
-        &::after {
-          top: -8px;
-        }
-
-        &::before {
-          bottom: -8px;
-        }
-      }
-
-      .logo-text {
-        display: inline-block;
-        font-size: 16px;
-        border-bottom: 1px solid #333;
-        padding-bottom: 2px;
-        letter-spacing: 2px;
-      }
-    }
 
     .nav {
       display: flex;

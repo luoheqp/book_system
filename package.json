@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "core-js": "^3.3.2",
+    "cropperjs": "^1.5.6",
     "epubjs": "^0.3.85",
     "koa": "^2.11.0",
     "koa-router": "^7.4.0",

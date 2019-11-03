@@ -104,8 +104,10 @@ export default class LineList extends Vue {
           self.selected.activeSwiper = this.el.dataset.key;
           // BUG: 点击左右的切换按钮也会触发这个 click 事件
           if (this.clickedSlide) {
-            self.$emit("updateActiveSwiper", self.selected.activeSwiper);
+            console.time();
             self.selected.activeSlide = this.clickedSlide.dataset.key;
+            self.$emit("updateActiveSwiper", self.selected.activeSwiper);
+            console.timeEnd();
           }
         }
       }

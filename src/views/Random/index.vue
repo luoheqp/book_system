@@ -34,7 +34,6 @@ export default class Random extends Vue {
   @Action("getBookInfo") getBookInfo!: Function;
 
   handleUpdateActiveSwiper(id: number): void {
-    console.log(id);
     this.activeSwiper = id;
   }
 }
