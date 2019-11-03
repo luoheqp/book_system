@@ -1,10 +1,6 @@
 export interface IThemeItem {
   name: string;
-  style: IThemeStyle;
-}
-
-export interface IThemeStyle {
-  body: object;
+  style: object;
 }
 
 export interface IEbookSet {

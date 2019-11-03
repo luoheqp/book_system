@@ -14,6 +14,7 @@ export default class Icon extends Vue {}
 
 <style lang="less" scoped>
 .logo-wrap {
+  font-family: "SFNSRounded";
   display: flex;
   align-items: center;
 

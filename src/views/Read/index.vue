@@ -9,11 +9,20 @@
     </div>
     <div class="opt-wrap">
       <ul class="opt">
+        <li class="opt-item">
+          <CatalogPop
+            v-if="isPopShow"
+            @togglePopState="togglePopState"
+            @jumpTo="jumpTo"
+            :catalogInfo="navigation"
+          ></CatalogPop>
+          <span class="opt-name" @click="togglePopState">menu</span>
+        </li>
         <!-- 自动翻页 -->
         <li class="opt-item">
-          <span class="opt-name" @click.self="toggleFSState">{{
-            ebookSet.isFull ? "less" : "full"
-          }}</span>
+          <span class="opt-name" @click.self="toggleFSState">
+            {{ ebookSet.isFull ? "less" : "full" }}
+          </span>
         </li>
         <!-- 样式调整 -->
         <li class="opt-item set-read-style">
@@ -84,10 +93,17 @@ import { fontSizeList, themeList } from "./config";
 import { IEbookSet } from "@/types/read";
 import Epub from "epubjs";
 
+// components
+import CatalogPop from "@/views/Read/components/CatalogPop.vue";
+
 // hard code resource
 const EPUB_ADDRESS = "/flipped.epub";
 
-@Component
+@Component({
+  components: {
+    CatalogPop
+  }
+})
 export default class Read extends Vue {
   public fontSizeList: object[] = fontSizeList;
   public themeList: object[] = themeList;
@@ -95,6 +111,9 @@ export default class Read extends Vue {
   public book!: any;
   public rendition!: any;
   public themes!: any;
+  public navigation!: any;
+
+  public isPopShow = false;
 
   // === 电子书设置相关 ===
   // 显示哪个设置
@@ -123,6 +142,13 @@ export default class Read extends Vue {
     // 注册样式并初始化
     this.registerTheme();
     this.setTheme("green");
+    // 生成 navigation
+    this.book.ready.then(() => {
+      this.navigation = this.book.navigation;
+      console.log(this.navigation);
+      // 生成 locations
+      // return this.book.locations.generate();
+    });
   }
 
   // 向前翻页
@@ -168,11 +194,22 @@ export default class Read extends Vue {
     this.ebookSet.isFull = !this.ebookSet.isFull;
   }
 
+  // 章节跳转
+  jumpTo(href: string) {
+    this.rendition.display(href);
+    this.togglePopState();
+  }
+
   // 注册样式
   registerTheme() {
     themeList.map(item => {
       this.themes.register(item.name, item.style);
     });
+  }
+
+  // 切换弹窗显示状态
+  togglePopState() {
+    this.isPopShow = !this.isPopShow;
   }
 
   created() {
@@ -283,7 +320,7 @@ export default class Read extends Vue {
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          border: 5px solid #fff;
+          border: 2px solid #fff;
           box-sizing: border-box;
           background: @mainColor;
           color: #fff;
@@ -307,7 +344,7 @@ export default class Read extends Vue {
                 background: #333;
 
                 &.selected {
-                  border: 3px solid @deepColor;
+                  border: 2px solid @deepColor;
                   box-sizing: border-box;
                 }
 
