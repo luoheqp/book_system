@@ -175,6 +175,18 @@ export default class Read extends Vue {
     });
   }
 
+  created() {
+    // 监听键盘 , 触发翻页
+    document.addEventListener("keyup", (e: any) => {
+      let key = e.keyCode;
+      if (key === 37) {
+        this.prevPage();
+      } else if (key === 39) {
+        this.nextPage();
+      }
+    });
+  }
+
   mounted() {
     this.initEpub();
     this.setTheme("green");

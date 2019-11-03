@@ -1,5 +1,5 @@
 <template>
-  <div class="user-wrap">user page</div>
+  <div class="user-wrap"></div>
 </template>
 
 <script lang="ts">

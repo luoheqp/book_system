@@ -2,10 +2,12 @@
   <div class="home-wrap">
     <div class="home">
       <div class="book-list">
-        <ListItem></ListItem>
-        <ListItem></ListItem>
-        <ListItem></ListItem>
-        <ListItem></ListItem>
+        <ListItem
+          class="list-item"
+          v-for="item in randomBookGroupInfo[0].bookGroup"
+          :key="item.id"
+          :info="item"
+        ></ListItem>
       </div>
     </div>
   </div>
@@ -16,13 +18,18 @@ import { Vue, Component } from "vue-property-decorator";
 
 // components
 import ListItem from "@/components/ListItem.vue";
+import { State } from "vuex-class";
+import { ILineListItem } from "../../types/info";
 
 @Component({
   components: {
     ListItem
   }
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  @State(state => state.book.randomBookGroupInfo)
+  randomBookGroupInfo!: ILineListItem[];
+}
 </script>
 
 <style lang="less" scoped>
@@ -33,6 +40,9 @@ export default class Home extends Vue {}
 
   .home {
     .book-list {
+      .list-item {
+        border-bottom: 1px solid #b2bac226;
+      }
     }
   }
 }

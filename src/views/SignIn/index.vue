@@ -2,18 +2,8 @@
   <div class="sign-in-wrap">
     <div class="sign-in">
       <Icon class="icon"></Icon>
-      <input
-        class="input-item"
-        type="text"
-        placeholder="此处为账号"
-        v-model="account"
-      />
-      <input
-        class="input-item"
-        type="password"
-        placeholder="此处为密码"
-        v-model="password"
-      />
+      <input type="text" placeholder="此处为账号" v-model="account" />
+      <input type="password" placeholder="此处为密码" v-model="password" />
       <p class="note">
         <span class="register">
           没有账号?
@@ -23,7 +13,7 @@
           <router-link to="/forgetPwd">忘记密码</router-link>
         </span>
       </p>
-      <input class="input-btn" type="button" value="登录" />
+      <input type="button" value="登录" />
     </div>
   </div>
 </template>
@@ -40,8 +30,8 @@ import Icon from "@/components/Icon.vue";
   }
 })
 export default class SignIn extends Vue {
-  public account!: string;
-  public password!: string;
+  public account: string = "";
+  public password: string = "";
 }
 </script>
 
@@ -64,16 +54,6 @@ export default class SignIn extends Vue {
       margin-bottom: @defMargin;
     }
 
-    .input-item {
-      width: 100%;
-      margin-bottom: @defMargin;
-      appearance: none;
-      border: 1px solid #333;
-      padding: 5px;
-      outline-color: @mainColor;
-      box-sizing: border-box;
-    }
-
     .note {
       width: 100%;
       display: flex;
@@ -92,14 +72,6 @@ export default class SignIn extends Vue {
       a {
         color: @mainColor;
       }
-    }
-
-    .input-btn {
-      appearance: none;
-      border: none;
-      background-color: @mainColor;
-      padding: 5px @defMargin;
-      color: #fff;
     }
   }
 }

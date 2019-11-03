@@ -8,6 +8,11 @@ import "@/assets/styles/reset.less";
 
 Vue.config.productionTip = false;
 
+Vue.config.keyCodes = {
+  lar: 37,
+  rar: 39
+};
+
 new Vue({
   router,
   store,

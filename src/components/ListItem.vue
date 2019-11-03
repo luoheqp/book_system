@@ -1,7 +1,9 @@
 <template>
   <div :class="['book-item', isCanHover ? 'hover' : '']">
     <!-- pic -->
-    <div class="pic"><img :src="info.picPath" alt="" /></div>
+    <div class="pic">
+      <img :src="info.picPath" alt />
+    </div>
     <!-- info -->
     <div class="info">
       <p class="name">{{ info.name }}</p>
@@ -135,18 +137,8 @@ export default class ListItem extends Vue {
       justify-content: space-between;
 
       .operate {
-        input {
-          appearance: none;
-          border: 1px solid #333;
-          background: #fff;
-          padding: 5px 10px;
-          border-radius: 15px;
-          outline: none;
-          cursor: pointer;
-
-          &:not(:last-child) {
-            margin-right: @defMargin;
-          }
+        input:not(:last-child) {
+          margin-right: @defMargin;
         }
       }
 
