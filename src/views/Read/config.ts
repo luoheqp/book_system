@@ -21,7 +21,7 @@ export const fontFamily: object[] = [
 ];
 
 // 阅读样式
-export const themeList: object[] = [
+export const themeList: any[] = [
   {
     name: "default",
     style: {
