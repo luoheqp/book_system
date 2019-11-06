@@ -51,7 +51,7 @@ import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 
 // components
-import ListItem from "@/components/ListItem.vue";
+import ListItem from "@/components/item/ListItem.vue";
 
 @Component({
   components: {

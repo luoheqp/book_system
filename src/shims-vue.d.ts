@@ -8,7 +8,6 @@ declare module "vue-awesome-swiper" {
   export const swiperSlide: any;
 }
 
-declare module "mockjs" {
-  let Mock: any;
-  export default Mock;
+declare module "@toast-ui/vue-editor" {
+  export let Editor: any;
 }

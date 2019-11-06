@@ -1,3 +1,4 @@
+// 书籍相关
 export interface ILineListItem {
   id: number;
   name: string;
@@ -18,4 +19,15 @@ export interface IListItem {
   press: string;
   desc: string;
   tag?: string[];
+}
+
+// 书评相关
+export interface IArticleItem {
+  id: number;
+  book: string;
+  author: string;
+  time: string;
+  tag: string[];
+  title: string;
+  like: number;
 }

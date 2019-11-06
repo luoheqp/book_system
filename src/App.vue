@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header :path="path"></Header>
+    <!-- <Header :path="path"></Header> -->
     <div class="container">
       <router-view />
     </div>

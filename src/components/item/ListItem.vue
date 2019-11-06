@@ -65,7 +65,7 @@ export default class ListItem extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../assets/styles/index.less";
+@import "../../assets/styles/index.less";
 
 .book-item {
   padding: @defMargin;
@@ -155,7 +155,7 @@ export default class ListItem extends Vue {
     right: 20px;
     width: 30px;
     height: 30px;
-    background-image: url("../assets/images/close.svg");
+    background-image: url("../../assets/images/close.svg");
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;

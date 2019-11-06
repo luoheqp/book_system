@@ -19,12 +19,17 @@ export default class BookItem extends Vue {}
 @import "../../../assets/styles/index.less";
 
 .book-item-wrap {
-  width: 20%;
+  width: 16%;
   padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: @defMargin;
+
+  &:hover {
+  }
 
   .pic {
     width: 100%;
-    height: 50px;
+    height: 100px;
     background-color: @mainColor;
   }
   .info {

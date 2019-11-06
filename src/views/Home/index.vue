@@ -2,12 +2,12 @@
   <div class="home-wrap">
     <div class="home">
       <div class="book-list">
-        <ListItem
+        <ArticleItem
           class="list-item"
-          v-for="item in randomBookGroupInfo[0].bookGroup"
+          v-for="item in articleGroupInfo"
           :key="item.id"
           :info="item"
-        ></ListItem>
+        ></ArticleItem>
       </div>
     </div>
   </div>
@@ -17,18 +17,18 @@
 import { Vue, Component } from "vue-property-decorator";
 
 // components
-import ListItem from "@/components/ListItem.vue";
+import ArticleItem from "@/components/item/ArticleItem.vue";
 import { State } from "vuex-class";
-import { ILineListItem } from "../../types/info";
+import { IArticleItem } from "../../types/info";
 
 @Component({
   components: {
-    ListItem
+    ArticleItem
   }
 })
 export default class Home extends Vue {
-  @State(state => state.book.randomBookGroupInfo)
-  randomBookGroupInfo!: ILineListItem[];
+  @State(state => state.article.articleGroupInfo)
+  articleGroupInfo!: IArticleItem[];
 }
 </script>
 

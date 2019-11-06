@@ -39,6 +39,7 @@ export default class Popup extends Vue {
     background-color: #fff;
     padding: @doubleMargin;
     border-radius: @defMargin;
+    animation: jelly 1s linear both;
 
     .title {
       font-size: 20px;

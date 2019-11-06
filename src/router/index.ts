@@ -8,6 +8,7 @@ import Read from "../views/Read/index.vue";
 import User from "../views/User/index.vue";
 import SignIn from "../views/SignIn/index.vue";
 import Register from "../views/Register/index.vue";
+import Write from "../views/Write/index.vue";
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,11 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register
+  },
+  {
+    path: "/write",
+    name: "write",
+    component: Write
   }
 ];
 

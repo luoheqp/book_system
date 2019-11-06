@@ -4,6 +4,7 @@ import Vuex from "vuex";
 // modules
 import user from "./user";
 import book from "./book";
+import article from "./article";
 
 Vue.use(Vuex);
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
   },
   modules: {
     user,
-    book
+    book,
+    article
   }
 });

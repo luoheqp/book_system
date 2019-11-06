@@ -9,4 +9,8 @@ bookApi.get("/book/getBookInfo", async (ctx, next) => {
   };
 });
 
+bookApi.post("/book/postBookInfo", async (ctx, next) => {
+  console.log(ctx.request.body);
+});
+
 module.exports = bookApi;
