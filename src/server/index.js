@@ -5,11 +5,19 @@ const router = require("./router");
 const app = new Koa();
 
 // body 解析
-app.use(koaBody({ multipart: true }));
+app.use(
+  koaBody({
+    multipart: true,
+    formLimit: "10mb",
+    formidable: {
+      maxFileSize: 1000 * 1024 * 1024,
+      keepExtensions: true
+    }
+  })
+);
 
 // 鉴权
 app.use(async (ctx, next) => {
-  console.log(ctx.request);
   next();
 });
 

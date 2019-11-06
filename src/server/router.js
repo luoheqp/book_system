@@ -12,7 +12,7 @@ bookApi.get("/book/getBookInfo", async (ctx, next) => {
 });
 
 bookApi.post("/book/postBookInfo", async (ctx, next) => {
-  console.log(ctx.request.body);
+  console.log(JSON.stringify(ctx.request.files));
   // 在上传书籍的时候分析信息 , 分类保存文件且录入数据库
   ctx.body = JSON.stringify(ctx.request.body);
 });
