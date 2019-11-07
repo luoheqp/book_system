@@ -1,6 +1,7 @@
 const Koa = require("koa");
 const koaBody = require("koa-body");
-const router = require("./router");
+const bookRouter = require("./router/book.router");
+const userRouter = require("./router/user.router");
 
 const app = new Koa();
 
@@ -8,7 +9,6 @@ const app = new Koa();
 app.use(
   koaBody({
     multipart: true,
-    formLimit: "10mb",
     formidable: {
       maxFileSize: 1000 * 1024 * 1024,
       keepExtensions: true
@@ -17,12 +17,14 @@ app.use(
 );
 
 // 鉴权
-app.use(async (ctx, next) => {
+app.use(async (ctx: any, next: () => void) => {
   next();
 });
 
 // 路由使用
-app.use(router.routes());
+// TODO: 路由分离规划
+app.use(bookRouter.routes());
+app.use(userRouter.routes());
 
 // 端口监听
 app.listen(3000, function() {
