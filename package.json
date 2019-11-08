@@ -8,16 +8,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@types/koa": "^2.0.51",
-    "@types/koa-router": "^7.0.42",
-    "@types/node": "^12.12.6",
     "axios": "^0.19.0",
     "core-js": "^3.3.2",
     "cropperjs": "^1.5.6",
     "epubjs": "^0.3.85",
-    "koa": "^2.11.0",
-    "koa-body": "^4.1.1",
-    "koa-router": "^7.4.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "moment": "^2.24.0",
