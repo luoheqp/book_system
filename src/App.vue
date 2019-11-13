@@ -36,7 +36,7 @@ export default class App extends Vue {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: @defBg;
+  // background-color: @defBg;
 
   .container {
     flex: 1;

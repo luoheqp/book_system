@@ -9,6 +9,9 @@
           :info="item"
         ></ArticleItem>
       </div>
+      <div class="commend">
+        <h2>Commend For You</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -39,7 +42,12 @@ export default class Home extends Vue {
   background-color: #fff;
 
   .home {
+    display: flex;
+
     .book-list {
+      flex: 1;
+      padding-right: 24px;
+
       .list-item {
         border-bottom: 1px solid #b2bac226;
       }

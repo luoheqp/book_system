@@ -16,12 +16,21 @@
             @jumpTo="jumpTo"
             :catalogInfo="navigation"
           ></CatalogPop>
-          <span class="opt-name" @click="togglePopState">menu</span>
+          <span class="opt-name" @click="togglePopState">
+            <i class="iconfont icon-cl-icon-Catalog"></i>
+          </span>
         </li>
-        <!-- 自动翻页 -->
+        <!-- 切换全屏 -->
         <li class="opt-item">
           <span class="opt-name" @click.self="toggleFSState">
-            {{ ebookSet.isFull ? "less" : "full" }}
+            <i
+              :class="[
+                'iconfont',
+                ebookSet.isFull
+                  ? 'icon-pro-fullscreen'
+                  : 'icon-pro-exit-fullscreen'
+              ]"
+            ></i>
           </span>
         </li>
         <!-- 样式调整 -->
@@ -46,9 +55,9 @@
               ></li>
             </ul>
           </div>
-          <span class="opt-name" @click.self="handleShowSet('read-style')"
-            >S</span
-          >
+          <span class="opt-name" @click.self="handleShowSet('read-style')">
+            <i class="iconfont icon-style"></i>
+          </span>
         </li>
         <!-- 字体调整 -->
         <li class="opt-item set-font-size">
@@ -77,9 +86,9 @@
               <div class="line" v-if="index !== fontSizeList.length - 1"></div>
             </div>
           </div>
-          <span class="opt-name" @click.self="handleShowSet('font-size')"
-            >Aa</span
-          >
+          <span class="opt-name" @click.self="handleShowSet('font-size')">
+            <i class="iconfont icon-Aa"></i>
+          </span>
         </li>
       </ul>
     </div>

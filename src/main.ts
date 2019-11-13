@@ -6,6 +6,9 @@ import store from "./store";
 // reset style
 import "@/assets/styles/reset.less";
 
+// icon
+import "@/assets/icon/iconfont.css";
+
 Vue.config.productionTip = false;
 
 Vue.config.keyCodes = {
