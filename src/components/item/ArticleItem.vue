@@ -13,7 +13,7 @@
       <div class="other">
         <div class="info">
           <div class="author">{{ info.author }}</div>
-          <div class="time">{{ info.time }} ` {{ timeUntilNow }}</div>
+          <div class="time">{{ info.time }} · {{ timeUntilNow }}</div>
         </div>
         <div class="action">
           <span class="like">
@@ -52,23 +52,16 @@ export default class ArticleItem extends Vue {
 
 .article-item-wrap {
   padding: @defMargin;
+  display: flex;
+  justify-content: space-between;
 
   &:hover {
     background-color: @hoverGray;
   }
 
   .article-item {
-    // .tag-list {
-    //   display: flex;
-    //   font-size: 12px;
-    //   color: @lightText;
-
-    //   .item {
-    //     &:not(:first-child) {
-    //       margin-left: @defMargin;
-    //     }
-    //   }
-    // }
+    flex: 1;
+    margin-right: @defMargin;
 
     .book {
       display: flex;
@@ -142,6 +135,8 @@ export default class ArticleItem extends Vue {
   }
 
   .article-cover {
+    background-color: #333;
+    width: 150px;
   }
 }
 </style>

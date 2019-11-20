@@ -49,7 +49,7 @@ export default class Home extends Vue {
       padding-right: 24px;
 
       .list-item {
-        border-bottom: 1px solid #b2bac226;
+        // border-bottom: 1px solid #b2bac226;
       }
     }
   }

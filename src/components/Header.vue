@@ -1,18 +1,22 @@
 <template>
   <div class="header-wrap">
     <div class="header">
-      <router-link to="/">
-        <Icon></Icon>
-      </router-link>
-      <ul class="nav">
-        <li
-          v-for="item in nav"
-          :class="['item', path === item.name ? 'active' : '']"
-          :key="item.name"
-        >
-          <router-link :to="item.path">{{ item.content }}</router-link>
-        </li>
-      </ul>
+      <div class="nav-main-wrap">
+        <router-link to="/">
+          <Icon></Icon>
+        </router-link>
+      </div>
+      <div class="nav-sub-wrap">
+        <ul class="nav-sub">
+          <li
+            v-for="item in nav"
+            :class="['item', path === item.name ? 'active' : '']"
+            :key="item.name"
+          >
+            <router-link :to="item.path">{{ item.content }}</router-link>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -73,43 +77,45 @@ export default class Header extends Vue {
 @import "../assets/styles/index.less";
 
 .header-wrap {
-  height: 60px;
   background-color: #fff;
   margin-bottom: 15px;
 
   .header {
     max-width: @contentWidth;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
     padding: 0 20px;
     margin: 0 auto;
     box-sizing: border-box;
-    display: flex;
-    align-items: center;
 
-    .nav {
-      display: flex;
+    .nav-main-wrap {
+      .flex-center();
+      height: 40px;
+      justify-content: space-between;
+    }
 
-      .item {
-        padding: 10px 20px;
+    .nav-sub-wrap {
+      .nav-sub {
         display: flex;
-        align-items: center;
-        border-radius: 20px;
-        font-weight: bold;
-        letter-spacing: 2px;
-        box-sizing: border-box;
 
-        &:not(.active):hover a {
-          color: @mainColor;
-          transition: all 0.3s linear;
-        }
+        .item {
+          padding: 10px 20px;
+          display: flex;
+          align-items: center;
+          border-radius: 20px;
+          font-weight: bold;
+          letter-spacing: 2px;
+          box-sizing: border-box;
 
-        &.active {
-          background-color: @mainColor;
+          &:not(.active):hover a {
+            color: @mainColor;
+            transition: all 0.3s linear;
+          }
 
-          a {
-            color: #fff !important;
+          &.active {
+            background-color: @mainColor;
+
+            a {
+              color: #fff !important;
+            }
           }
         }
       }
