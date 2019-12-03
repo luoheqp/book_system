@@ -1,20 +1,17 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, { StoreOptions } from "vuex";
+import { RootState } from "./types";
 
 // modules
-import user from "./user";
-import book from "./book";
-import article from "./article";
+import { user } from "./user/index";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-    token: "this is a token"
-  },
+const store: StoreOptions<RootState> = {
+  state: {},
   modules: {
-    user,
-    book,
-    article
+    user
   }
-});
+};
+
+export default new Vuex.Store<RootState>(store);
