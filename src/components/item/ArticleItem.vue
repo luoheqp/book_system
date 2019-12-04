@@ -74,6 +74,7 @@ export default class ArticleItem extends Vue {
 
       .link {
         display: flex;
+        font-size: 15px;
 
         a {
           margin-left: 10px;
@@ -89,9 +90,8 @@ export default class ArticleItem extends Vue {
 
     .name {
       margin-bottom: 10px;
-      font-size: 24px;
+      font-size: 20px;
       line-height: 28px;
-      font-weight: 600;
       overflow: hidden;
       max-height: 84px;
       text-overflow: ellipsis;

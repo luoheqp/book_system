@@ -3,9 +3,10 @@
     <div class="header">
       <div class="nav-main-wrap">
         <router-link to="/">
-          <Icon></Icon>
+          <Icon class="icon"></Icon>
         </router-link>
       </div>
+      <!-- TODO: 吸顶 -->
       <div class="nav-sub-wrap">
         <ul class="nav-sub">
           <li
@@ -23,7 +24,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { INavItem } from "@/types/header";
+import { INavItem } from "../types/header";
 import VueRouter from "vue-router";
 
 // components
@@ -88,11 +89,18 @@ export default class Header extends Vue {
 
     .nav-main-wrap {
       .flex-center();
-      height: 40px;
+      height: 65px;
       justify-content: space-between;
+
+      .icon {
+      }
     }
 
     .nav-sub-wrap {
+      height: 50px;
+      display: flex;
+      align-items: center;
+
       .nav-sub {
         display: flex;
 
@@ -101,21 +109,17 @@ export default class Header extends Vue {
           display: flex;
           align-items: center;
           border-radius: 20px;
-          font-weight: bold;
+          font-size: 15px;
           letter-spacing: 2px;
           box-sizing: border-box;
 
           &:not(.active):hover a {
             color: @mainColor;
-            transition: all 0.3s linear;
+            transition: all 0.2s linear;
           }
 
-          &.active {
-            background-color: @mainColor;
-
-            a {
-              color: #fff !important;
-            }
+          &.active a {
+            color: @mainColor;
           }
         }
       }
