@@ -3,8 +3,10 @@
     <div class="popup">
       <h3 class="title" v-show="title">
         <span>{{ title }}</span>
-        <span class="cancel" @click="toggleShowState">cancel</span>
       </h3>
+      <span class="cancel" @click="toggleShowState">
+        <i class="iconfont icon-Cancelcontrol"></i>
+      </span>
       <slot @toggleShowState="toggleShowState"></slot>
     </div>
   </div>
@@ -15,7 +17,7 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
 export default class Popup extends Vue {
-  @Prop({ default: "2333" }) title!: string;
+  @Prop({ default: "" }) title!: string;
 
   toggleShowState() {
     this.$emit("toggleShowState");
@@ -33,13 +35,15 @@ export default class Popup extends Vue {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(255, 255, 255, 0.85);
+  z-index: 3;
 
   .popup {
     background-color: #fff;
-    padding: @doubleMargin;
-    border-radius: @defMargin;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px;
     animation: jelly 1s linear both;
+    position: relative;
 
     .title {
       font-size: 20px;
@@ -49,9 +53,21 @@ export default class Popup extends Vue {
       margin-bottom: @defMargin;
       display: flex;
       justify-content: space-between;
+    }
 
-      .cancel {
-        cursor: pointer;
+    .cancel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      color: rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+
+      .iconfont {
+        font-size: 24px;
+      }
+
+      &:hover {
+        color: #000;
       }
     }
   }

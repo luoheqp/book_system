@@ -7,7 +7,7 @@ import Random from "../views/Random/index.vue";
 import Read from "../views/Read/index.vue";
 import User from "../views/User/index.vue";
 import SignIn from "../views/SignIn/index.vue";
-import Register from "../views/Register/index.vue";
+import SignUp from "../views/SignUp/index.vue";
 import Write from "../views/Write/index.vue";
 
 Vue.use(VueRouter);
@@ -45,9 +45,9 @@ const routes = [
     component: SignIn
   },
   {
-    path: "/register",
-    name: "register",
-    component: Register
+    path: "/signUp",
+    name: "signUp",
+    component: SignUp
   },
   {
     path: "/write",

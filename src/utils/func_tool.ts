@@ -22,3 +22,21 @@ export function bindAndPassContext(
     }
   };
 }
+
+interface regObj {
+  [propName: string]: RegExp;
+}
+
+export function regularCheck(target: string, reg: string) {
+  const regList: regObj = {
+    email: new RegExp(
+      "^([A-Za-z0-9\\_\\-\\.])+@([A-Za-z0-9\\_\\-\\.])+.([A-Za-z]{2,4})$"
+    )
+  };
+
+  if (!regList[reg]) {
+    return false;
+  }
+
+  return regList[reg].test(target);
+}

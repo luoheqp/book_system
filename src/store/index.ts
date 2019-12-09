@@ -3,7 +3,7 @@ import Vuex, { StoreOptions } from "vuex";
 import { RootState } from "./types";
 
 // modules
-import { user } from "./user/index";
+import user from "./user/index";
 
 Vue.use(Vuex);
 

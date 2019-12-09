@@ -1,6 +1,8 @@
 import { GetterTree, MutationTree, ActionTree, Action } from "vuex";
 
-class State {}
+class State {
+  protected token: string = "";
+}
 
 const mutations = <MutationTree<State>>{};
 

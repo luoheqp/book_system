@@ -8,7 +8,7 @@ export interface IUserInfo {
   gender: number; // sex
 }
 
-export interface IUserRegisterInfo {
+export interface IUserSignUpInfo {
   name?: string;
   account: string;
   password: string;

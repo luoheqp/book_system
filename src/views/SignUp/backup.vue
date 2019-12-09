@@ -1,6 +1,6 @@
 <template>
-  <div class="register-wrap">
-    <div class="register">
+  <div class="sign-up-wrap">
+    <div class="sign-up">
       <div class="avatar-wrap">
         <img v-if="userInfo.avatar" src="/images/slk.jpg" alt="avatar" />
         <Icon v-if="!userInfo.avatar"></Icon>
@@ -28,11 +28,11 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { IUserRegisterInfo } from "@/types/user";
+import { IUserSignUpInfo } from "@/types/user";
 
 // components
 import Icon from "@/components/Icon.vue";
-import AvatarPop from "@/views/Register/components/AvatarPop.vue";
+import AvatarPop from "@/views/SignUp/components/AvatarPop.vue";
 
 @Component({
   components: {
@@ -40,9 +40,9 @@ import AvatarPop from "@/views/Register/components/AvatarPop.vue";
     AvatarPop
   }
 })
-export default class Register extends Vue {
+export default class SignUp extends Vue {
   // 需要上传的数据
-  public userInfo: IUserRegisterInfo = {
+  public userInfo: IUserSignUpInfo = {
     name: "",
     account: "",
     password: "",
@@ -65,14 +65,14 @@ export default class Register extends Vue {
 <style lang="less" scoped>
 @import "../../assets/styles/index.less";
 
-.register-wrap {
+.sign-up-wrap {
   .flex-center();
   position: absolute;
   height: 100%;
   width: 100%;
   min-height: 600px;
 
-  .register {
+  .sign-up {
     background-color: #fff;
     display: flex;
     flex-direction: column;
