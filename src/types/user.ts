@@ -12,5 +12,5 @@ export interface IUserSignUpInfo {
   name?: string;
   account: string;
   password: string;
-  avatar: string;
+  avatar: Blob;
 }

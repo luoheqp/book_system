@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import router from "@/router";
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: "https://www.easy-mock.com/mock/5db80f643a19ea177648c646/api",
+  baseURL: "/api",
   timeout: 10000,
   headers: {
     contentType: "application/json;charset=UTF-8"
@@ -50,7 +50,8 @@ const handleResponse = async (response: AxiosResponse) => {
     router.replace("login");
     return;
   }
-  return Promise.reject(data);
+  console.log(data.msg);
+  return Promise.resolve(data);
 };
 
 export default axiosInstance;

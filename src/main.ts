@@ -7,7 +7,7 @@ import store from "./store";
 import "@/assets/styles/reset.less";
 
 // icon
-import "@/assets/icon/iconfont.css";
+// import "@/assets/icon/iconfont.css";
 
 Vue.config.productionTip = false;
 

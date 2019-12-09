@@ -32,32 +32,15 @@
           </li>
         </ul>
       </div>
-      <Popup
-        class="su-pop"
-        v-if="suPopState"
-        @toggleShowState="toggleSignUpPopState"
-      >
-        <div class="su-wrap">
-          <h3>Sign up to join us</h3>
-          <p class="sub-title">Enter your email address to create an account</p>
-          <div class="input-wrap">
-            <p>Your Email</p>
-            <input
-              v-model="userInfo.account"
-              :class="['su-input', infoError ? 'error' : '']"
-              type="text"
-              @blur="e => handleCheck(e.target.value, 'email')"
-            />
-          </div>
-          <input
-            @click="handleNext"
-            class="continue"
-            type="button"
-            value="Continue"
-          />
-        </div>
-      </Popup>
     </div>
+
+    <Popup
+      class="su-pop"
+      v-if="suPopState"
+      @toggleShowState="toggleSignUpPopState"
+    >
+      <SignUp />
+    </Popup>
   </div>
 </template>
 
@@ -70,15 +53,13 @@ import VueRouter from "vue-router";
 // components
 import Icon from "@/components/Icon.vue";
 import Popup from "@/components/Popup.vue";
-
-// func
-import { regularCheck } from "@/utils/func_tool";
-import { IUserSignUpInfo } from "../types/user";
+import SignUp from "@/components/SignUp.vue";
 
 @Component({
   components: {
     Icon,
-    Popup
+    Popup,
+    SignUp
   }
 })
 export default class Header extends Vue {
@@ -105,16 +86,7 @@ export default class Header extends Vue {
       path: "/user"
     }
   ];
-
   private suPopState: boolean = false;
-  // sign up data
-  private infoError: boolean = false;
-  private step: number = 1;
-  private userInfo: IUserSignUpInfo = {
-    account: "",
-    password: "",
-    avatar: ""
-  };
 
   // props
   @Prop({ default: "home" }) private path!: string;
@@ -124,28 +96,6 @@ export default class Header extends Vue {
 
   private toggleSignUpPopState() {
     this.suPopState = !this.suPopState;
-  }
-
-  private handleCheck(value: string, reg: string) {
-    if (!regularCheck(value, reg)) {
-      this.infoError = true;
-      return false;
-    }
-    this.infoError = false;
-    return true;
-  }
-
-  private handleNext() {
-    let flag: boolean = true;
-    switch (this.step) {
-      case 1:
-        flag = this.handleCheck(this.userInfo.account, "email");
-        break;
-    }
-
-    if (flag) {
-      this.step = this.step + 1;
-    }
   }
 }
 </script>
@@ -167,9 +117,6 @@ export default class Header extends Vue {
       .flex-center();
       height: 65px;
       justify-content: space-between;
-
-      .icon-wrap {
-      }
 
       .user-wrap {
         .flex-center();
@@ -227,68 +174,6 @@ export default class Header extends Vue {
           &.active a {
             color: @mainColor;
           }
-        }
-      }
-    }
-
-    .su-pop {
-      .su-wrap {
-        .flex-center();
-        flex-direction: column;
-        width: 600px;
-        height: 550px;
-        padding: 44px 56px;
-        box-sizing: border-box;
-        text-align: center;
-
-        h3 {
-          line-height: 36px;
-          font-size: 32px;
-          font-weight: 500px;
-          color: rgba(0, 0, 0, 0.84);
-          margin-bottom: 8px;
-        }
-
-        .sub-title {
-          font-size: 16px;
-          line-height: 20px;
-          color: rgba(0, 0, 0, 0.54);
-        }
-
-        .input-wrap {
-          margin: 25px 0 45px 0;
-          width: 270px;
-
-          & > p {
-            font-size: 15px;
-            line-height: 20px;
-            color: rgba(0, 0, 0, 0.84);
-            margin: 12px;
-          }
-
-          .su-input {
-            border: none;
-            width: 100%;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.34);
-            font-size: 16px;
-            line-height: 24px;
-            font-weight: 300;
-            outline: none;
-            text-align: center;
-            font-family: "medium-number";
-
-            &.error {
-              border-bottom-color: red;
-            }
-          }
-        }
-
-        .continue {
-          background: rgba(0, 0, 0, 0.9);
-          font-size: 14px;
-          color: #fff;
-          border-radius: 4px;
-          padding: 8px 16px;
         }
       }
     }

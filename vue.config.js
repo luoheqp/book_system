@@ -2,9 +2,12 @@ module.exports = {
   lintOnSave: false,
   devServer: {
     proxy: {
-      "/book/*": {
+      "/api/*": {
         target: "http://localhost:3000", // 测试环境
-        changeOrigin: true
+        changeOrigin: true,
+        pathRewrite: {
+          "/api/": ""
+        }
       }
     }
   }
