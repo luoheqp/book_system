@@ -88,12 +88,10 @@ import { regularCheck } from "@/utils/func_tool";
 // interface
 import { IUserSignUpInfo } from "../types/user";
 
-// axios
-import { postUserInfoToSignUp } from "@/apis/user";
-
 // vue-cropperjs
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
+import { Action } from "vuex-class";
 
 @Component({})
 export default class SignUp extends Vue {
@@ -130,6 +128,8 @@ export default class SignUp extends Vue {
       minCropBoxHeight: 200
     });
   }
+
+  @Action("user/signup") signup: any;
 
   // input func
   private handleCheck(value: string, reg: string) {
@@ -171,8 +171,12 @@ export default class SignUp extends Vue {
     userData.append("account", account);
     userData.append("password", password);
     userData.append("avatar", avatar);
-    const signUpRes = await postUserInfoToSignUp(userData);
-    console.log(signUpRes);
+    this.signup(userData).then(res => {
+      console.log(res);
+      if (res.code === 0) {
+        this.$router.go(0);
+      }
+    });
   }
 
   // 上传图片后触发
@@ -415,11 +419,11 @@ export default class SignUp extends Vue {
   }
 
   .continue {
-    background: rgba(0, 0, 0, 0.9);
     font-size: 14px;
     color: #fff;
     border-radius: 4px;
     padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.9);
   }
 }
 </style>

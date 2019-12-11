@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import router from "@/router";
+import Cookies from "js-cookie";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: "/api",
@@ -12,7 +13,7 @@ const axiosInstance: AxiosInstance = axios.create({
 // 添加请求拦截
 axiosInstance.interceptors.request.use(
   function(config): AxiosRequestConfig {
-    // config.headers: Object
+    config.headers.token = Cookies.get("token");
     return config;
   },
   function(err) {
@@ -41,9 +42,10 @@ enum codeStatus {
 
 const handleResponse = async (response: AxiosResponse) => {
   const data = response.data;
+  console.log(data);
   if (data.code === codeStatus.FINE) {
     // 响应无异常 , 传达数据
-    return Promise.resolve(data.data);
+    return Promise.resolve(data);
   }
   if (data.code === codeStatus.NEED_LOGIN) {
     // 没有登录 , 进行消息提示并跳转登录页面

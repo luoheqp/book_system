@@ -16,7 +16,9 @@
             </li>
           </ul>
           <ul v-show="token">
-            <li class="avatar"></li>
+            <li class="avatar">
+              <img :src="`http://${info.avatar}`" alt="" />
+            </li>
           </ul>
         </div>
       </div>
@@ -54,6 +56,7 @@ import VueRouter from "vue-router";
 import Icon from "@/components/Icon.vue";
 import Popup from "@/components/Popup.vue";
 import SignUp from "@/components/SignUp.vue";
+import { IUserInfo } from "../types/user";
 
 @Component({
   components: {
@@ -92,7 +95,8 @@ export default class Header extends Vue {
   @Prop({ default: "home" }) private path!: string;
 
   // state
-  @State(state => state.user.token) token!: object;
+  @State(state => state.user.token) token!: String;
+  @State(state => state.user.info) info!: IUserInfo;
 
   private toggleSignUpPopState() {
     this.suPopState = !this.suPopState;
@@ -145,6 +149,12 @@ export default class Header extends Vue {
             height: 32px;
             border-radius: 50%;
             background: #ccc;
+            overflow: hidden;
+
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
           }
         }
       }

@@ -1,11 +1,13 @@
 export interface IUserInfo {
-  id: number; // uid
-  name: string; // nick name
-  avatar: string; // avatar
-  mail: string; // e-mail
-  age: number; // age
-  birth: string; // birthday
-  gender: number; // sex
+  account: string;
+  avatar: string;
+  likeTag: string;
+  likeBook: number;
+  article: string;
+  readBook: number;
+  readSet: Object;
+  collectBook: Object[];
+  uploadBook: Object[];
 }
 
 export interface IUserSignUpInfo {
