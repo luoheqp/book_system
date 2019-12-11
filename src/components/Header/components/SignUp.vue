@@ -87,7 +87,7 @@ import { regularCheck } from "@/utils/func_tool";
 import { Action } from "vuex-class";
 
 // interface
-import { IUserSignUpInfo } from "../types/user";
+import { IUserSignUpInfo } from "@/types/user";
 
 // vue-cropperjs
 import Cropper from "cropperjs";
