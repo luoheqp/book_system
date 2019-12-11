@@ -1,6 +1,10 @@
 import { GetterTree, MutationTree, ActionTree, Action } from "vuex";
 import Cookies from "js-cookie";
-import { postUserInfoToSignUp, getUserInfo } from "@/apis/user";
+import {
+  postUserInfoToSignUp,
+  postUserInfoToSignIn,
+  getUserInfo
+} from "@/apis/user";
 import { IUserSignUpSuccess } from "./types";
 import { IUserInfo } from "@/types/user";
 
@@ -23,6 +27,19 @@ const actions = <ActionTree<State, any>>{
     return new Promise((resolve, reject) => {
       // 注册执行
       postUserInfoToSignUp(data).then((res: any) => {
+        const { token } = res;
+        // 保存 token 并持久化
+        commit("saveToken", token);
+        // cookie 保存三天
+        Cookies.set("token", token, { expires: 3 });
+        resolve({ code: 0 });
+      });
+    });
+  },
+  signin({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      // 注册执行
+      postUserInfoToSignIn(data).then((res: any) => {
         const { token } = res;
         // 保存 token 并持久化
         commit("saveToken", token);

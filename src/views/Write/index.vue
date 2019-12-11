@@ -27,9 +27,7 @@ export default class Write extends Vue {
   public txt: any = "this is a txt";
 
   handleChange(e: any) {
-    console.log(e.target.files[0]);
     this.content.append("filename", e.target.files[0]);
-    console.log(this.content.filename);
   }
 
   handleSubmit() {

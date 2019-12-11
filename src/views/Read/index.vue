@@ -154,7 +154,6 @@ export default class Read extends Vue {
     // 生成 navigation
     this.book.ready.then(() => {
       this.navigation = this.book.navigation;
-      console.log(this.navigation);
       // 生成 locations
       // return this.book.locations.generate();
     });

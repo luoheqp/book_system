@@ -1,11 +1,19 @@
 import axiosInstance from "./request";
-import { IUserSignUpInfo } from "@/types/user";
+import { IUserSignUpInfo, IUserSignInInfo } from "@/types/user";
 import { IUserSignUpSuccess } from "@/store/user/types";
 
 export function postUserInfoToSignUp(userInfo: IUserSignUpInfo) {
   return axiosInstance({
     method: "post",
     url: "user",
+    data: userInfo
+  });
+}
+
+export function postUserInfoToSignIn(userInfo: IUserSignInInfo) {
+  return axiosInstance({
+    method: "post",
+    url: "user/login",
     data: userInfo
   });
 }

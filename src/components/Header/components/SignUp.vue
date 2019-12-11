@@ -3,7 +3,7 @@
     <h3>Sign up to join us</h3>
     <div class="step-wrap" v-show="step === 1">
       <p class="sub-title">
-        Enter your email address to create an account
+        Enter your email address
       </p>
       <div class="input-wrap">
         <p>Your Email</p>
@@ -84,6 +84,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { regularCheck } from "@/utils/func_tool";
+import { Action } from "vuex-class";
 
 // interface
 import { IUserSignUpInfo } from "../types/user";
@@ -91,7 +92,6 @@ import { IUserSignUpInfo } from "../types/user";
 // vue-cropperjs
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
-import { Action } from "vuex-class";
 
 @Component({})
 export default class SignUp extends Vue {
@@ -112,7 +112,6 @@ export default class SignUp extends Vue {
     "http://www.resource.com:8000/user/avatar/default.png";
 
   private mounted() {
-    console.log(this);
     this.cropper = new Cropper(this.$refs.cropper as HTMLCanvasElement, {
       aspectRatio: 1 / 1, // 裁剪框比例
       viewMode: 1, // 视图模式
@@ -171,8 +170,7 @@ export default class SignUp extends Vue {
     userData.append("account", account);
     userData.append("password", password);
     userData.append("avatar", avatar);
-    this.signup(userData).then(res => {
-      console.log(res);
+    this.signup(userData).then((res: any) => {
       if (res.code === 0) {
         this.$router.go(0);
       }
@@ -193,14 +191,15 @@ export default class SignUp extends Vue {
     };
 
     avatar.onload = () => {
-      this.cropper.replace(avatar.result.toString());
-      this.canCropperSubmit = true;
+      if (avatar.result !== null) {
+        this.cropper.replace(avatar.result.toString());
+        this.canCropperSubmit = true;
+      }
     };
     this.toggleCropperState();
   }
 
   private toggleCropperState(flag?: boolean) {
-    console.log("change cropper state , flag is: ", flag);
     if (flag) {
       this.isCropperShow = flag;
       return true;
@@ -214,21 +213,23 @@ export default class SignUp extends Vue {
     const cav = this.cropper.getCroppedCanvas({
       imageSmoothingQuality: "medium"
     });
-    cav.toBlob((blob: Blob): void => {
-      // 保存 blob 对象
-      this.userInfo.avatar = blob;
-      // 将 blob 对象转换成图片可显示的状态
-      let avatar = new FileReader();
-      this.avatar = window.URL.createObjectURL(blob);
-      // 切换 cropper 弹窗状态
-      this.toggleCropperState();
+    cav.toBlob((blob: Blob | null): void => {
+      if (blob !== null) {
+        // 保存 blob 对象
+        this.userInfo.avatar = blob;
+        // 将 blob 对象转换成图片可显示的状态
+        let avatar = new FileReader();
+        this.avatar = window.URL.createObjectURL(blob);
+        // 切换 cropper 弹窗状态
+        this.toggleCropperState();
+      }
     }, "image/jpg");
   }
 }
 </script>
 
 <style lang="less" scoped>
-@import "../assets/styles/index.less";
+@import "../../../assets/styles/index.less";
 
 .su-wrap {
   .flex-center();
