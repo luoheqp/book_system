@@ -33,7 +33,9 @@
         </div>
       </div>
     </div>
-    <div class="article-cover"></div>
+    <div class="article-cover">
+      <img v-if="info.cover" :src="info.cover" alt="" />
+    </div>
   </div>
 </template>
 
@@ -47,7 +49,7 @@ export default class ArticleItem extends Vue {
   @Prop({ default: {} }) info!: IArticleItem;
 
   get timeUntilNow(): string {
-    let time: string[] = this.info.time;
+    let time: string = this.info.time;
     return moment(time).fromNow();
   }
 }
@@ -57,7 +59,6 @@ export default class ArticleItem extends Vue {
 @import "../../assets/styles/index.less";
 
 .article-item-wrap {
-  padding: @defMargin;
   display: flex;
   justify-content: space-between;
 
@@ -82,6 +83,8 @@ export default class ArticleItem extends Vue {
         font-size: 15px;
 
         a {
+          .one-line();
+          width: 200px;
           margin-left: 10px;
           font-style: italic;
           color: @lightText;
@@ -157,7 +160,6 @@ export default class ArticleItem extends Vue {
   }
 
   .article-cover {
-    background-color: #333;
     width: 150px;
   }
 }

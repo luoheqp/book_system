@@ -31,6 +31,7 @@ export default class Commend extends Vue {}
     margin: 32px 32px 0 32px;
     padding-bottom: 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    font-family: marat !important;
   }
 
   .commend-list {

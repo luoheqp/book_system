@@ -139,8 +139,13 @@ export default class Header extends Vue {
         ul {
           display: flex;
 
-          li {
+          .item {
             .flex-align-center();
+            cursor: pointer;
+
+            &:hover {
+              .txt-hover();
+            }
 
             &:not(:first-child) {
               margin-left: @defMargin;
@@ -180,8 +185,7 @@ export default class Header extends Vue {
           box-sizing: border-box;
 
           &:not(.active):hover a {
-            color: @mainColor;
-            transition: all 0.2s linear;
+            .txt-hover();
           }
 
           &.active a {

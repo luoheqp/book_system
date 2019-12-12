@@ -40,8 +40,33 @@ export default class Home extends Vue {
       desc: "Be with someone you’re comfortable being weird with.",
       time: "2019.12.12 8:42",
       tag: ["literature", "english"],
+      cover: "https://cdn-images-1.medium.com/fit/c/152/156/0*fnlQjIyet5-Mx57V",
       title: "Let Us Read < Tuesdays with Morrie >",
       like: 13
+    },
+    {
+      id: 2,
+      book:
+        "Animal Spirits：How Human Psychology Drives the Economy, and Why It Matters for Global capitalism",
+      author: "George A. Akerlof，Robert J. Shiller",
+      desc: "Tell you so many question",
+      time: "2019.12.12 21:01",
+      tag: ["english", "economy"],
+      title: "I love this book, you need read it",
+      like: 14
+    },
+    {
+      id: 3,
+      book: "Sweetbitter",
+      author: "Stephanie Danler",
+      desc:
+        "your mouth waters itself. Salting the most nuanced of enterprises, the food always requesting more, but the tipping point fatal.",
+      time: "2019.12.12 20:55",
+      tag: ["english"],
+      cover:
+        "https://cdn-images-1.medium.com/fit/c/152/156/1*5IwI3UFT8BmTwyY9k_vcbg.jpeg",
+      title: "Now, enjoy it",
+      like: 20
     }
   ];
 }
@@ -62,7 +87,9 @@ export default class Home extends Vue {
       padding-right: 24px;
 
       .list-item {
-        // border-bottom: 1px solid #b2bac226;
+        &:not(:last-child) {
+          margin-bottom: 48px;
+        }
       }
     }
 

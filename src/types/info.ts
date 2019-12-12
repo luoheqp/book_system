@@ -31,4 +31,5 @@ export interface IArticleItem {
   tag: string[];
   title: string;
   like: number;
+  cover?: string;
 }
