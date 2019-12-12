@@ -26,7 +26,7 @@ export default class Popup extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../assets/styles/index.less";
+@import "../../assets/styles/index.less";
 
 .popup-wrap {
   .flex-center();

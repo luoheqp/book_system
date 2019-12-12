@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import Popup from "@/components/Popup.vue";
+import Popup from "@/components/common/Popup.vue";
 
 @Component({
   components: {

@@ -3,13 +3,19 @@
     <div class="article-item">
       <div class="book">
         <div class="link">
-          关联图书
+          RELATED BOOK
           <a href="#">{{ info.book }}</a>
         </div>
-        <div class="tag">{{ info.tag }}</div>
+        <div class="tag">
+          <ul class="tag-list">
+            <li class="item" v-for="item in info.tag" :key="item">
+              {{ item }}
+            </li>
+          </ul>
+        </div>
       </div>
       <h2 class="name">{{ info.title }}</h2>
-      <div class="sentence">{{ info.title }}</div>
+      <div class="desc">{{ info.desc }}</div>
       <div class="other">
         <div class="info">
           <div class="author">{{ info.author }}</div>
@@ -41,7 +47,7 @@ export default class ArticleItem extends Vue {
   @Prop({ default: {} }) info!: IArticleItem;
 
   get timeUntilNow(): string {
-    let time: string[] = this.info.time.split("-");
+    let time: string[] = this.info.time;
     return moment(time).fromNow();
   }
 }
@@ -70,7 +76,6 @@ export default class ArticleItem extends Vue {
       font-size: 16px;
       line-height: 20px;
       color: @lightText;
-      margin-bottom: 5px;
 
       .link {
         display: flex;
@@ -86,11 +91,24 @@ export default class ArticleItem extends Vue {
           }
         }
       }
+
+      .tag {
+        .tag-list {
+          .flex-center();
+
+          .item {
+            &:not(:last-child) {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
     }
 
     .name {
-      margin-bottom: 10px;
+      margin-bottom: 2px;
       font-size: 20px;
+      font-weight: 600;
       line-height: 28px;
       overflow: hidden;
       max-height: 84px;
@@ -99,9 +117,10 @@ export default class ArticleItem extends Vue {
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       color: #333;
+      font-family: marat !important;
     }
 
-    .sentence {
+    .desc {
       overflow: hidden;
       max-height: 84px;
       text-overflow: ellipsis;
@@ -130,6 +149,9 @@ export default class ArticleItem extends Vue {
       }
 
       .action {
+        .like {
+          margin-right: 10px;
+        }
       }
     }
   }

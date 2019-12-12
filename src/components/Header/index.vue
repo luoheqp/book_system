@@ -9,13 +9,11 @@
         </div>
         <div class="user-wrap">
           <span class="icon"><i class="iconfont icon-search"></i></span>
-          <ul v-show="!token">
-            <li class="item" @click="toggleSignUpPopState">Sign up</li>
-            <li class="item">
-              <router-link to="/signIn">Sign in</router-link>
-            </li>
+          <ul v-if="!token">
+            <li class="item" @click="togglePopState('signup')">Sign up</li>
+            <li class="item" @click="togglePopState('signin')">Sign in</li>
           </ul>
-          <ul v-show="token">
+          <ul v-else>
             <li class="avatar">
               <img :src="`http://${info.avatar}`" alt="" />
             </li>
@@ -36,12 +34,9 @@
       </div>
     </div>
 
-    <Popup
-      class="su-pop"
-      v-if="suPopState"
-      @toggleShowState="toggleSignUpPopState"
-    >
-      <SignUp />
+    <Popup class="su-pop" v-if="popState" @toggleShowState="togglePopState">
+      <SignUp v-if="popType === 'signup'" @toSignIn="switchPopType('signin')" />
+      <SignIn v-if="popType === 'signin'" @toSignUp="switchPopType('signup')" />
     </Popup>
   </div>
 </template>
@@ -49,20 +44,22 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { State } from "vuex-class";
-import { INavItem } from "../types/header";
+import { INavItem } from "../../types/header";
 import VueRouter from "vue-router";
 
 // components
 import Icon from "@/components/Icon.vue";
-import Popup from "@/components/Popup.vue";
-import SignUp from "@/components/SignUp.vue";
-import { IUserInfo } from "../types/user";
+import Popup from "@/components/common/Popup.vue";
+import SignUp from "./components/SignUp.vue";
+import SignIn from "./components/SignIn.vue";
+import { IUserInfo } from "../../types/user";
 
 @Component({
   components: {
     Icon,
     Popup,
-    SignUp
+    SignUp,
+    SignIn
   }
 })
 export default class Header extends Vue {
@@ -70,26 +67,27 @@ export default class Header extends Vue {
   private nav: Array<INavItem> = [
     {
       name: "home",
-      content: "Home",
+      content: "HOME",
       path: "/"
     },
     {
       name: "random",
-      content: "Random",
+      content: "RANDOM",
       path: "/random"
     },
     {
       name: "read",
-      content: "Reader",
+      content: "READER",
       path: "/read"
     },
     {
       name: "user",
-      content: "User",
+      content: "USER",
       path: "/user"
     }
   ];
-  private suPopState: boolean = false;
+  private popState: boolean = false;
+  private popType: "signup" | "singin" = "signup";
 
   // props
   @Prop({ default: "home" }) private path!: string;
@@ -98,14 +96,19 @@ export default class Header extends Vue {
   @State(state => state.user.token) token!: String;
   @State(state => state.user.info) info!: IUserInfo;
 
-  private toggleSignUpPopState() {
-    this.suPopState = !this.suPopState;
+  private togglePopState(type: "signup" | "singin") {
+    this.switchPopType(type);
+    this.popState = !this.popState;
+  }
+
+  private switchPopType(type: "signup" | "singin") {
+    this.popType = type;
   }
 }
 </script>
 
 <style lang="less" scoped>
-@import "../assets/styles/index.less";
+@import "../../assets/styles/index.less";
 
 .header-wrap {
   background-color: #fff;
