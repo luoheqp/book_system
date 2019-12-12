@@ -1,6 +1,6 @@
 <template>
   <div class="su-wrap">
-    <h3>Sign in to enjoy</h3>
+    <h3>Sign in to enjoy yourself</h3>
     <div class="step-wrap" v-show="step === 1">
       <p class="sub-title">
         Enter your email address
@@ -38,6 +38,9 @@
       type="button"
       :value="step === 2 ? 'Submit' : 'Continue'"
     />
+    <span class="no-account" v-show="step === 1"
+      >No Account? <em @click="handleToSignUp">Create One</em></span
+    >
   </div>
 </template>
 
@@ -105,6 +108,10 @@ export default class SignIn extends Vue {
         this.$router.go(0);
       }
     });
+  }
+
+  private handleToSignUp() {
+    this.$emit("toSignUp", "signup");
   }
 }
 </script>
@@ -191,6 +198,13 @@ export default class SignIn extends Vue {
     border-radius: 4px;
     padding: 8px 16px;
     background: rgba(0, 0, 0, 0.9);
+    margin-bottom: 15px;
+  }
+
+  .no-account {
+    em {
+      color: @mainColor;
+    }
   }
 }
 </style>

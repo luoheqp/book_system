@@ -26,6 +26,7 @@ export interface IArticleItem {
   id: number;
   book: string;
   author: string;
+  desc: string;
   time: string;
   tag: string[];
   title: string;

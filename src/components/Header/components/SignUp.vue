@@ -78,6 +78,9 @@
       type="button"
       :value="step === 3 ? 'Submit' : 'Continue'"
     />
+    <span class="have-account" v-show="step === 1"
+      >Have Account? <em @click="handleToSignIn">Sign In</em></span
+    >
   </div>
 </template>
 
@@ -175,6 +178,11 @@ export default class SignUp extends Vue {
         this.$router.go(0);
       }
     });
+  }
+
+  // 已有账号 , 直接登录
+  private handleToSignIn() {
+    this.$emit("toSignIn", "signup");
   }
 
   // 上传图片后触发
@@ -425,6 +433,13 @@ export default class SignUp extends Vue {
     border-radius: 4px;
     padding: 8px 16px;
     background: rgba(0, 0, 0, 0.9);
+    margin-bottom: 15px;
+  }
+
+  .have-account {
+    em {
+      color: @mainColor;
+    }
   }
 }
 </style>

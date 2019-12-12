@@ -35,8 +35,8 @@
     </div>
 
     <Popup class="su-pop" v-if="popState" @toggleShowState="togglePopState">
-      <SignUp v-if="popType === 'signup'" />
-      <SignIn v-if="popType === 'signin'" />
+      <SignUp v-if="popType === 'signup'" @toSignIn="switchPopType('signin')" />
+      <SignIn v-if="popType === 'signin'" @toSignUp="switchPopType('signup')" />
     </Popup>
   </div>
 </template>
@@ -97,8 +97,12 @@ export default class Header extends Vue {
   @State(state => state.user.info) info!: IUserInfo;
 
   private togglePopState(type: "signup" | "singin") {
-    this.popType = type;
+    this.switchPopType(type);
     this.popState = !this.popState;
+  }
+
+  private switchPopType(type: "signup" | "singin") {
+    this.popType = type;
   }
 }
 </script>
