@@ -34,7 +34,11 @@
       </div>
     </div>
     <div class="article-cover">
-      <img v-if="info.cover" :src="info.cover" alt="" />
+      <div
+        class="cover"
+        v-if="info.cover"
+        :style="`background-image: url(${info.cover})`"
+      ></div>
     </div>
   </div>
 </template>
@@ -62,9 +66,9 @@ export default class ArticleItem extends Vue {
   display: flex;
   justify-content: space-between;
 
-  &:hover {
-    background-color: @hoverGray;
-  }
+  // &:hover {
+  //   background-color: @hoverGray;
+  // }
 
   .article-item {
     flex: 1;
@@ -121,6 +125,7 @@ export default class ArticleItem extends Vue {
       -webkit-box-orient: vertical;
       color: #333;
       font-family: marat !important;
+      cursor: pointer;
     }
 
     .desc {
@@ -161,6 +166,12 @@ export default class ArticleItem extends Vue {
 
   .article-cover {
     width: 150px;
+
+    .cover {
+      background-repeat: no-repeat;
+      background-position-y: center;
+      height: 100%;
+    }
   }
 }
 </style>

@@ -176,7 +176,7 @@ export default class Header extends Vue {
         display: flex;
 
         .item {
-          padding: 10px 20px;
+          padding: 10px 20px 10px 0;
           display: flex;
           align-items: center;
           border-radius: 20px;

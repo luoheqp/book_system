@@ -56,7 +56,8 @@ export default class App extends Vue {
 
   .container {
     flex: 1;
-    width: @contentWidth;
+    max-width: @contentWidth;
+    width: 100%;
     margin: 0 auto;
     position: relative;
   }

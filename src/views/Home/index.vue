@@ -82,8 +82,7 @@ export default class Home extends Vue {
     display: flex;
 
     .book-list {
-      flex: 1;
-      max-width: 680px;
+      width: 680px;
       padding-right: 24px;
 
       .list-item {
@@ -95,6 +94,22 @@ export default class Home extends Vue {
 
     .commend-wrap {
       width: 328px;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .home {
+    align-items: center;
+
+    .book-list {
+      width: 100% !important;
+      padding: 0 20px 0 20px !important;
+      box-sizing: border-box;
+    }
+
+    .commend-wrap {
+      display: none;
     }
   }
 }
