@@ -84,6 +84,16 @@ export default class Header extends Vue {
       name: "user",
       content: "USER",
       path: "/user"
+    },
+    {
+      name: "reader",
+      content: "READER",
+      path: "/reader"
+    },
+    {
+      name: "write",
+      content: "WRITE",
+      path: "/write"
     }
   ];
   private popState: boolean = false;
@@ -113,10 +123,11 @@ export default class Header extends Vue {
 .header-wrap {
   background-color: #fff;
   margin-bottom: 15px;
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.15);
 
   .header {
     max-width: @contentWidth;
-    padding: 0 20px;
+    padding: 0 @defMargin;
     margin: 0 auto;
     box-sizing: border-box;
 

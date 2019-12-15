@@ -5,8 +5,15 @@
 input[type="button"] {
   appearance: none;
   border: none;
-  background-color: @mainColor;
-  padding: 5px @defMargin;
-  color: #fff;
   cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 4px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.9);
+  outline: none;
+
+  &:disabled {
+    // background: rgba(0, 0, 0, 0.9);
+  }
 }

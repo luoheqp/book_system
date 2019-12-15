@@ -193,12 +193,7 @@ export default class SignIn extends Vue {
   }
 
   .continue {
-    font-size: 14px;
-    color: #fff;
-    border-radius: 4px;
-    padding: 8px 16px;
-    background: rgba(0, 0, 0, 0.9);
-    margin-bottom: 15px;
+    margin-bottom: @defMargin;
   }
 
   .no-account {

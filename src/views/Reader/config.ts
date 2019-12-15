@@ -1,4 +1,4 @@
-import { IThemeItem } from "@/types/read";
+import { IThemeItem } from "@/types/reader";
 
 // 文字大小列表
 export const fontSizeList: object[] = [

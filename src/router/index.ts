@@ -4,9 +4,8 @@ import VueRouter from "vue-router";
 // views
 import Home from "../views/Home/index.vue";
 import Random from "../views/Random/index.vue";
-import Read from "../views/Read/index.vue";
+import Reader from "../views/Reader/index.vue";
 import User from "../views/User/index.vue";
-import SignIn from "../views/SignIn/index.vue";
 import Write from "../views/Write/index.vue";
 
 Vue.use(VueRouter);
@@ -29,19 +28,14 @@ const routes = [
     component: Random
   },
   {
-    path: "/read",
-    name: "read",
-    component: Read
+    path: "/reader",
+    name: "reader",
+    component: Reader
   },
   {
     path: "/user",
     name: "user",
     component: User
-  },
-  {
-    path: "/signIn",
-    name: "signIn",
-    component: SignIn
   },
   {
     path: "/write",

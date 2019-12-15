@@ -1,5 +1,5 @@
 <template>
-  <div class="read-wrap">
+  <div class="reader-wrap">
     <div class="ebook-wrap">
       <div id="ebook" ref="ebook"></div>
       <div class="mask">
@@ -34,12 +34,12 @@
           </span>
         </li>
         <!-- 样式调整 -->
-        <li class="opt-item set-read-style">
+        <li class="opt-item set-reader-style">
           <div
             :class="[
               'select',
               'set-opt',
-              showSet === 'read-style' ? 'show' : ''
+              showSet === 'reader-style' ? 'show' : ''
             ]"
           >
             <ul class="theme-list">
@@ -55,7 +55,7 @@
               ></li>
             </ul>
           </div>
-          <span class="opt-name" @click.self="handleShowSet('read-style')">
+          <span class="opt-name" @click.self="handleShowSet('reader-style')">
             <i class="iconfont icon-style"></i>
           </span>
         </li>
@@ -99,11 +99,11 @@
 import { Vue, Component } from "vue-property-decorator";
 import { toggleBrowserFullScreenState } from "@/utils/browser_tool";
 import { fontSizeList, themeList } from "./config";
-import { IEbookSet } from "@/types/read";
+import { IEbookSet } from "@/types/reader";
 import Epub from "epubjs";
 
 // components
-import CatalogPop from "@/views/Read/components/CatalogPop.vue";
+import CatalogPop from "@/views/Reader/components/CatalogPop.vue";
 
 // hard code resource
 const EPUB_ADDRESS = "/flipped.epub";
@@ -113,7 +113,7 @@ const EPUB_ADDRESS = "/flipped.epub";
     CatalogPop
   }
 })
-export default class Read extends Vue {
+export default class Reader extends Vue {
   public fontSizeList: object[] = fontSizeList;
   public themeList: object[] = themeList;
   // === 电子书相关 data ===
@@ -250,7 +250,7 @@ export default class Read extends Vue {
 @import "../../assets/styles/index.less";
 
 // TODO: 样式有问题
-.read-wrap {
+.reader-wrap {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -335,7 +335,7 @@ export default class Read extends Vue {
           cursor: pointer;
         }
 
-        &.set-read-style {
+        &.set-reader-style {
           .select {
             &.show {
               padding-top: 0;
