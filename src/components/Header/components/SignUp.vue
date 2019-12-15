@@ -167,6 +167,7 @@ export default class SignUp extends Vue {
     }
   }
 
+  // 提交注册
   private async handleSubmit() {
     let userData = new FormData();
     let { account, password, avatar } = this.userInfo;

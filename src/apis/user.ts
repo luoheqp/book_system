@@ -4,23 +4,23 @@ import { IUserSignUpSuccess } from "@/store/user/types";
 
 export function postUserInfoToSignUp(userInfo: IUserSignUpInfo) {
   return axiosInstance({
-    method: "post",
     url: "user",
+    method: "post",
     data: userInfo
   });
 }
 
 export function postUserInfoToSignIn(userInfo: IUserSignInInfo) {
   return axiosInstance({
-    method: "post",
     url: "user/login",
+    method: "post",
     data: userInfo
   });
 }
 
 export function getUserInfo() {
   return axiosInstance({
-    method: "get",
-    url: "user"
+    url: "user",
+    method: "get"
   });
 }

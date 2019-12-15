@@ -1,7 +1,41 @@
 <template>
   <div class="write-wrap">
-    <div class="title-wrap">
-      <input type="text" class="title" placeholder="Title here" />
+    <div class="info-wrap">
+      <div class="title-wrap">
+        <input
+          type="text"
+          v-model="title"
+          class="title"
+          placeholder="Title here"
+        />
+        <input
+          type="text"
+          v-model="desc"
+          class="desc"
+          placeholder="Maybe you want write some description"
+        />
+      </div>
+      <div class="cover-wrap">
+        <label class="cover" for="cover">
+          <input
+            type="file"
+            accept="image/*"
+            id="cover"
+            @change="e => handleCoverChange(e.target.files)"
+          />
+          <span>cover here</span>
+        </label>
+      </div>
+    </div>
+    <div class="tag-wrap">
+      <ul class="list">
+        <li class="item" v-for="(item, index) in tag" :key="index">
+          # {{ item }}
+        </li>
+        <li class="item add" @click="handleAddTag">
+          <i class="iconfont icon-add"></i>
+        </li>
+      </ul>
     </div>
     <div class="write">
       <div class="do-wrap">
@@ -12,12 +46,12 @@
           @keyup="handleInputChange"
         ></textarea>
       </div>
-      <div class="preview-wrap">
-        <article class="markdown-body" v-html="preview"></article>
+      <div class="content-wrap">
+        <article class="markdown-body" v-html="content"></article>
       </div>
     </div>
     <div class="sub-wrap">
-      <input type="button" class="sub" value="Submit" />
+      <input type="button" class="sub" @click="handleSubmit" value="Submit" />
     </div>
   </div>
 </template>
@@ -30,12 +64,27 @@ import marked from "marked";
 import hljs from "highlight.js"; // 高亮
 import DOMPurify from "dompurify"; // DOM 化 , 防止 XSS 攻击
 import "@/assets/styles/markdown/github-markdown.css";
+import { Action } from "vuex-class";
 
 @Component({})
 export default class Write extends Vue {
-  private preview = "";
+  // article info
+  private title: string = "title";
+  private desc: string = "desc";
+  private content: string = "content";
+  private cover!: File;
+  private bookId: string = "bookId";
+  private tag: string[] = ["tag1", "tag2", "tag3"];
 
-  mounted() {
+  @Action("article/createArticle") createArticle: any;
+
+  private created() {
+    // 获取书籍 id
+    this.bookId = this.$route.params.bookId;
+  }
+
+  private mounted() {
+    // 初始化 marked
     marked.setOptions({
       renderer: new marked.Renderer(),
       highlight: function(code) {
@@ -53,7 +102,40 @@ export default class Write extends Vue {
 
   // 输入内容发生改变
   private handleInputChange(e: any) {
-    this.preview = marked(e.target.value);
+    this.content = marked(e.target.value);
+  }
+
+  // 添加新的 tag
+  private handleAddTag() {
+    this.tag.push("new tag");
+  }
+
+  // 添加或替换 cover
+  private handleCoverChange(files: FileList) {
+    if (!files[0]) {
+      return false;
+    }
+    // let avatar: FileReader = new FileReader();
+    // avatar.readAsDataURL(files[0]);
+    this.cover = files[0];
+    // console.log(avatar);
+  }
+
+  // 完成文章
+  private handleSubmit() {
+    // 整合数据
+    let data = new FormData();
+    data.append("title", this.title);
+    data.append("desc", this.desc);
+    data.append("tag", JSON.stringify(this.tag));
+    data.append("content", this.content);
+    data.append("bookId", this.bookId);
+
+    if (this.cover) {
+      data.append("cover", this.cover);
+    }
+
+    this.createArticle(data);
   }
 }
 </script>
@@ -68,20 +150,102 @@ export default class Write extends Vue {
   display: flex;
   flex-direction: column;
 
-  .title-wrap {
-    .flex-align-center();
+  .info-wrap {
+    .flex-center();
     margin-bottom: @defMargin;
 
-    .title {
+    .title-wrap {
+      .flex-align-center();
       flex: 1;
-      border: none;
-      border-bottom: 1px solid #333;
-      padding-bottom: 5px;
-      font-size: 20px;
-      font-family: "medium";
-      letter-spacing: 2px;
-      box-sizing: border-box;
-      outline: none;
+      flex-direction: column;
+      margin-right: @defMargin;
+
+      .title,
+      .desc {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #333;
+        font-family: "medium";
+        letter-spacing: 2px;
+        box-sizing: border-box;
+        outline: none;
+      }
+
+      .title {
+        padding-bottom: 5px;
+        margin-bottom: @defMargin;
+        font-size: 20px;
+      }
+
+      .desc {
+        padding-bottom: 5px;
+        font-size: 16px;
+      }
+    }
+
+    .cover-wrap {
+      height: 100%;
+      width: 100px;
+      overflow: hidden;
+
+      > img {
+        width: 100%;
+
+        &:hover {
+          transform: scale(1.2);
+          transition: transform 0.2s linear;
+        }
+      }
+
+      .cover {
+        .flex-center();
+        border: 1px dashed #333;
+        height: 100%;
+        box-sizing: border-box;
+
+        input {
+          width: 0;
+          height: 0;
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  .tag-wrap {
+    margin-bottom: @defMargin;
+    .list {
+      .flex-align-center();
+
+      .item {
+        .one-line();
+        max-width: 120px;
+        background: @mainColor;
+        padding: 3px 5px;
+        color: #fff;
+        border-radius: 5px;
+        box-sizing: border-box;
+        border: 1px solid @mainColor;
+        transition: all 0.2s linear;
+
+        &:not(:last-child) {
+          margin-right: 5px;
+        }
+
+        &.add {
+          cursor: pointer;
+
+          &:hover {
+            border: 1px solid @mainColor;
+            background: #fff;
+            color: @mainColor;
+          }
+
+          .icon-add {
+            font-size: 10px;
+          }
+        }
+      }
     }
   }
 
@@ -99,7 +263,7 @@ export default class Write extends Vue {
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        padding: 15px 15px 15px 0;
+        padding-right: @defMargin;
         border: none;
         outline: none;
         font-family: "medium";
@@ -107,7 +271,7 @@ export default class Write extends Vue {
         resize: none;
       }
     }
-    .preview-wrap {
+    .content-wrap {
       flex: 1;
       height: 100%;
       overflow-y: scroll;
@@ -118,10 +282,11 @@ export default class Write extends Vue {
         min-width: 200px;
         max-width: 980px;
         margin: 0 auto;
-        padding: 15px;
+        padding: 0 @defMargin;
       }
     }
   }
+
   .sub-wrap {
     .flex-center();
     padding: @defMargin;

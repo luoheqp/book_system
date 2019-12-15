@@ -5,7 +5,6 @@ import {
   postUserInfoToSignIn,
   getUserInfo
 } from "@/apis/user";
-import { IUserSignUpSuccess } from "./types";
 import { IUserInfo } from "@/types/user";
 
 class State {
@@ -52,9 +51,15 @@ const actions = <ActionTree<State, any>>{
   getUserInfo({ commit }) {
     return new Promise((resolve, reject) => {
       getUserInfo().then((res: any) => {
-        const { data } = res;
-        commit("saveUserInfo", data);
-        resolve({ code: 0 });
+        const { code } = res;
+        if (code === 0) {
+          const { data } = res;
+          commit("saveUserInfo", data);
+          resolve({ code: 0 });
+        } else if (code === 2) {
+          Cookies.remove("token");
+          resolve({ code: 0 });
+        }
       });
     });
   }

@@ -4,13 +4,15 @@ import { RootState } from "./types";
 
 // modules
 import user from "./user/index";
+import article from "./article/index";
 
 Vue.use(Vuex);
 
 const store: StoreOptions<RootState> = {
   state: {},
   modules: {
-    user
+    user,
+    article
   }
 };
 

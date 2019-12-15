@@ -38,7 +38,7 @@ const routes = [
     component: User
   },
   {
-    path: "/write",
+    path: "/write/:bookId",
     name: "write",
     component: Write
   }
