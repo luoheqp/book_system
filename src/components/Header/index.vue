@@ -21,7 +21,7 @@
         </div>
       </div>
       <!-- TODO: 吸顶 -->
-      <div class="nav-sub-wrap">
+      <div :class="['nav-sub-wrap', isNeedFixed ? 'fixed' : '']">
         <ul class="nav-sub">
           <li
             v-for="item in nav"
@@ -98,6 +98,8 @@ export default class Header extends Vue {
   ];
   private popState: boolean = false;
   private popType: "signup" | "singin" = "signup";
+  // 是否固定副导航
+  private isNeedFixed: boolean = false;
 
   // props
   @Prop({ default: "home" }) private path!: string;
@@ -105,6 +107,19 @@ export default class Header extends Vue {
   // state
   @State(state => state.user.token) token!: String;
   @State(state => state.user.info) info!: IUserInfo;
+
+  private mounted() {
+    window.addEventListener("scroll", this.handleScrollEvent);
+  }
+
+  // 滚动触发
+  private handleScrollEvent(e: Event) {
+    if (pageYOffset > 65) {
+      this.isNeedFixed = true;
+    } else {
+      this.isNeedFixed = false;
+    }
+  }
 
   private togglePopState(type: "signup" | "singin") {
     this.switchPopType(type);
@@ -123,16 +138,15 @@ export default class Header extends Vue {
 .header-wrap {
   background-color: #fff;
   margin-bottom: 15px;
-  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.15);
 
   .header {
-    max-width: @contentWidth;
     padding: 0 @defMargin;
-    margin: 0 auto;
     box-sizing: border-box;
 
     .nav-main-wrap {
       .flex-center();
+      max-width: @contentWidth;
+      margin: 0 auto;
       height: 65px;
       justify-content: space-between;
 
@@ -181,7 +195,21 @@ export default class Header extends Vue {
 
     .nav-sub-wrap {
       height: 50px;
+      max-width: @contentWidth;
+      margin: 0 auto;
       display: flex;
+      background: #fff;
+
+      &.fixed {
+        height: 40px;
+        padding: 0 @defMargin;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.15);
+      }
 
       .nav-sub {
         display: flex;
@@ -194,6 +222,10 @@ export default class Header extends Vue {
           font-size: 15px;
           letter-spacing: 2px;
           box-sizing: border-box;
+
+          a {
+            color: rgba(0, 0, 0, 0.5);
+          }
 
           &:not(.active):hover a {
             .txt-hover();

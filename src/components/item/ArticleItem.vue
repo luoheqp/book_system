@@ -3,7 +3,7 @@
     <div class="article-item">
       <div class="book">
         <div class="link">
-          RELATED BOOK
+          BOOK
           <a href="#">{{ info.book }}</a>
         </div>
         <div class="tag">
@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div class="article-cover">
+    <div class="article-cover hide-in-960">
       <div
         class="cover"
         v-if="info.cover"
@@ -172,6 +172,12 @@ export default class ArticleItem extends Vue {
       background-position-y: center;
       height: 100%;
     }
+  }
+}
+
+@media (max-width: 960px) {
+  .hide-in-960 {
+    display: none;
   }
 }
 </style>

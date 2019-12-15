@@ -32,7 +32,12 @@
         <li class="item" v-for="(item, index) in tag" :key="index">
           # {{ item }}
         </li>
-        <li class="item add" @click="handleAddTag">
+        <li class="item input" v-if="isAddTagInputShow">
+          <input type="text" class="add-tag-input" v-model="addTag" autofocus />
+          <i class="iconfont icon-ok" @click="handleAddTag"></i>
+        </li>
+        <li class="item add" v-else @click="toggleAddTagInputState">
+          TAG
           <i class="iconfont icon-add"></i>
         </li>
       </ul>
@@ -69,12 +74,16 @@ import { Action } from "vuex-class";
 @Component({})
 export default class Write extends Vue {
   // article info
-  private title: string = "title";
-  private desc: string = "desc";
-  private content: string = "content";
+  private title: string = "";
+  private desc: string = "";
+  private content: string = "";
   private cover!: File;
-  private bookId: string = "bookId";
-  private tag: string[] = ["tag1", "tag2", "tag3"];
+  private bookId: string = "";
+  private tag: string[] = [];
+
+  // page state
+  private isAddTagInputShow: boolean = false;
+  private addTag: string = "";
 
   @Action("article/createArticle") createArticle: any;
 
@@ -106,8 +115,16 @@ export default class Write extends Vue {
   }
 
   // 添加新的 tag
+  private toggleAddTagInputState() {
+    this.isAddTagInputShow = !this.isAddTagInputShow;
+  }
+
   private handleAddTag() {
-    this.tag.push("new tag");
+    if (this.addTag) {
+      this.tag.push(this.addTag);
+      this.addTag = "";
+    }
+    this.toggleAddTagInputState();
   }
 
   // 添加或替换 cover
@@ -220,6 +237,7 @@ export default class Write extends Vue {
       .item {
         .one-line();
         max-width: 120px;
+        height: 24px;
         background: @mainColor;
         padding: 3px 5px;
         color: #fff;
@@ -230,6 +248,35 @@ export default class Write extends Vue {
 
         &:not(:last-child) {
           margin-right: 5px;
+        }
+
+        &.input {
+          .flex-center();
+          background: #fff;
+          color: @mainColor;
+
+          .add-tag-input {
+            border: none;
+            width: 100%;
+            outline: none;
+            margin-right: 5px;
+            color: @mainColor;
+          }
+
+          .icon-ok {
+            border: 1px solid @mainColor;
+            border-radius: 50%;
+            padding: 2px;
+            box-sizing: border-box;
+            transform: scale(0.7);
+            transition: all 0.2s linear;
+
+            &:hover {
+              color: #fff;
+              background: @mainColor;
+              cursor: pointer;
+            }
+          }
         }
 
         &.add {
