@@ -102,7 +102,7 @@ export default class SignUp extends Vue {
   private infoError: boolean = false;
   private step: number = 1;
   private userInfo: IUserSignUpInfo = {
-    account: "61442@qq.com",
+    account: "614429937@qq.com",
     password: "12345",
     avatar: new Blob()
   };
