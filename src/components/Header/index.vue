@@ -76,11 +76,6 @@ export default class Header extends Vue {
       path: "/random"
     },
     {
-      name: "read",
-      content: "READER",
-      path: "/read"
-    },
-    {
       name: "user",
       content: "USER",
       path: "/user"

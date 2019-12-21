@@ -6,6 +6,11 @@ export interface ICreateArticleInfo {
   cover?: File;
 }
 
+export interface IGetArticleListInfo {
+  pageSize?: number;
+  tag?: string;
+}
+
 export interface IArticleInfo {
   title: string;
   author: string;

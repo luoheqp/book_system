@@ -1,24 +1,15 @@
 <template>
   <div class="user-wrap">
+    <!-- BUG: 此容器名字过长的话会变形 , 原因未知 -->
     <div class="user">
-      <div class="user-pic">
-        <img src="/images/slk.jpg" alt="user-pic" />
-      </div>
       <div class="user-info">
-        <p class="user-name">user name</p>
-        <p class="read-statistic">
-          <span class="sub">读书经历:</span>
-          你已读
-          <em>3</em> 本书 , 写了 <em>10</em> 篇读后感 , 还请再接再厉哟 ~
-        </p>
-        <p class="upload-statistic">
-          <span class="sub">书籍积累:</span>
-          你已上传
-          <em>3</em> 本书 , 写了 <em>10</em> 篇读后感 , 还请再接再厉哟 ~
-        </p>
+        <div class="line">
+          <p class="user-name">{{ userInfo.account }}{{ userInfo.account }}</p>
+          <p class="setting" @click="togglePopState">Edit profile</p>
+        </div>
       </div>
-      <div class="setting">
-        <input type="button" style="input-item" value="修改个人设置" />
+      <div class="user-pic">
+        <img :src="userInfo.avatar" alt="user-avatar" />
       </div>
     </div>
     <div class="read">
@@ -42,6 +33,9 @@
       <div :class="['write-box-wrap', nav === 'write' ? 'active' : '']">
         write box
       </div>
+      <Popup v-if="1" @toggleShowState="togglePopState">
+        <UserInfoEdit />
+      </Popup>
     </div>
   </div>
 </template>
@@ -51,17 +45,31 @@ import { Vue, Component } from "vue-property-decorator";
 
 // components
 import BookList from "@/views/User/components/BookList.vue";
+import Popup from "@/components/common/Popup.vue";
+import UserInfoEdit from "./components/UserInfoEdit.vue";
+
+import { State } from "vuex-class";
+import { IUserInfo } from "../../types/user";
 
 @Component({
   components: {
-    BookList
+    BookList,
+    Popup,
+    UserInfoEdit
   }
 })
 export default class User extends Vue {
   private nav: string = "read";
+  private popState: boolean = false;
+
+  @State(state => state.user.info) userInfo!: IUserInfo;
 
   handleChangeNav(nav: string) {
     this.nav = nav;
+  }
+
+  togglePopState() {
+    this.popState = !this.popState;
   }
 }
 </script>
@@ -72,46 +80,62 @@ export default class User extends Vue {
 .user-wrap {
   .user {
     .flex-center();
+    justify-content: space-between;
     place-items: flex-start;
     background-color: #fff;
-    padding: @doubleMargin;
+    // padding: @doubleMargin;
     margin-bottom: @defMargin;
+    box-sizing: border-box;
+
+    .user-info {
+      flex: 1;
+      margin-right: @defMargin;
+
+      .line {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: @defMargin;
+      }
+
+      .user-name {
+        .one-line();
+        flex: 1;
+        max-width: 400px;
+        font-size: 30px;
+        font-weight: bold;
+        margin-right: @defMargin;
+        box-sizing: border-box;
+      }
+
+      .setting {
+        font-size: 16px;
+        font-weight: normal;
+        border: 1px solid #333;
+        border-radius: 5px;
+        padding: 2px 5px;
+        transition: all 0.1s linear;
+        cursor: pointer;
+
+        &:hover {
+          background: #333;
+          color: #fff;
+        }
+      }
+    }
 
     .user-pic {
       .flex-center();
-      width: 100px;
+      flex: 0 0 100px;
       height: 100px;
       border-radius: 50%;
       overflow: hidden;
-      margin-right: @defMargin;
+      background-color: #ccc;
 
       img {
         max-width: 100%;
         max-height: 100%;
-      }
-    }
-
-    .user-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      .user-name {
-        font-size: 30px;
-        font-weight: bold;
-        margin-bottom: @defMargin;
-      }
-
-      .read-statistic,
-      .upload-statistic {
-        font-size: 12px;
-        color: @lightText;
-        margin-bottom: 10px;
-
-        em {
-          color: @mainColor;
-        }
+        object-fit: contain;
       }
     }
   }
