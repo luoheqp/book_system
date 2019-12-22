@@ -1,6 +1,10 @@
 import axiosInstance from "./request";
-import { IUserSignUpInfo, IUserSignInInfo } from "@/types/user";
-import { IUserSignUpSuccess } from "@/store/user/types";
+import {
+  IUserSignUpInfo,
+  IUserSignInInfo,
+  IUserChangeInfo
+} from "@/types/user";
+// import { IUserSignUpSuccess } from "@/store/user/types";
 
 export function postUserInfoToSignUp(userInfo: IUserSignUpInfo) {
   return axiosInstance({
@@ -22,5 +26,13 @@ export function getUserInfo() {
   return axiosInstance({
     url: "user",
     method: "get"
+  });
+}
+
+export function postChangeUserInfo(changeInfo: IUserChangeInfo) {
+  return axiosInstance({
+    url: "user",
+    method: "patch",
+    data: changeInfo
   });
 }

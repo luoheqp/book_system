@@ -4,7 +4,7 @@
     <div class="user">
       <div class="user-info">
         <div class="line">
-          <p class="user-name">{{ userInfo.account }}{{ userInfo.account }}</p>
+          <p class="user-name">{{ userInfo.account }}</p>
           <p class="setting" @click="togglePopState">Edit profile</p>
         </div>
       </div>
@@ -18,13 +18,13 @@
           :class="['nav-item', nav === 'read' ? 'active' : '']"
           @click="() => handleChangeNav('read')"
         >
-          读书
+          Reading
         </li>
         <li
           :class="['nav-item', nav === 'write' ? 'active' : '']"
           @click="() => handleChangeNav('write')"
         >
-          有感
+          Writing
         </li>
       </ul>
       <div :class="['read-box-wrap', nav === 'read' ? 'active' : '']">
@@ -33,7 +33,7 @@
       <div :class="['write-box-wrap', nav === 'write' ? 'active' : '']">
         write box
       </div>
-      <Popup v-if="1" @toggleShowState="togglePopState">
+      <Popup v-if="popState" @toggleShowState="togglePopState">
         <UserInfoEdit />
       </Popup>
     </div>
@@ -78,6 +78,8 @@ export default class User extends Vue {
 @import "../../assets/styles/index.less";
 
 .user-wrap {
+  padding: 0 @defMargin;
+
   .user {
     .flex-center();
     justify-content: space-between;
@@ -100,7 +102,6 @@ export default class User extends Vue {
 
       .user-name {
         .one-line();
-        flex: 1;
         max-width: 400px;
         font-size: 30px;
         font-weight: bold;
@@ -143,7 +144,7 @@ export default class User extends Vue {
   .read {
     .nav {
       margin-bottom: @defMargin;
-      padding: @defMargin;
+      padding: @defMargin 0;
       display: flex;
       background-color: #fff;
 
@@ -167,7 +168,7 @@ export default class User extends Vue {
 
     .read-box-wrap,
     .write-box-wrap {
-      padding: @defMargin;
+      padding: @defMargin 0;
       background-color: #fff;
       display: none;
 

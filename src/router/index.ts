@@ -7,6 +7,7 @@ import Random from "../views/Random/index.vue";
 import Reader from "../views/Reader/index.vue";
 import User from "../views/User/index.vue";
 import Write from "../views/Write/index.vue";
+import AddBook from "../views/AddBook/index.vue";
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
     path: "/write/:bookId",
     name: "write",
     component: Write
+  },
+  {
+    path: "/addBook",
+    name: "addBook",
+    component: AddBook
   }
 ];
 

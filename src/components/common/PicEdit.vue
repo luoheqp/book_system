@@ -1,11 +1,11 @@
 <template>
   <div class="pic-edit-wrap">
     <!-- 裁剪容器 -->
-    <div :class="['cropper-wrap', isCropperShow ? 'active' : '']">
+    <div :class="['cropper-wrap']" v-show="isCropperShow">
       <div class="ok" @click="handleGetAvatarData">
         <i class="iconfont icon-ok"></i>
       </div>
-      <img src="" ref="cropper" />
+      <img :src="avatar" ref="cropper" />
       <div class="cancel" @click="() => toggleCropperState(false)">
         <i class="iconfont icon-Cancelcontrol"></i>
       </div>
@@ -24,7 +24,7 @@
     </div>
     <!-- 效果容器 -->
     <div class="avatar" :class="[isCropperShow ? 'active' : '']">
-      <img :src="avatar" alt="avatar" />
+      <img :src="avatar" alt />
     </div>
     <!-- 裁剪按键 -->
     <div
@@ -49,8 +49,15 @@ export default class PicEdit extends Vue {
   public cropper!: Cropper;
   public canCropperSubmit: boolean = false;
   public isCropperShow: boolean = false;
-  private avatar: string =
-    "http://www.resource.com:8000/user/avatar/default.png";
+  private avatar: string = "";
+
+  @Prop({ default: "www.resource.com:8000/user/avatar/default.png" })
+  defImg!: string;
+
+  @Watch("defImg", { immediate: true })
+  onDefImgChange() {
+    this.avatar = this.defImg;
+  }
 
   private mounted() {
     this.cropper = new Cropper(this.$refs.cropper as HTMLCanvasElement, {
@@ -64,14 +71,16 @@ export default class PicEdit extends Vue {
       zoomable: true, // 是否允许放大图像
       cropBoxMovable: false, // 是否允许裁剪部分移动
       cropBoxResizable: false, // 是否允许裁剪部分缩放
-      minCropBoxWidth: 200,
-      minCropBoxHeight: 200
+      minCropBoxWidth: 160,
+      minCropBoxHeight: 160,
+      minContainerWidth: 160, // 容器最小宽度
+      minContainerHeight: 160 // 容器最小高度
     });
   }
 
   // 上传图片后触发
   private handleAvatarChange(e: any) {
-    const file = e.target.files[0];
+    const file = e.target.files[0] || e;
 
     // 上传图片并加载到 Cropper 中
     let avatar: FileReader = new FileReader();
@@ -125,14 +134,15 @@ export default class PicEdit extends Vue {
 
 .pic-edit-wrap {
   .flex-center();
-  flex-direction: column;
   position: relative;
+  width: 300px;
+  justify-content: space-between;
 
   .avatar,
   .select-pic,
   .other {
-    position: absolute;
     transition: all 0.3s ease-in;
+    background: #ccc;
 
     &.active {
       transform: scale(0);
@@ -140,11 +150,10 @@ export default class PicEdit extends Vue {
   }
 
   .avatar {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     overflow: hidden;
-    margin-bottom: @doubleMargin;
     object-fit: fill;
 
     img {
@@ -154,21 +163,19 @@ export default class PicEdit extends Vue {
   }
 
   .select-pic {
-    left: -20px;
+    .flex-center();
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+
+    &:hover {
+      background: #333;
+    }
 
     .select {
-      .flex-center();
       cursor: pointer;
-      background: #ccc;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
       color: #fff;
-      transition: all 0.3s linear;
-
-      &:hover {
-        background: #333;
-      }
 
       .icon-pic {
         font-size: 26px;
@@ -182,14 +189,11 @@ export default class PicEdit extends Vue {
 
   .other {
     .flex-center();
-    right: -20px;
     cursor: pointer;
-    background: #ccc;
     border-radius: 50%;
     width: 50px;
     height: 50px;
     color: #fff;
-    transition: all 0.3s linear;
 
     &:hover {
       background: #333;
@@ -201,11 +205,12 @@ export default class PicEdit extends Vue {
   }
 
   .cropper-wrap {
-    position: relative;
-    width: 400px;
-    height: 300px;
-    opacity: 0;
-    // display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 160px;
+    height: 160px;
     transition: all 0.3s linear;
 
     .ok,
@@ -226,11 +231,6 @@ export default class PicEdit extends Vue {
 
     .cancel {
       right: -50px;
-    }
-
-    &.active {
-      opacity: 1;
-      display: inline-block;
     }
   }
 }

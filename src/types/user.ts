@@ -21,3 +21,8 @@ export interface IUserSignInInfo {
   account: string;
   password: string;
 }
+
+export interface IUserChangeInfo {
+  avatar?: Blob;
+  password?: string;
+}

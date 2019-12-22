@@ -3,9 +3,10 @@ import Cookies from "js-cookie";
 import {
   postUserInfoToSignUp,
   postUserInfoToSignIn,
-  getUserInfo
+  getUserInfo,
+  postChangeUserInfo
 } from "@/apis/user";
-import { IUserInfo } from "@/types/user";
+import { IUserInfo, IUserChangeInfo } from "@/types/user";
 
 class State {
   public token: string = "";
@@ -58,6 +59,15 @@ const actions = <ActionTree<State, any>>{
           resolve({ code: 0 });
         } else if (code === 2) {
           Cookies.remove("token");
+          resolve({ code: 0 });
+        }
+      });
+    });
+  },
+  changeUserInfo({ commit }, data: IUserChangeInfo) {
+    return new Promise((resolve, reject) => {
+      postChangeUserInfo(data).then((res: any) => {
+        if (res.code === 0) {
           resolve({ code: 0 });
         }
       });

@@ -15,7 +15,7 @@
           </ul>
           <ul v-else>
             <li class="avatar">
-              <img :src="`http://${info.avatar}`" alt="" />
+              <img :src="info.avatar" alt="" />
             </li>
           </ul>
         </div>
@@ -89,6 +89,11 @@ export default class Header extends Vue {
       name: "write",
       content: "WRITE",
       path: "/write"
+    },
+    {
+      name: "addBook",
+      content: "ADD_BOOK",
+      path: "/addBook"
     }
   ];
   private popState: boolean = false;

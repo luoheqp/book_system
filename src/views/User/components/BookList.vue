@@ -1,13 +1,9 @@
 <template>
   <div class="book-list-wrap">
-    <BookItem></BookItem>
-    <BookItem></BookItem>
-    <BookItem></BookItem>
-    <BookItem></BookItem>
-    <BookItem></BookItem>
-    <BookItem></BookItem>
-    <BookItem></BookItem>
-    <BookItem></BookItem>
+    <BookItem class="item"></BookItem>
+    <BookItem class="item"></BookItem>
+    <BookItem class="item"></BookItem>
+    <BookItem class="item"></BookItem>
   </div>
 </template>
 
@@ -26,9 +22,16 @@ export default class BookList extends Vue {}
 </script>
 
 <style lang="less" scoped>
+@import "../../../assets/styles/index.less";
+
 .book-list-wrap {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  .item {
+    width: 49%;
+    margin-bottom: @defMargin;
+  }
 }
 </style>

@@ -8,6 +8,7 @@ declare module "vue-awesome-swiper" {
   export const swiperSlide: any;
 }
 
-declare module "@toast-ui/vue-editor" {
-  export let Editor: any;
+declare module "vue2-dropzone" {
+  let vue2Dropzone: any;
+  export default vue2Dropzone;
 }

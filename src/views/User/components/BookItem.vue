@@ -3,7 +3,9 @@
     <div class="pic"></div>
     <div class="info">
       <p class="name"></p>
-      <p class="progress"></p>
+      <p class="author"></p>
+      <p class="progress">progress:</p>
+      <p class="time">last time:</p>
     </div>
   </div>
 </template>
@@ -19,23 +21,53 @@ export default class BookItem extends Vue {}
 @import "../../../assets/styles/index.less";
 
 .book-item-wrap {
-  width: 16%;
-  padding: 10px;
+  .flex-center();
+  padding: @defMargin;
   box-sizing: border-box;
-  margin-bottom: @defMargin;
+  align-items: unset;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s linear;
 
   &:hover {
+    box-shadow: 0 0 20px 0px #33333330;
   }
 
   .pic {
-    width: 100%;
+    flex: 0 0 70px;
     height: 100px;
-    background-color: @mainColor;
+    background-color: #ccc;
+    margin-right: @defMargin;
+    border-radius: 10px;
   }
   .info {
-    .name {
+    flex: 1;
+    // BUG: 去掉试试 ?
+    width: 50%;
+
+    p {
+      .one-line();
+
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
     }
+
+    .name {
+      font-size: 26px;
+    }
+
+    .author {
+      font-style: italic;
+      font-size: 18px;
+    }
+
     .progress {
+    }
+
+    .time {
+      font-family: SFNSRounded;
+      font-size: 12px;
     }
   }
 }

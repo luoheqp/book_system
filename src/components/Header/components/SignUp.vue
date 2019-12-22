@@ -216,8 +216,6 @@ export default class SignUp extends Vue {
     }
 
     .avatar-wrap {
-      width: 400px;
-      height: 300px;
       margin: 25px 0 45px 0;
     }
   }
