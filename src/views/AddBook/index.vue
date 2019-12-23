@@ -8,11 +8,16 @@
       </span>
     </div>
     <div class="info-area">
-      <vue-dropzone
-        ref="myVueDropzone"
-        id="dropzone"
-        :options="dzOpt"
-      ></vue-dropzone>
+      <label
+        class="upload"
+        for="real"
+        @drop="handleDropFile"
+        @dragenter="handleBlock"
+        @dragover="handleBlock"
+      >
+        <input class="real" type="file" id="real" />
+        <span class="mask">add book here</span>
+      </label>
     </div>
   </div>
 </template>
@@ -20,27 +25,53 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 
+// epubjs
+import Epub, { Book } from "epubjs";
+import Navigation from "epubjs/types/navigation";
+
 // components
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
 
 @Component({
-  components: {
-    vueDropzone: vue2Dropzone
-  }
+  components: {}
 })
 export default class AddBook extends Vue {
-  private dzOpt: any = {
-    url: this.handleFileUpload,
-    thumbnailWidth: 150,
-    maxFilesize: 0.5,
-    acceptedFiles: "application/pdf"
-  };
+  private bookFile!: File;
+  private book!: Book;
+  private navigation!: Navigation;
 
   private mounted() {}
 
-  private handleFileUpload(e: any) {
-    console.log(e);
+  // 拖拽获取文件
+  private handleDropFile(e: DragEvent) {
+    this.handleBlock(e);
+    if (e.dataTransfer) {
+      this.bookFile = e.dataTransfer.files[0];
+    }
+    this.getBookInfo();
+  }
+
+  //  阻止默认事件和冒泡
+  private handleBlock(e: DragEvent) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  private getBookInfo() {
+    this.book = Epub();
+    let reader = new FileReader();
+    reader.readAsArrayBuffer(this.bookFile);
+    reader.onload = e => {
+      if (e.target) {
+        this.book.open(e.target.result as ArrayBuffer);
+
+        this.book.ready.then(() => {
+          this.navigation = this.book.navigation;
+          console.log(this.navigation);
+          // 生成 locations
+          // return this.book.locations.generate();
+        });
+      }
+    };
   }
 }
 </script>
@@ -67,7 +98,7 @@ export default class AddBook extends Vue {
   }
 
   .info-area {
-    .book-file {
+    .upload {
       .flex-center();
       position: relative;
       width: 300px;
@@ -80,7 +111,7 @@ export default class AddBook extends Vue {
       transition: border 0.2s linear;
 
       &:hover {
-        border: 3px dashed #333;
+        border: 1.5px dashed #333;
       }
 
       .real {
