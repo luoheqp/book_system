@@ -57,6 +57,11 @@ export default class AddBook extends Vue {
   }
 
   private getBookInfo() {
+    // 获取 epub 相关数据
+    this.initEpub();
+  }
+
+  private initEpub() {
     this.book = Epub();
     let reader = new FileReader();
     reader.readAsArrayBuffer(this.bookFile);
@@ -65,10 +70,8 @@ export default class AddBook extends Vue {
         this.book.open(e.target.result as ArrayBuffer);
 
         this.book.ready.then(() => {
+          // 获取 navigation 信息
           this.navigation = this.book.navigation;
-          console.log(this.navigation);
-          // 生成 locations
-          // return this.book.locations.generate();
         });
       }
     };
@@ -103,7 +106,6 @@ export default class AddBook extends Vue {
       position: relative;
       width: 300px;
       height: 150px;
-      background: #ccc;
       border-radius: @defMargin;
       border: 1px dashed #333;
       box-sizing: border-box;
