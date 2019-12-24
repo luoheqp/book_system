@@ -18,6 +18,20 @@
         <input class="real" type="file" id="real" />
         <span class="mask">add book here</span>
       </label>
+      <div class="info">
+        <img :src="cover" alt="" />
+        <p>name: <span>{{}}</span></p>
+      </div>
+      <ul class="chapter">
+        <li v-for="item in navigation.toc" :key="item.id">
+          {{ item.label }}
+          <ul v-if="item.subitems.length">
+            <li v-for="sub in item.subitems" :key="sub.id">
+              {{ sub.label }}
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -37,7 +51,8 @@ import Navigation from "epubjs/types/navigation";
 export default class AddBook extends Vue {
   private bookFile!: File;
   private book!: Book;
-  private navigation!: Navigation;
+  private cover: string = "";
+  private navigation: Navigation | object = {};
 
   private mounted() {}
 
@@ -69,9 +84,15 @@ export default class AddBook extends Vue {
       if (e.target) {
         this.book.open(e.target.result as ArrayBuffer);
 
-        this.book.ready.then(() => {
+        this.book.ready.then(async () => {
           // 获取 navigation 信息
           this.navigation = this.book.navigation;
+          this.book.archive
+            .createUrl(this.cover, { base64: false })
+            .then(url => {
+              console.log(url);
+              this.cover = url;
+            });
         });
       }
     };
