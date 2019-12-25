@@ -43,7 +43,6 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator";
-import { bindAndPassContext } from "@/utils/func_tool";
 import { IListItem, ILineListSelected, ILineListItem } from "@/types/info";
 
 // vue-awesome-swiper
