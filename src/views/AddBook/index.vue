@@ -7,66 +7,101 @@
         it will be public if <em>it through our check</em>
       </span>
     </div>
-    <div class="info-area">
+    <div class="info-wrap">
+      <!-- 添加按钮 -->
       <label
+        v-if="!isLoading && !bookFile"
         class="upload"
         for="real"
-        @drop="handleDropFile"
+        @drop="handleChangeFile"
         @dragenter="handleBlock"
         @dragover="handleBlock"
       >
-        <input class="real" type="file" id="real" />
-        <span class="mask">add book here</span>
+        <input class="real" type="file" id="real" @change="handleChangeFile" />
+        <span class="mask">add here</span>
       </label>
-      <div class="info">
-        <img :src="cover" alt="" />
-        <p>name: <span>{{}}</span></p>
-      </div>
-      <ul class="chapter">
-        <li v-for="item in navigation.toc" :key="item.id">
-          {{ item.label }}
-          <ul v-if="item.subitems.length">
-            <li v-for="sub in item.subitems" :key="sub.id">
-              {{ sub.label }}
+      <Loading v-if="isLoading" txt="processing" />
+      <div class="info" v-if="!loading && bookFile">
+        <div class="cover-wrap">
+          <img :src="coverData" alt="" />
+        </div>
+        <div class="basic-wrap">
+          <p>book name: {{ bookInfo.name }}</p>
+          <p>author: {{ bookInfo.author }}</p>
+          <p>description: {{ bookInfo.desc }}</p>
+          <p>publish date: {{ bookInfo.pubdate }}</p>
+          <p>press: {{ bookInfo.press }}</p>
+
+          <ul class="chapter">
+            <li v-for="item in chapter" :key="item.id">
+              {{ item.label }}
+              <ul v-if="item.subitems.length">
+                <li v-for="sub in item.subitems" :key="sub.id">
+                  {{ sub.label }}
+                </li>
+              </ul>
             </li>
           </ul>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
+import { dataURItoBlob } from "@/utils/func_tool";
+import { IBookUploadInfo } from "@/types/book";
 
 // epubjs
 import Epub, { Book } from "epubjs";
 import Navigation from "epubjs/types/navigation";
 
 // components
+import Loading from "@/components/common/Loading.vue";
 
 @Component({
-  components: {}
+  components: {
+    Loading
+  }
 })
 export default class AddBook extends Vue {
-  private bookFile!: File;
+  private bookFile: File | string = "";
+
+  // about epub
   private book!: Book;
-  private cover: string = "";
   private navigation: Navigation | object = {};
+
+  // about info
+  private cover: Blob = new Blob(); // 书籍封面
+  private coverData: string = "";
+  private chapter: object[] = [];
+  private bookInfo!: IBookUploadInfo;
+
+  // state
+  private isLoading: boolean = false;
+
+  @Watch("bookFile")
+  onBookFileChange(val: File) {
+    this.getBookInfo();
+  }
 
   private mounted() {}
 
-  // 拖拽获取文件
-  private handleDropFile(e: DragEvent) {
+  // 拖拽或点击获取文件
+  private handleChangeFile(e: any) {
     this.handleBlock(e);
+    this.isLoading = true;
     if (e.dataTransfer) {
       this.bookFile = e.dataTransfer.files[0];
+    } else {
+      this.bookFile = e.target.files[0];
     }
     this.getBookInfo();
   }
 
   //  阻止默认事件和冒泡
-  private handleBlock(e: DragEvent) {
+  private handleBlock(e: Event) {
     e.stopPropagation();
     e.preventDefault();
   }
@@ -76,26 +111,70 @@ export default class AddBook extends Vue {
     this.initEpub();
   }
 
+  // 初始化 epub
   private initEpub() {
     this.book = Epub();
     let reader = new FileReader();
-    reader.readAsArrayBuffer(this.bookFile);
-    reader.onload = e => {
+    reader.readAsArrayBuffer(this.bookFile as File);
+    reader.onload = async e => {
       if (e.target) {
         this.book.open(e.target.result as ArrayBuffer);
 
-        this.book.ready.then(async () => {
-          // 获取 navigation 信息
-          this.navigation = this.book.navigation;
-          this.book.archive
-            .createUrl(this.cover, { base64: false })
-            .then(url => {
-              console.log(url);
-              this.cover = url;
-            });
-        });
+        await this.getNavigation();
+        await this.getEpubCover();
+        await this.getMetaData();
+        this.isLoading = false;
       }
     };
+  }
+
+  // 获取 navigation 信息
+  private getNavigation() {
+    return new Promise((resolve, reject) => {
+      this.book.loaded.navigation.then(navigation => {
+        this.navigation = navigation;
+        // 获取展示相关的章节信息
+        this.chapter = navigation.toc;
+        resolve();
+      });
+    });
+  }
+
+  // 获取 cover 信息
+  private getEpubCover() {
+    return new Promise((resolve, reject) => {
+      this.book.loaded.cover.then(cover => {
+        this.book.archive.createUrl(cover, { base64: true }).then(url => {
+          this.cover = dataURItoBlob(url);
+
+          let reader = new FileReader();
+          reader.readAsDataURL(this.cover);
+          reader.onload = e => {
+            if (e.target) {
+              this.coverData = e.target.result as string;
+              resolve();
+            }
+          };
+        });
+      });
+    });
+  }
+
+  // 获取 mate 信息
+  private getMetaData() {
+    return new Promise((resolve, reject) => {
+      this.book.loaded.metadata.then(metadata => {
+        let { title, creator, description, pubdate, publisher } = metadata;
+        this.bookInfo = Object.assign({}, this.bookInfo, {
+          name: title,
+          author: creator,
+          desc: description,
+          pubdate: pubdate,
+          press: publisher
+        });
+        resolve();
+      });
+    });
   }
 }
 </script>
@@ -104,10 +183,14 @@ export default class AddBook extends Vue {
 @import "../../assets/styles/index.less";
 
 .add-book-wrap {
-  padding: 0 @defMargin;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   .title {
     margin-bottom: @doubleMargin;
+    text-align: center;
 
     .big {
       font-size: 36px;
@@ -121,20 +204,28 @@ export default class AddBook extends Vue {
     }
   }
 
-  .info-area {
+  .info-wrap {
+    .flex-center();
+    min-width: 300px;
+    min-height: 150px;
+
     .upload {
       .flex-center();
       position: relative;
-      width: 300px;
-      height: 150px;
-      border-radius: @defMargin;
+      width: 150px;
+      height: 75px;
+      border-radius: 5px;
       border: 1px dashed #333;
       box-sizing: border-box;
       cursor: pointer;
-      transition: border 0.2s linear;
+      transition: transform 0.1s linear;
 
       &:hover {
-        border: 1.5px dashed #333;
+        transform: scale(1.5);
+
+        span {
+          transform: scale(0.5);
+        }
       }
 
       .real {
@@ -142,8 +233,38 @@ export default class AddBook extends Vue {
         height: 0;
         opacity: 0;
       }
+    }
 
-      .mask {
+    .info {
+      .flex-center();
+      width: 515px;
+      align-items: flex-start;
+      justify-content: space-between;
+
+      .cover-wrap {
+        height: 350px;
+        flex: 0 0 250px;
+        margin-right: @defMargin;
+        background-image: url("../../assets/images/stripe-bg.jpg");
+        background-size: 40%;
+        padding: @defMargin;
+        box-sizing: border-box;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .basic-wrap {
+        flex: 0 0 250px;
+
+        p {
+          &:not(:last-child) {
+            margin-bottom: @defMargin;
+          }
+        }
       }
     }
   }
