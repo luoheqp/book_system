@@ -26,24 +26,25 @@
           <img :src="coverData" alt="" />
         </div>
         <div class="basic-wrap">
-          <p>book name: {{ bookInfo.name }}</p>
-          <p>author: {{ bookInfo.author }}</p>
-          <p>description: {{ bookInfo.desc }}</p>
-          <p>publish date: {{ bookInfo.pubdate }}</p>
-          <p>press: {{ bookInfo.press }}</p>
-
-          <ul class="chapter">
-            <li v-for="item in chapter" :key="item.id">
-              {{ item.label }}
-              <ul v-if="item.subitems.length">
-                <li v-for="sub in item.subitems" :key="sub.id">
-                  {{ sub.label }}
-                </li>
-              </ul>
-            </li>
-          </ul>
+          <p>book name<br />{{ bookInfo.name }}</p>
+          <p>author<br />{{ bookInfo.author }}</p>
+          <p>description<br />{{ bookInfo.desc }}</p>
+          <p>publish date<br />{{ bookInfo.pubdate }}</p>
+          <p>press<br />{{ bookInfo.press }}</p>
         </div>
       </div>
+    </div>
+    <div class="chapter-wrap">
+      <ul class="chapter-list">
+        <li class="chapter-item" v-for="item in chapter" :key="item.id">
+          {{ item.label }}
+          <ul class="sub-list" v-if="item.subitems.length">
+            <li class="sub-item" v-for="sub in item.subitems" :key="sub.id">
+              {{ sub.label }}
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -183,10 +184,7 @@ export default class AddBook extends Vue {
 @import "../../assets/styles/index.less";
 
 .add-book-wrap {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  padding: 0 @defMargin;
 
   .title {
     margin-bottom: @doubleMargin;
@@ -208,6 +206,7 @@ export default class AddBook extends Vue {
     .flex-center();
     min-width: 300px;
     min-height: 150px;
+    margin-bottom: @defMargin;
 
     .upload {
       .flex-center();
@@ -237,14 +236,13 @@ export default class AddBook extends Vue {
 
     .info {
       .flex-center();
-      width: 515px;
       align-items: flex-start;
       justify-content: space-between;
 
       .cover-wrap {
         height: 350px;
         flex: 0 0 250px;
-        margin-right: @defMargin;
+        margin-right: @doubleMargin;
         background-image: url("../../assets/images/stripe-bg.jpg");
         background-size: 40%;
         padding: @defMargin;
@@ -258,11 +256,25 @@ export default class AddBook extends Vue {
       }
 
       .basic-wrap {
-        flex: 0 0 250px;
+        flex: 1;
 
         p {
           &:not(:last-child) {
             margin-bottom: @defMargin;
+          }
+        }
+      }
+    }
+  }
+
+  .chapter-wrap {
+    .chapter-list {
+      .flex-center();
+
+      .chapter-item {
+        .sub-list {
+          .sub-item {
+            .flex-center();
           }
         }
       }
