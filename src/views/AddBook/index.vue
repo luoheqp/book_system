@@ -1,51 +1,82 @@
 <template>
   <div class="add-book-wrap">
-    <div class="title">
-      <h3 class="big">Add your book</h3>
-      <span class="sub">
-        You can select and upload your book file in this page <br />
-        it will be public if <em>it through our check</em>
-      </span>
-    </div>
-    <div class="info-wrap">
-      <!-- 添加按钮 -->
-      <label
-        v-if="!isLoading && !bookFile"
-        class="upload"
-        for="real"
-        @drop="handleChangeFile"
-        @dragenter="handleBlock"
-        @dragover="handleBlock"
-      >
-        <input class="real" type="file" id="real" @change="handleChangeFile" />
-        <span class="mask">add here</span>
-      </label>
-      <Loading v-if="isLoading" txt="processing" />
-      <div class="info" v-if="!loading && bookFile">
-        <div class="cover-wrap">
-          <img :src="coverData" alt="" />
-        </div>
-        <div class="basic-wrap">
-          <p>book name<br />{{ bookInfo.name }}</p>
-          <p>author<br />{{ bookInfo.author }}</p>
-          <p>description<br />{{ bookInfo.desc }}</p>
-          <p>publish date<br />{{ bookInfo.pubdate }}</p>
-          <p>press<br />{{ bookInfo.press }}</p>
+    <div class="main-wrap">
+      <div class="title">
+        <h3 class="big">Add your book</h3>
+        <span class="sub">
+          You can select and upload your book file in this page <br />
+          it will be public if <em>it through our check</em>
+        </span>
+      </div>
+      <div class="info-wrap">
+        <!-- 添加按钮 -->
+        <label
+          v-if="!isLoading && !bookFile"
+          class="upload"
+          for="real"
+          @drop="handleChangeFile"
+          @dragenter="handleBlock"
+          @dragover="handleBlock"
+        >
+          <input
+            class="real"
+            type="file"
+            id="real"
+            @change="handleChangeFile"
+          />
+          <span class="mask">add here</span>
+        </label>
+        <Loading v-if="isLoading" txt="processing" />
+        <div class="info" v-if="!isLoading && bookFile">
+          <div class="wrap">
+            <div class="cover-wrap">
+              <img :src="coverData" alt="" />
+            </div>
+            <div class="basic-wrap">
+              <p>
+                <em>book name</em><span>{{ bookInfo.name }}</span>
+              </p>
+              <p>
+                <em>author</em><span>{{ bookInfo.author }}</span>
+              </p>
+              <p>
+                <em>description</em><span>{{ bookInfo.desc }}</span>
+              </p>
+              <p>
+                <em>publish date</em><span>{{ bookInfo.pubdate }}</span>
+              </p>
+              <p>
+                <em>press</em><span>{{ bookInfo.press }}</span>
+              </p>
+              <input
+                type="button"
+                value="check chapter"
+                @click="toggleChapterPopState"
+              />
+            </div>
+          </div>
+          <input class="upload" type="button" value="Upload Now!" />
         </div>
       </div>
     </div>
-    <div class="chapter-wrap">
-      <ul class="chapter-list">
-        <li class="chapter-item" v-for="item in chapter" :key="item.id">
-          {{ item.label }}
-          <ul class="sub-list" v-if="item.subitems.length">
-            <li class="sub-item" v-for="sub in item.subitems" :key="sub.id">
-              {{ sub.label }}
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <Popup
+      class="chapter-pop"
+      v-if="isChapterPopShow"
+      @toggleShowState="toggleChapterPopState"
+    >
+      <div class="chapter-wrap">
+        <ul class="chapter-list">
+          <li class="chapter-item" v-for="item in chapter" :key="item.id">
+            {{ item.label }}
+            <ul class="sub-list" v-if="item.subitems.length">
+              <li class="sub-item" v-for="sub in item.subitems" :key="sub.id">
+                {{ sub.label }}
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </Popup>
   </div>
 </template>
 
@@ -60,20 +91,22 @@ import Navigation from "epubjs/types/navigation";
 
 // components
 import Loading from "@/components/common/Loading.vue";
+import Popup from "@/components/common/Popup.vue";
+import { Action } from "vuex-class";
 
 @Component({
   components: {
-    Loading
+    Loading,
+    Popup
   }
 })
 export default class AddBook extends Vue {
-  private bookFile: File | string = "";
-
   // about epub
   private book!: Book;
   private navigation: Navigation | object = {};
 
   // about info
+  private bookFile: File | string = ""; // 书籍本体
   private cover: Blob = new Blob(); // 书籍封面
   private coverData: string = "";
   private chapter: object[] = [];
@@ -81,11 +114,14 @@ export default class AddBook extends Vue {
 
   // state
   private isLoading: boolean = false;
+  private isChapterPopShow: boolean = false;
 
   @Watch("bookFile")
   onBookFileChange(val: File) {
     this.getBookInfo();
   }
+
+  @Action("book/createBook") createBook: any;
 
   private mounted() {}
 
@@ -177,6 +213,14 @@ export default class AddBook extends Vue {
       });
     });
   }
+
+  private toggleChapterPopState() {
+    this.isChapterPopShow = !this.isChapterPopShow;
+  }
+
+  private handleCreateBook() {
+    this.createBook().then(res => {});
+  }
 }
 </script>
 
@@ -184,97 +228,148 @@ export default class AddBook extends Vue {
 @import "../../assets/styles/index.less";
 
 .add-book-wrap {
-  padding: 0 @defMargin;
+  .main-wrap {
+    .abs-center();
+    top: 40%;
 
-  .title {
-    margin-bottom: @doubleMargin;
-    text-align: center;
+    .title {
+      margin-bottom: @doubleMargin;
+      text-align: center;
 
-    .big {
-      font-size: 36px;
-      font-weight: bold;
-      margin-bottom: 10px;
+      .big {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .sub {
+        font-size: 16px;
+        line-height: 1.2;
+      }
     }
 
-    .sub {
-      font-size: 16px;
-      line-height: 1.2;
+    .info-wrap {
+      .flex-center();
+      min-width: 300px;
+      min-height: 150px;
+      margin-bottom: @defMargin;
+
+      > .upload {
+        .flex-center();
+        position: relative;
+        width: 150px;
+        height: 75px;
+        border-radius: 5px;
+        border: 1px dashed #333;
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: transform 0.1s linear;
+
+        &:hover {
+          transform: scale(1.5);
+
+          span {
+            transform: scale(0.5);
+          }
+        }
+
+        .real {
+          width: 0;
+          height: 0;
+          opacity: 0;
+        }
+      }
+
+      .info {
+        .flex-justify-center();
+        flex-direction: column;
+        align-items: center;
+
+        .wrap {
+          .flex-justify-center();
+          margin-bottom: @doubleMargin;
+
+          .cover-wrap {
+            height: 350px;
+            width: 250px;
+            margin-right: @doubleMargin;
+            background-image: url("../../assets/images/stripe-bg.jpg");
+            background-size: 40%;
+            padding: @defMargin;
+            box-sizing: border-box;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+            }
+          }
+
+          .basic-wrap {
+            width: 250px;
+
+            p {
+              em {
+                display: inline-block;
+                font-size: 16px;
+                margin-bottom: 8px;
+                font-family: SFNSRounded;
+                letter-spacing: 1px;
+                border-bottom: 1px solid #333;
+                padding: 0 10px 3px 0;
+
+                &::first-letter {
+                  text-transform: uppercase;
+                  font-weight: bold;
+                }
+              }
+
+              span {
+                .one-line();
+                line-height: 1.1;
+              }
+
+              &:not(:last-child) {
+                margin-bottom: 10px;
+              }
+            }
+          }
+        }
+
+        .upload {
+          width: 200px;
+          height: 60px;
+        }
+      }
     }
   }
 
-  .info-wrap {
-    .flex-center();
-    min-width: 300px;
-    min-height: 150px;
-    margin-bottom: @defMargin;
+  .chapter-pop {
+    .chapter-wrap {
+      padding: @doubleMargin;
 
-    .upload {
-      .flex-center();
-      position: relative;
-      width: 150px;
-      height: 75px;
-      border-radius: 5px;
-      border: 1px dashed #333;
-      box-sizing: border-box;
-      cursor: pointer;
-      transition: transform 0.1s linear;
+      .chapter-list {
+        .flex-justify-center();
+        flex-direction: column;
 
-      &:hover {
-        transform: scale(1.5);
+        .chapter-item {
+          font-weight: bold;
 
-        span {
-          transform: scale(0.5);
-        }
-      }
-
-      .real {
-        width: 0;
-        height: 0;
-        opacity: 0;
-      }
-    }
-
-    .info {
-      .flex-center();
-      align-items: flex-start;
-      justify-content: space-between;
-
-      .cover-wrap {
-        height: 350px;
-        flex: 0 0 250px;
-        margin-right: @doubleMargin;
-        background-image: url("../../assets/images/stripe-bg.jpg");
-        background-size: 40%;
-        padding: @defMargin;
-        box-sizing: border-box;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-      }
-
-      .basic-wrap {
-        flex: 1;
-
-        p {
           &:not(:last-child) {
             margin-bottom: @defMargin;
           }
-        }
-      }
-    }
-  }
 
-  .chapter-wrap {
-    .chapter-list {
-      .flex-center();
+          .sub-list {
+            .flex-align-center();
+            flex-wrap: wrap;
+            font-weight: normal;
+            margin-top: @defMargin;
+            margin-right: -15px;
 
-      .chapter-item {
-        .sub-list {
-          .sub-item {
-            .flex-center();
+            .sub-item {
+              width: 300px;
+              margin: 0 @defMargin @defMargin 0;
+            }
           }
         }
       }

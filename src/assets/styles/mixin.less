@@ -24,6 +24,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  width: 100%;
+  display: inline-block;
 }
 
 .abs-full {
@@ -32,6 +34,13 @@
   bottom: 0;
   right: 0;
   left: 0;
+}
+
+.abs-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .cp {

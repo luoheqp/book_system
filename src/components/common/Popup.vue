@@ -44,6 +44,10 @@ export default class Popup extends Vue {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 10px;
     animation: jelly 1s linear both;
     position: relative;
+    margin: 0 @doubleMargin;
+    max-height: 800px;
+    max-width: 800px;
+    overflow-x: hidden;
 
     .title {
       font-size: 20px;
