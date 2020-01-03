@@ -1,3 +1,5 @@
+import router from "@/router";
+
 export const toggleBrowserFullScreenState = (flag?: boolean): void => {
   let el: any = document.documentElement;
   let event: any;
@@ -23,4 +25,8 @@ export const toggleBrowserFullScreenState = (flag?: boolean): void => {
       wscript.SendKeys("{F11}");
     }
   }
+};
+
+export const goTargetPage = (name: string, params: any) => {
+  router.push({ name: name, params: params });
 };

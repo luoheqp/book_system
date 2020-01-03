@@ -1,4 +1,5 @@
 import { ActionTree, MutationTree } from "vuex";
+import { postToCreateBook } from "@/apis/book";
 
 class State {
   public bookList: any[] = [];
@@ -7,14 +8,20 @@ class State {
 const mutations = <MutationTree<State>>{};
 
 const actions = <ActionTree<State, any>>{
-  createBook({ commit }, data) {}
+  createBook({ commit }, data) {
+    postToCreateBook(data).then((res: any) => {
+      if (res.code === 0) {
+        return res;
+      }
+    });
+  }
 };
 
-const ArticleModule = {
+const BookModule = {
   namespaced: true,
   state: new State(),
   actions: actions,
   mutations: mutations
 };
 
-export default ArticleModule;
+export default BookModule;

@@ -4,7 +4,14 @@ export interface IBookUploadInfo {
   press: string;
   pubdate: string;
   desc: string;
-  catalog: string[];
+  catalog: ICatalog[];
   tag?: string[];
   cover: Blob;
+}
+
+export interface ICatalog {
+  id: string;
+  label: string;
+  href: string;
+  subitems?: ICatalog[];
 }

@@ -55,7 +55,12 @@
               />
             </div>
           </div>
-          <input class="upload" type="button" value="Upload Now!" />
+          <input
+            class="upload"
+            type="button"
+            value="Upload Now!"
+            @click="handleCreateBook"
+          />
         </div>
       </div>
     </div>
@@ -77,13 +82,15 @@
         </ul>
       </div>
     </Popup>
+    <div class="toast">toast</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
-import { dataURItoBlob } from "@/utils/func_tool";
-import { IBookUploadInfo } from "@/types/book";
+import { dataURItoBlob } from "../../utils/func_tool";
+import { dealBookChapter } from "../../utils/book_tool";
+import { IBookUploadInfo, ICatalog } from "../../types/book";
 
 // epubjs
 import Epub, { Book } from "epubjs";
@@ -109,8 +116,9 @@ export default class AddBook extends Vue {
   private bookFile: File | string = ""; // 书籍本体
   private cover: Blob = new Blob(); // 书籍封面
   private coverData: string = "";
-  private chapter: object[] = [];
+  private chapter: ICatalog[] = [];
   private bookInfo!: IBookUploadInfo;
+  private tag: string[] = [];
 
   // state
   private isLoading: boolean = false;
@@ -219,7 +227,24 @@ export default class AddBook extends Vue {
   }
 
   private handleCreateBook() {
-    this.createBook().then(res => {});
+    let { chapter, tag } = this;
+    let catalog = dealBookChapter(chapter);
+
+    console.log(chapter);
+
+    let bookData = new FormData();
+
+    let { name, author, desc, pubdate, press } = this.bookInfo;
+    bookData.append("name", name);
+    bookData.append("author", author);
+    bookData.append("desc", desc);
+    bookData.append("pubdate", pubdate);
+    bookData.append("press", press);
+    bookData.append("catalog", JSON.stringify(catalog));
+    bookData.append("tag", JSON.stringify(tag));
+    bookData.append("book", this.bookFile);
+    bookData.append("cover", this.cover);
+    this.createBook(bookData).then((res: any) => {});
   }
 }
 </script>
@@ -375,5 +400,14 @@ export default class AddBook extends Vue {
       }
     }
   }
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%);
+  padding: 5px 15px;
+  box-shadow: 0px 0px 10px 1px #ccc;
 }
 </style>
