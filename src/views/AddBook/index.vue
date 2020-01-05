@@ -28,26 +28,26 @@
         </label>
         <Loading v-if="isLoading" txt="processing" />
         <div class="info" v-if="!isLoading && bookFile">
+          <!-- 书籍文件信息板块 -->
           <div class="wrap">
             <div class="cover-wrap">
               <img :src="coverData" alt="" />
             </div>
             <div class="basic-wrap">
-              <p>
-                <em>book name</em><span>{{ bookInfo.name }}</span>
-              </p>
-              <p>
-                <em>author</em><span>{{ bookInfo.author }}</span>
-              </p>
-              <p>
-                <em>description</em><span>{{ bookInfo.desc }}</span>
-              </p>
-              <p>
-                <em>publish date</em><span>{{ bookInfo.pubdate }}</span>
-              </p>
-              <p>
-                <em>press</em><span>{{ bookInfo.press }}</span>
-              </p>
+              <div class="book-info">
+                <p>
+                  <em>book name</em><span>{{ bookInfo.name }}</span>
+                </p>
+                <p>
+                  <em>author</em><span>{{ bookInfo.author }}</span>
+                </p>
+                <p>
+                  <em>publish date</em><span>{{ bookInfo.pubdate }}</span>
+                </p>
+                <p>
+                  <em>press</em><span>{{ bookInfo.press }}</span>
+                </p>
+              </div>
               <input
                 type="button"
                 value="check chapter"
@@ -55,6 +55,13 @@
               />
             </div>
           </div>
+          <!-- 自定义信息板块 -->
+          <div class="custom">
+            <p>description</p>
+            <textarea cols="30" placeholder="write description here"></textarea>
+            <p>tag</p>
+          </div>
+          <!-- 上传按钮 -->
           <input
             class="upload"
             type="button"
@@ -82,12 +89,12 @@
         </ul>
       </div>
     </Popup>
-    <div class="toast">toast</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator";
+import moment from "moment";
 import { dataURItoBlob } from "../../utils/func_tool";
 import { dealBookChapter } from "../../utils/book_tool";
 import { IBookUploadInfo, ICatalog } from "../../types/book";
@@ -210,6 +217,9 @@ export default class AddBook extends Vue {
     return new Promise((resolve, reject) => {
       this.book.loaded.metadata.then(metadata => {
         let { title, creator, description, pubdate, publisher } = metadata;
+        pubdate = moment(pubdate)
+          .utc()
+          .format("YYYY-MM-DD");
         this.bookInfo = Object.assign({}, this.bookInfo, {
           name: title,
           author: creator,
@@ -234,6 +244,7 @@ export default class AddBook extends Vue {
 
     let bookData = new FormData();
 
+    // TODO: 绝对不是这样写的 ...
     let { name, author, desc, pubdate, press } = this.bookInfo;
     bookData.append("name", name);
     bookData.append("author", author);
@@ -254,9 +265,6 @@ export default class AddBook extends Vue {
 
 .add-book-wrap {
   .main-wrap {
-    .abs-center();
-    top: 40%;
-
     .title {
       margin-bottom: @doubleMargin;
       text-align: center;
@@ -331,33 +339,58 @@ export default class AddBook extends Vue {
           }
 
           .basic-wrap {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             width: 250px;
 
-            p {
-              em {
-                display: inline-block;
-                font-size: 16px;
-                margin-bottom: 8px;
-                font-family: SFNSRounded;
-                letter-spacing: 1px;
-                border-bottom: 1px solid #333;
-                padding: 0 10px 3px 0;
+            .book-info {
+              p {
+                em {
+                  display: inline-block;
+                  font-size: 16px;
+                  margin-bottom: 8px;
+                  font-family: SFNSRounded;
+                  letter-spacing: 1px;
+                  border-bottom: 1px solid #333;
+                  padding: 0 10px 3px 0;
 
-                &::first-letter {
-                  text-transform: uppercase;
-                  font-weight: bold;
+                  &::first-letter {
+                    text-transform: uppercase;
+                    font-weight: bold;
+                  }
+                }
+
+                span {
+                  .one-line();
+                  line-height: 1.1;
+                }
+
+                &:not(:last-child) {
+                  margin-bottom: 10px;
                 }
               }
-
-              span {
-                .one-line();
-                line-height: 1.1;
-              }
-
-              &:not(:last-child) {
-                margin-bottom: 10px;
-              }
             }
+          }
+        }
+
+        .custom {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+
+          p {
+            margin: @defMargin 0 10px;
+
+            &:first-child {
+              margin-top: 0;
+            }
+          }
+
+          textarea {
+            border: none;
+            resize: none;
+            outline: none;
           }
         }
 
@@ -400,14 +433,5 @@ export default class AddBook extends Vue {
       }
     }
   }
-}
-
-.toast {
-  position: fixed;
-  left: 50%;
-  top: 20%;
-  transform: translate(-50%);
-  padding: 5px 15px;
-  box-shadow: 0px 0px 10px 1px #ccc;
 }
 </style>

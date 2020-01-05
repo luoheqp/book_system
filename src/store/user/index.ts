@@ -27,12 +27,16 @@ const actions = <ActionTree<State, any>>{
     return new Promise((resolve, reject) => {
       // 注册执行
       postUserInfoToSignUp(data).then((res: any) => {
-        const { token } = res;
-        // 保存 token 并持久化
-        commit("saveToken", token);
-        // cookie 保存三天
-        Cookies.set("token", token, { expires: 3 });
-        resolve({ code: 0 });
+        if (res.code === 0) {
+          const { token } = res;
+          // 保存 token 并持久化
+          commit("saveToken", token);
+          // cookie 保存三天
+          Cookies.set("token", token, { expires: 3 });
+          resolve();
+        } else {
+          reject(res.msg);
+        }
       });
     });
   },
@@ -40,12 +44,16 @@ const actions = <ActionTree<State, any>>{
     return new Promise((resolve, reject) => {
       // 注册执行
       postUserInfoToSignIn(data).then((res: any) => {
-        const { token } = res;
-        // 保存 token 并持久化
-        commit("saveToken", token);
-        // cookie 保存三天
-        Cookies.set("token", token, { expires: 3 });
-        resolve({ code: 0 });
+        if (res.code === 0) {
+          const { token } = res;
+          // 保存 token 并持久化
+          commit("saveToken", token);
+          // cookie 保存三天
+          Cookies.set("token", token, { expires: 3 });
+          resolve();
+        } else {
+          reject(res.msg);
+        }
       });
     });
   },

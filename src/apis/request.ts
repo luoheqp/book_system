@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import Cookies from "js-cookie";
+import Vue from "vue";
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: "/api",
@@ -50,7 +51,6 @@ const handleResponse = async (response: AxiosResponse) => {
     // router.replace("login");
     return;
   }
-  console.log(data.msg);
   return Promise.resolve(data);
 };
 

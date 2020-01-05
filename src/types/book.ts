@@ -10,7 +10,6 @@ export interface IBookUploadInfo {
 }
 
 export interface ICatalog {
-  id: string;
   label: string;
   href: string;
   subitems?: ICatalog[];

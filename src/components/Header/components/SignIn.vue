@@ -103,11 +103,13 @@ export default class SignIn extends Vue {
     let { account, password } = this.userInfo;
     userData.append("account", account);
     userData.append("password", password);
-    this.signin(userData).then((res: any) => {
-      if (res.code === 0) {
-        this.$router.go(0);
-      }
-    });
+    this.signin(userData)
+      .then((res: any) => {
+        // this.$router.go(0);
+      })
+      .catch(err => {
+        this.$toast.show(err);
+      });
   }
 
   private handleToSignUp() {

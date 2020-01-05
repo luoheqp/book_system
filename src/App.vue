@@ -31,6 +31,7 @@ export default class App extends Vue {
     // 验证登录状态
     const token = Cookie.get("token");
     if (!this.vuexToken && token) {
+      console.log("app get token");
       this.saveToken(token);
       this.getUserInfo();
     }

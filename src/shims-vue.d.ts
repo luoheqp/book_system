@@ -12,3 +12,8 @@ declare module "vue2-dropzone" {
   let vue2Dropzone: any;
   export default vue2Dropzone;
 }
+
+declare module "@/components/global/Toast" {
+  let Toast: any;
+  export default Toast;
+}

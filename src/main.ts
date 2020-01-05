@@ -9,6 +9,10 @@ import "@/assets/styles/reset.less";
 // icon
 // import "@/assets/icon/iconfont.css";
 
+// toast
+import Toast from "@/components/global/Toast";
+Vue.use(Toast);
+
 Vue.config.productionTip = false;
 
 Vue.config.keyCodes = {
