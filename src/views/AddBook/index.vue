@@ -457,11 +457,11 @@ export default class AddBook extends Vue {
             display: flex;
 
             .tag {
+              .flex-center();
               border: 1px solid #333;
               border-radius: 20px;
               height: 20px;
               background: #fff;
-              line-height: 20px;
               padding: 0 5px;
               box-sizing: border-box;
 
