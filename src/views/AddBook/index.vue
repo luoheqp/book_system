@@ -58,8 +58,21 @@
           <!-- 自定义信息板块 -->
           <div class="custom">
             <p>description</p>
-            <textarea cols="30" placeholder="write description here"></textarea>
+            <div
+              class="desc-edit"
+              contenteditable="true"
+              placeholder="write description here"
+              ref="desc"
+            >
+              {{ bookInfo.desc || "write description here plz." }}
+            </div>
             <p>tag</p>
+            <div class="tag-edit">
+              <span class="tag" v-for="item in tag" :key="item">{{
+                item
+              }}</span>
+              <span class="tag addition" @click="toggleTagPopState">+</span>
+            </div>
           </div>
           <!-- 上传按钮 -->
           <input
@@ -87,6 +100,26 @@
             </ul>
           </li>
         </ul>
+      </div>
+    </Popup>
+    <Popup
+      class="tag-pop"
+      v-if="isTagPopShow"
+      @toggleShowState="toggleTagPopState"
+    >
+      <div class="tag-wrap">
+        <h3>Select Tag You Want</h3>
+        <div class="tag-content">
+          <label v-for="item in tagList" :key="item" :for="item">
+            <input
+              :id="item"
+              type="checkbox"
+              :value="item"
+              @change="e => handleTagChange(e, item)"
+            />
+            <span>{{ item }}</span>
+          </label>
+        </div>
       </div>
     </Popup>
   </div>
@@ -118,6 +151,7 @@ export default class AddBook extends Vue {
   // about epub
   private book!: Book;
   private navigation: Navigation | object = {};
+  private tagList: string[] = ["history", "love", "animation"];
 
   // about info
   private bookFile: File | string = ""; // 书籍本体
@@ -130,6 +164,7 @@ export default class AddBook extends Vue {
   // state
   private isLoading: boolean = false;
   private isChapterPopShow: boolean = false;
+  private isTagPopShow: boolean = false;
 
   @Watch("bookFile")
   onBookFileChange(val: File) {
@@ -236,6 +271,10 @@ export default class AddBook extends Vue {
     this.isChapterPopShow = !this.isChapterPopShow;
   }
 
+  private toggleTagPopState() {
+    this.isTagPopShow = !this.isTagPopShow;
+  }
+
   private handleCreateBook() {
     let { chapter, tag } = this;
     let catalog = dealBookChapter(chapter);
@@ -245,7 +284,8 @@ export default class AddBook extends Vue {
     let bookData = new FormData();
 
     // TODO: 绝对不是这样写的 ...
-    let { name, author, desc, pubdate, press } = this.bookInfo;
+    let { name, author, pubdate, press } = this.bookInfo;
+    let desc = (this.$refs.desc as HTMLElement).innerText;
     bookData.append("name", name);
     bookData.append("author", author);
     bookData.append("desc", desc);
@@ -256,6 +296,17 @@ export default class AddBook extends Vue {
     bookData.append("book", this.bookFile);
     bookData.append("cover", this.cover);
     this.createBook(bookData).then((res: any) => {});
+  }
+
+  private handleTagChange(e, value) {
+    const flag = e.target.checked;
+    if (flag) {
+      this.tag.push(value);
+    } else {
+      let { tag } = this;
+      tag = tag.filter(item => item !== value);
+      this.tag = tag;
+    }
   }
 }
 </script>
@@ -378,19 +429,57 @@ export default class AddBook extends Vue {
           display: flex;
           flex-direction: column;
           width: 100%;
+          margin-bottom: @doubleMargin;
 
           p {
             margin: @defMargin 0 10px;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-family: SFNSRounded;
+            letter-spacing: 1px;
+            padding: 0 10px 3px 0;
+
+            &::first-letter {
+              text-transform: uppercase;
+              font-weight: bold;
+            }
 
             &:first-child {
               margin-top: 0;
             }
           }
 
-          textarea {
-            border: none;
-            resize: none;
+          .desc-edit {
             outline: none;
+          }
+
+          .tag-edit {
+            display: flex;
+
+            .tag {
+              border: 1px solid #333;
+              border-radius: 20px;
+              height: 20px;
+              background: #fff;
+              line-height: 20px;
+              padding: 0 5px;
+              box-sizing: border-box;
+
+              &:not(:last-child) {
+                margin-right: 5px;
+              }
+            }
+            .addition {
+              background: #333;
+              color: #fff;
+              cursor: pointer;
+              transition: all 0.1s linear;
+
+              &:hover {
+                background: #fff;
+                color: #333;
+              }
+            }
           }
         }
 
@@ -428,6 +517,57 @@ export default class AddBook extends Vue {
               width: 300px;
               margin: 0 @defMargin @defMargin 0;
             }
+          }
+        }
+      }
+    }
+  }
+
+  .tag-pop {
+    .tag-wrap {
+      padding: @defMargin;
+
+      h3 {
+        font-size: 26px;
+        font-weight: bold;
+        font-family: medium;
+        margin-bottom: @defMargin;
+        margin-right: 40px;
+      }
+
+      .tag-content {
+        display: flex;
+
+        label {
+          position: relative;
+
+          &:not(:last-child) {
+            margin-right: 5px;
+          }
+
+          input[type="checkbox"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+
+            &:checked {
+              & + span {
+                background: #333;
+                color: #fff;
+              }
+            }
+          }
+
+          span {
+            border: 1px solid #333;
+            border-radius: 20px;
+            height: 20px;
+            background: #fff;
+            line-height: 20px;
+            padding: 0 5px;
+            box-sizing: border-box;
+            transition: all 0.1s linear;
           }
         }
       }
