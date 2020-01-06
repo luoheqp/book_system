@@ -2,25 +2,29 @@
   <div :class="['book-item', isCanHover ? 'hover' : '']">
     <!-- pic -->
     <div class="pic">
-      <img :src="info.picPath" alt />
+      <img :src="info.cover" alt />
     </div>
     <!-- info -->
-    <div class="info">
-      <p class="name">{{ info.name }}</p>
-      <p class="detail">
-        <span class="author">{{ info.author }}著</span>
-        <span class="date">{{ info.date }}</span>
-        <span class="press">{{ info.press }}</span>
-      </p>
-      <p class="desc">{{ info.desc }}</p>
+    <div class="info-wrap">
+      <div class="info">
+        <p class="name">{{ info.name }}</p>
+        <p class="detail">
+          <span class="author">Author: {{ info.author }}</span>
+          <span class="date">Published date: {{ info.pubdate }}</span>
+          <span class="press">Press: {{ info.press }}</span>
+        </p>
+        <p class="desc">{{ info.desc }}</p>
+      </div>
       <div class="other">
         <div class="operate">
-          <input type="button" value="详情" :data-key="info.id" />
-          <input type="button" value="收藏" :data-key="info.id" />
+          <router-link class="item" :to="`/reader/${info._id}`">
+            Read
+          </router-link>
+          <router-link class="item" :to="`/book/${info._id}`">Like</router-link>
         </div>
         <div class="tag">
-          <span v-for="(item, index) in info.tag" :key="index"
-            >#{{ item }}</span
+          <span v-for="item in info.tag" :key="item._id"
+            >#{{ item.tagName }}</span
           >
         </div>
       </div>
@@ -68,7 +72,7 @@ export default class ListItem extends Vue {
 @import "../../assets/styles/index.less";
 
 .book-item {
-  padding: @defMargin;
+  padding: @defMargin 0;
   height: 230px;
   box-sizing: border-box;
   display: flex;
@@ -88,63 +92,85 @@ export default class ListItem extends Vue {
     object-fit: contain;
 
     img {
-      max-width: 100%;
-      min-height: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
   }
 
-  .info {
-    padding: 10px 0;
-    color: @defText;
-    box-sizing: border-box;
+  .info-wrap {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-    .name {
-      font-size: 26px;
-      font-weight: bold;
-    }
-
-    .detail {
-      span:not(:last-child) {
-        margin-right: 10px;
-      }
-
-      .author {
-      }
-      .date {
-      }
-      .press {
-      }
-    }
-
-    .desc {
-      line-height: 20px;
+    .info {
       color: @defText;
+      box-sizing: border-box;
       flex: 1;
-      max-height: 60px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 10px;
+
+        &::first-letter {
+          text-transform: uppercase;
+        }
+      }
+
+      .detail {
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+
+        span {
+          margin-bottom: 7px;
+        }
+      }
+
+      .desc {
+        line-height: 20px;
+        color: @defText;
+        flex: 1;
+        max-height: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
     }
 
     .other {
       display: flex;
       justify-content: space-between;
+      align-items: flex-end;
 
       .operate {
-        input:not(:last-child) {
-          margin-right: @defMargin;
+        display: flex;
+
+        > .item {
+          padding: 5px 10px;
+          background: #333;
+          color: #fff;
+          border-radius: 5px;
+
+          &:not(:last-child) {
+            margin-right: @defMargin;
+          }
         }
       }
 
       .tag {
         font-size: 12px;
         color: @lightText;
+
+        span:not(:last-child) {
+          margin-right: 5px;
+        }
       }
     }
   }

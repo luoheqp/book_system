@@ -2,8 +2,8 @@
   <div class="book-item-wrap">
     <div class="pic"></div>
     <div class="info">
-      <p class="name"></p>
-      <p class="author"></p>
+      <p class="name">name</p>
+      <p class="author">author</p>
       <p class="progress">progress:</p>
       <p class="time">last time:</p>
     </div>
@@ -44,6 +44,9 @@ export default class BookItem extends Vue {}
     flex: 1;
     // BUG: 去掉试试 ?
     width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     p {
       .one-line();

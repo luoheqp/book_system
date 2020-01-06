@@ -62,7 +62,7 @@ export default class SignIn extends Vue {
     password: "12345"
   };
 
-  @Action("user/signin") signin: any;
+  @Action("user/signin") signin!: Function;
 
   // input func
   private handleCheck(value: string, reg: string) {
@@ -107,7 +107,7 @@ export default class SignIn extends Vue {
       .then((res: any) => {
         // this.$router.go(0);
       })
-      .catch(err => {
+      .catch((err: string) => {
         this.$toast.show(err);
       });
   }

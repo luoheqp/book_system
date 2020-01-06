@@ -7,3 +7,17 @@ export function postToCreateBook(data: FormData) {
     data: data
   });
 }
+
+export function getToGetBookTag() {
+  return axiosInstance({
+    url: "/bookTag",
+    method: "get"
+  });
+}
+
+export function getToGetBookGroupInfo() {
+  return axiosInstance({
+    url: "/book",
+    method: "get"
+  });
+}

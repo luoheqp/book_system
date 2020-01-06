@@ -68,9 +68,9 @@
             </div>
             <p>tag</p>
             <div class="tag-edit">
-              <span class="tag" v-for="item in tag" :key="item">{{
-                item
-              }}</span>
+              <span class="tag" v-for="item in tag" :key="item._id">
+                {{ item.tagName }}
+              </span>
               <span class="tag addition" @click="toggleTagPopState">+</span>
             </div>
           </div>
@@ -104,20 +104,20 @@
     </Popup>
     <Popup
       class="tag-pop"
-      v-if="isTagPopShow"
+      v-show="isTagPopShow"
       @toggleShowState="toggleTagPopState"
     >
       <div class="tag-wrap">
         <h3>Select Tag You Want</h3>
         <div class="tag-content">
-          <label v-for="item in tagList" :key="item" :for="item">
+          <label v-for="item in tagList" :key="item._id" :for="item._id">
             <input
-              :id="item"
+              :id="item._id"
               type="checkbox"
               :value="item"
               @change="e => handleTagChange(e, item)"
             />
-            <span>{{ item }}</span>
+            <span>{{ item.tagName }}</span>
           </label>
         </div>
       </div>
@@ -139,7 +139,8 @@ import Navigation from "epubjs/types/navigation";
 // components
 import Loading from "@/components/common/Loading.vue";
 import Popup from "@/components/common/Popup.vue";
-import { Action } from "vuex-class";
+import { Action, State } from "vuex-class";
+import { ITag } from "../../types/info";
 
 @Component({
   components: {
@@ -151,7 +152,6 @@ export default class AddBook extends Vue {
   // about epub
   private book!: Book;
   private navigation: Navigation | object = {};
-  private tagList: string[] = ["history", "love", "animation"];
 
   // about info
   private bookFile: File | string = ""; // 书籍本体
@@ -171,9 +171,17 @@ export default class AddBook extends Vue {
     this.getBookInfo();
   }
 
-  @Action("book/createBook") createBook: any;
+  @Action("book/createBook") createBook!: Function;
+  @Action("book/getBookTag") getBookTag!: Function;
 
-  private mounted() {}
+  @State(state => state.book.tagList) tagList!: ITag[];
+
+  private mounted() {
+    // 没有 tagList
+    if (!this.tagList.length) {
+      this.getBookTag();
+    }
+  }
 
   // 拖拽或点击获取文件
   private handleChangeFile(e: any) {
@@ -298,7 +306,7 @@ export default class AddBook extends Vue {
     this.createBook(bookData).then((res: any) => {});
   }
 
-  private handleTagChange(e, value) {
+  private handleTagChange(e: any, value: string) {
     const flag = e.target.checked;
     if (flag) {
       this.tag.push(value);

@@ -105,9 +105,6 @@ import Epub from "epubjs";
 // components
 import CatalogPop from "@/views/Reader/components/CatalogPop.vue";
 
-// hard code resource
-const EPUB_ADDRESS = "/flipped.epub";
-
 @Component({
   components: {
     CatalogPop
@@ -116,6 +113,8 @@ const EPUB_ADDRESS = "/flipped.epub";
 export default class Reader extends Vue {
   public fontSizeList: object[] = fontSizeList;
   public themeList: object[] = themeList;
+  public EPUB_ADDRESS = "http://www.resource.com:8000/book/";
+
   // === 电子书相关 data ===
   public book!: any;
   public rendition!: any;
@@ -133,6 +132,34 @@ export default class Reader extends Vue {
     theme: "default",
     isFull: false
   };
+
+  created() {
+    // 监听键盘 , 触发翻页
+    document.addEventListener("keyup", (e: any) => {
+      let key = e.keyCode;
+      if (key === 37) {
+        this.prevPage();
+      } else if (key === 39) {
+        this.nextPage();
+      }
+    });
+  }
+
+  mounted() {
+    // 加载电子书
+    const bookId = this.$route.params.id;
+    this.EPUB_ADDRESS = this.EPUB_ADDRESS = bookId;
+
+    this.initEpub();
+    this.setTheme("green");
+
+    // 页面缩放时改变大小
+    const ebook = this.$refs.ebook as any;
+    // TODO: 节流
+    window.addEventListener("resize", () => {
+      this.rendition.resize(ebook.offsetWidth, ebook.offsetHeight);
+    });
+  }
 
   // 初始化解析电子书
   initEpub() {
@@ -218,30 +245,6 @@ export default class Reader extends Vue {
   // 切换弹窗显示状态
   togglePopState() {
     this.isPopShow = !this.isPopShow;
-  }
-
-  created() {
-    // 监听键盘 , 触发翻页
-    document.addEventListener("keyup", (e: any) => {
-      let key = e.keyCode;
-      if (key === 37) {
-        this.prevPage();
-      } else if (key === 39) {
-        this.nextPage();
-      }
-    });
-  }
-
-  mounted() {
-    this.initEpub();
-    this.setTheme("green");
-
-    // 页面缩放时改变大小
-    const ebook = this.$refs.ebook as any;
-    // TODO: 节流
-    window.addEventListener("resize", () => {
-      this.rendition.resize(ebook.offsetWidth, ebook.offsetHeight);
-    });
   }
 }
 </script>

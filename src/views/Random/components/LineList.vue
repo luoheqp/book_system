@@ -19,6 +19,7 @@
               : ''
           ]"
         >
+          <div class="cover"><img :src="item.cover" :alt="item.name" /></div>
           <span class="name">{{ item.name }}</span>
         </div>
       </swiper-slide>
@@ -159,6 +160,7 @@ export default class LineList extends Vue {
 
           .content {
             .flex-center();
+            flex-direction: column;
             height: 150px;
             width: 150px;
             background-color: #fff;
@@ -167,20 +169,30 @@ export default class LineList extends Vue {
             transition: padding 0.05s linear;
             position: relative;
 
-            .name {
+            .cover {
               width: 100%;
-              position: absolute;
-              display: inline-block;
-              bottom: 0;
+              height: 100%;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+              }
+            }
+
+            .name {
+              max-width: 50%;
               font-size: 16px;
-              padding: 5px 10px;
+              padding: 5px 0;
               box-sizing: border-box;
               line-height: 22px;
+              overflow: hidden;
               text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-line-clamp: 1;
-              -webkit-box-orient: vertical;
               transition: all 0.3s linear;
+
+              &::first-letter {
+                text-transform: uppercase;
+              }
             }
 
             &:hover .name {
@@ -233,16 +245,15 @@ export default class LineList extends Vue {
   }
 
   .list-item {
+    transition: all 0.5s linear;
     max-height: 0;
-    padding: 0;
+    padding: @defMargin 0;
     opacity: 0;
 
     &.show {
-      transition: max-height 0.5s linear;
       max-height: 1000px;
       opacity: 1;
       margin-bottom: 15px;
-      padding: @defMargin;
       border-bottom: 3px solid @mainColor;
     }
   }

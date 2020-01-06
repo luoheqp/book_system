@@ -143,7 +143,6 @@ export default class User extends Vue {
 
   .read {
     .nav {
-      margin-bottom: @defMargin;
       padding: @defMargin 0;
       display: flex;
       background-color: #fff;

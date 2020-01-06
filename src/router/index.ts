@@ -29,7 +29,7 @@ const routes = [
     component: Random
   },
   {
-    path: "/reader",
+    path: "/reader/:id",
     name: "reader",
     component: Reader
   },

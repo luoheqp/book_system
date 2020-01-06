@@ -13,12 +13,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch } from "vue-property-decorator";
 import { State, Action } from "vuex-class";
 import { IListItem, ILineListItem } from "@/types/info";
 
 // components
 import LineList from "./components/LineList.vue";
+import { ITag } from "../../types/info";
 
 @Component({
   components: {
@@ -31,7 +32,11 @@ export default class Random extends Vue {
   @State(state => state.book.randomBookGroupInfo)
   randomBookGroupInfo!: ILineListItem[];
 
-  @Action("getBookInfo") getBookInfo!: Function;
+  @Action("book/getBookGroupInfo") getBookGroupInfo!: Function;
+
+  private mounted() {
+    this.getBookGroupInfo();
+  }
 
   handleUpdateActiveSwiper(id: number): void {
     this.activeSwiper = id;

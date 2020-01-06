@@ -33,3 +33,8 @@ export interface IArticleItem {
   like: number;
   cover?: string;
 }
+
+export interface ITag {
+  _id: string;
+  tagName: string;
+}

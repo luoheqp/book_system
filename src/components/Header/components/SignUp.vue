@@ -78,7 +78,7 @@ export default class SignUp extends Vue {
     avatar: new Blob()
   };
 
-  @Action("user/signup") signup: any;
+  @Action("user/signup") signup!: Function;
 
   // input func
   private handleCheck(value: string, reg: string) {

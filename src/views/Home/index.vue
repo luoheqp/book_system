@@ -34,7 +34,7 @@ import { IArticleInfo } from "../../types/article";
 })
 export default class Home extends Vue {
   @State(state => state.article.articleList) articleList!: IArticleInfo[];
-  @Action("article/getArticleList") getArticleList: any;
+  @Action("article/getArticleList") getArticleList!: Function;
 
   private mounted() {
     this.getArticleList();

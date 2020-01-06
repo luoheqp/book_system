@@ -1,9 +1,6 @@
 <template>
   <div class="book-list-wrap">
     <BookItem class="item"></BookItem>
-    <BookItem class="item"></BookItem>
-    <BookItem class="item"></BookItem>
-    <BookItem class="item"></BookItem>
   </div>
 </template>
 

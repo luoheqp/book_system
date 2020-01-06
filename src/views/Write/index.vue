@@ -85,7 +85,7 @@ export default class Write extends Vue {
   private isAddTagInputShow: boolean = false;
   private addTag: string = "";
 
-  @Action("article/createArticle") createArticle: any;
+  @Action("article/createArticle") createArticle!: Function;
 
   private created() {
     // 获取书籍 id

@@ -35,7 +35,7 @@ export default class UserInfoEdit extends Vue {
   private conform: string = "";
 
   @State(state => state.user.info) userInfo!: IUserInfo;
-  @Action("user/changeUserInfo") changeUserInfo: any;
+  @Action("user/changeUserInfo") changeUserInfo!: Function;
 
   private getAvatar(avatar: Blob) {
     this.changeInfo.avatar = avatar;

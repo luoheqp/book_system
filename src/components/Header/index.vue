@@ -209,6 +209,7 @@ export default class Header extends Vue {
         right: 0;
         z-index: 1;
         box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.15);
+        z-index: 10;
       }
 
       .nav-sub {
