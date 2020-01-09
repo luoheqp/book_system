@@ -53,6 +53,11 @@
                 value="check chapter"
                 @click="toggleChapterPopState"
               />
+              <input
+                type="button"
+                value="exchange other"
+                @click="() => (this.bookFile = undefined)"
+              />
             </div>
           </div>
           <!-- 自定义信息板块 -->
@@ -168,7 +173,11 @@ export default class AddBook extends Vue {
 
   @Watch("bookFile")
   onBookFileChange(val: File) {
-    this.getBookInfo();
+    if (this.bookFile) {
+      this.getBookInfo();
+    } else {
+      // this.tag = [];
+    }
   }
 
   @Action("book/createBook") createBook!: Function;
@@ -207,20 +216,14 @@ export default class AddBook extends Vue {
   }
 
   // 初始化 epub
-  private initEpub() {
+  private async initEpub() {
     this.book = Epub();
-    let reader = new FileReader();
-    reader.readAsArrayBuffer(this.bookFile as File);
-    reader.onload = async e => {
-      if (e.target) {
-        this.book.open(e.target.result as ArrayBuffer);
+    this.book.open(this.bookFile as string);
 
-        await this.getNavigation();
-        await this.getEpubCover();
-        await this.getMetaData();
-        this.isLoading = false;
-      }
-    };
+    await this.getNavigation();
+    await this.getEpubCover();
+    await this.getMetaData();
+    this.isLoading = false;
   }
 
   // 获取 navigation 信息
@@ -286,8 +289,6 @@ export default class AddBook extends Vue {
   private handleCreateBook() {
     let { chapter, tag } = this;
     let catalog = dealBookChapter(chapter);
-
-    console.log(chapter);
 
     let bookData = new FormData();
 

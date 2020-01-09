@@ -7,13 +7,13 @@
     <swiper :options="swiperOption" :data-key="listInfo.id">
       <swiper-slide
         v-for="item in listInfo.bookGroup"
-        :key="item.id"
-        :data-key="item.id"
+        :key="item._id"
+        :data-key="item._id"
       >
         <div
           :class="[
             'content',
-            item.id === selected.activeSlide &&
+            item._id === selected.activeSlide &&
             selected.activeSwiper === nowSwiper
               ? 'selected'
               : ''
@@ -75,7 +75,7 @@ export default class LineList extends Vue {
   // 选中书籍的信息
   get selectedBookInfo(): IListItem {
     return this.listInfo.bookGroup.filter((item: IListItem) => {
-      return item.id === this.selected.activeSlide;
+      return item._id === this.selected.activeSlide;
     })[0];
   }
 
@@ -135,18 +135,11 @@ export default class LineList extends Vue {
     }
 
     .more {
-      background-color: @mainColor;
-      padding: 5px 10px;
-      color: #fff;
       font-weight: bold;
       font-size: 12px;
       letter-spacing: 2px;
       cursor: pointer;
       transition: all 0.1s linear;
-
-      &:hover {
-        transform: scale(0.8);
-      }
     }
   }
 
@@ -189,6 +182,7 @@ export default class LineList extends Vue {
               overflow: hidden;
               text-overflow: ellipsis;
               transition: all 0.3s linear;
+              white-space: nowrap;
 
               &::first-letter {
                 text-transform: uppercase;

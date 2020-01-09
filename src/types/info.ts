@@ -11,7 +11,7 @@ export interface ILineListSelected {
 }
 
 export interface IListItem {
-  id: number;
+  _id: number;
   picPath: string;
   name: string;
   author: string;

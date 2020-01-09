@@ -17,7 +17,7 @@
       </div>
       <div class="other">
         <div class="operate">
-          <router-link class="item" :to="`/reader/${info._id}`">
+          <router-link class="item" :to="`/reader/${info.md5}`">
             Read
           </router-link>
           <router-link class="item" :to="`/book/${info._id}`">Like</router-link>

@@ -2,15 +2,20 @@ import { ActionTree, MutationTree } from "vuex";
 import {
   postToCreateBook,
   getToGetBookTag,
-  getToGetBookGroupInfo,
-  getToGetBook
+  getToGetBookGroupInfo
 } from "@/apis/book";
 import { ITag, ILineListItem } from "@/types/info";
+import { IEbookSet } from "@/types/reader";
 
 class State {
   public bookList: any[] = [];
   public tagList: ITag[] = [];
   public randomBookGroupInfo: ILineListItem[] = [];
+  public ebookSet: IEbookSet = {
+    fontSize: 12,
+    theme: "default",
+    isFull: false
+  };
 }
 
 const mutations = <MutationTree<State>>{
@@ -19,6 +24,10 @@ const mutations = <MutationTree<State>>{
   },
   saveBookGroupInfo(state, bookGroupInfo) {
     state.randomBookGroupInfo = bookGroupInfo;
+  },
+  setEbookSet(state, data) {
+    // TODO: 枚举类型解决 ?
+    state.ebookSet[data.key as "fontSize"] = data.value;
   }
 };
 
