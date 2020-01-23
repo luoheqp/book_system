@@ -16,3 +16,10 @@ export function getArticleList(data: IGetArticleListInfo) {
     params: data
   });
 }
+
+export function getArticleById(data: string) {
+  return axiosInstance({
+    url: `/article/${data}`,
+    method: "get"
+  });
+}

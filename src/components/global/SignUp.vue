@@ -1,82 +1,86 @@
 <template>
-  <div class="su-wrap">
-    <h3>Sign up to join us</h3>
-    <div class="step-wrap" v-show="step === 1">
-      <p class="sub-title">
-        Enter your email address
-      </p>
-      <div class="input-wrap">
-        <p>Your Email</p>
+  <Popup @toggleShowState="toggleSignUp">
+    <div class="su-wrap">
+      <h3>Sign up to join us</h3>
+      <div class="step-wrap" v-show="step === 1">
+        <p class="sub-title">
+          Enter your email address
+        </p>
+        <div class="input-wrap">
+          <p>Your Email</p>
+          <input
+            v-model="userInfo.account"
+            :class="['su-input', infoError ? 'error' : '']"
+            type="text"
+            @blur="e => handleCheck(e.target.value, 'email')"
+          />
+          <span class="error-msg">please enter right email</span>
+        </div>
+      </div>
+      <div class="step-wrap" v-show="step === 2">
+        <p class="sub-title">
+          Enter your password
+        </p>
+        <div class="input-wrap">
+          <p>Your Password</p>
+          <input
+            v-model="userInfo.password"
+            :class="['su-input', infoError ? 'error' : '']"
+            type="password"
+            @blur="e => handleCheck(e.target.value, 'pwd')"
+          />
+          <span class="error-msg">please enter right password</span>
+        </div>
+      </div>
+      <div class="step-wrap" v-show="step === 3">
+        <p class="sub-title">
+          Select your avatar
+        </p>
+        <div class="avatar-wrap">
+          <PicEdit @getBlob="getAvatar" />
+          <span class="error-msg" v-if="infoError">
+            please select a pictrue as avatar
+          </span>
+        </div>
+      </div>
+      <div class="operate">
         <input
-          v-model="userInfo.account"
-          :class="['su-input', infoError ? 'error' : '']"
-          type="text"
-          @blur="e => handleCheck(e.target.value, 'email')"
+          @click="handleStep('back')"
+          class="back"
+          type="button"
+          v-show="step !== 1"
+          value="Back"
         />
-        <span class="error-msg">please enter right email</span>
-      </div>
-    </div>
-    <div class="step-wrap" v-show="step === 2">
-      <p class="sub-title">
-        Enter your password
-      </p>
-      <div class="input-wrap">
-        <p>Your Password</p>
         <input
-          v-model="userInfo.password"
-          :class="['su-input', infoError ? 'error' : '']"
-          type="password"
-          @blur="e => handleCheck(e.target.value, 'pwd')"
+          @click="handleStep('next')"
+          class="continue"
+          type="button"
+          :value="step === 3 ? 'Submit' : 'Continue'"
         />
-        <span class="error-msg">please enter right password</span>
       </div>
+      <span class="have-account" v-show="step === 1">
+        Have Account? <em @click="handleToSignIn">Sign In</em>
+      </span>
     </div>
-    <div class="step-wrap" v-show="step === 3">
-      <p class="sub-title">
-        Select your avatar
-      </p>
-      <div class="avatar-wrap">
-        <PicEdit @getBlob="getAvatar" />
-        <span class="error-msg" v-if="infoError">
-          please select a pictrue as avatar
-        </span>
-      </div>
-    </div>
-    <div class="operate">
-      <input
-        @click="handleStep('back')"
-        class="back"
-        type="button"
-        v-show="step !== 1"
-        value="Back"
-      />
-      <input
-        @click="handleStep('next')"
-        class="continue"
-        type="button"
-        :value="step === 3 ? 'Submit' : 'Continue'"
-      />
-    </div>
-    <span class="have-account" v-show="step === 1">
-      Have Account? <em @click="handleToSignIn">Sign In</em>
-    </span>
-  </div>
+  </Popup>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { regularCheck } from "@/utils/func_tool";
-import { Action } from "vuex-class";
+import { Action, Mutation } from "vuex-class";
 
 // interface
 import { IUserSignUpInfo } from "@/types/user";
 
 // components
 import PicEdit from "@/components/common/PicEdit.vue";
+import Popup from "@/components/common/Popup.vue";
 
 @Component({
   components: {
-    PicEdit
+    PicEdit,
+    Popup
   }
 })
 export default class SignUp extends Vue {
@@ -90,6 +94,7 @@ export default class SignUp extends Vue {
   };
 
   @Action("user/signup") signup!: Function;
+  @Mutation("normal/toggleSignUp") toggleSignUp!: Function;
 
   // input func
   private handleCheck(value: string, reg: string) {

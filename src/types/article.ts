@@ -24,3 +24,8 @@ export interface IArticleInfo {
   content: string;
   time: string;
 }
+
+export interface IArticle {
+  _id: string;
+  content: string;
+}

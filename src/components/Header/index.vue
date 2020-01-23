@@ -38,11 +38,6 @@
         </ul>
       </div>
     </div>
-
-    <Popup class="su-pop" v-if="popState" @toggleShowState="togglePopState">
-      <SignUp v-if="popType === 'signup'" @toSignIn="switchPopType('signin')" />
-      <SignIn v-if="popType === 'signin'" @toSignUp="switchPopType('signup')" />
-    </Popup>
   </div>
 </template>
 
@@ -55,8 +50,6 @@ import VueRouter from "vue-router";
 // components
 import Icon from "@/components/Icon.vue";
 import Popup from "@/components/common/Popup.vue";
-import SignUp from "./components/SignUp.vue";
-import SignIn from "./components/SignIn.vue";
 import Operate from "./components/Operate.vue";
 import { IUserInfo } from "../../types/user";
 
@@ -64,8 +57,6 @@ import { IUserInfo } from "../../types/user";
   components: {
     Icon,
     Popup,
-    SignUp,
-    SignIn,
     Operate
   }
 })
@@ -81,20 +72,8 @@ export default class Header extends Vue {
       name: "random",
       content: "RANDOM",
       path: "/random"
-    },
-    {
-      name: "write",
-      content: "WRITE",
-      path: "/write"
-    },
-    {
-      name: "addBook",
-      content: "ADD_BOOK",
-      path: "/addBook"
     }
   ];
-  private popState: boolean = false;
-  private popType: "signup" | "singin" = "signup";
   // 是否固定副导航
   private isNeedFixed: boolean = false;
 
@@ -118,15 +97,6 @@ export default class Header extends Vue {
     } else {
       this.isNeedFixed = false;
     }
-  }
-
-  private togglePopState(type: "signup" | "singin") {
-    this.switchPopType(type);
-    this.popState = !this.popState;
-  }
-
-  private switchPopType(type: "signup" | "singin") {
-    this.popType = type;
   }
 }
 </script>

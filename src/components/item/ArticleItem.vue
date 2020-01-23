@@ -4,7 +4,9 @@
       <div class="book">
         <div class="link">
           BOOK
-          <a href="#">{{ info.book }}</a>
+          <router-link :to="`/reader/${info.bookId}`">
+            {{ info.book }}
+          </router-link>
         </div>
         <div class="tag">
           <ul class="tag-list">
@@ -14,7 +16,11 @@
           </ul>
         </div>
       </div>
-      <h2 class="name">{{ info.title }}</h2>
+      <h2 class="name">
+        <router-link :to="`/article/${info._id}`">
+          {{ info.title }}
+        </router-link>
+      </h2>
       <div class="desc">{{ info.desc }}</div>
       <div class="other">
         <div class="info">
@@ -65,10 +71,6 @@ export default class ArticleItem extends Vue {
 .article-item-wrap {
   display: flex;
   justify-content: space-between;
-
-  // &:hover {
-  //   background-color: @hoverGray;
-  // }
 
   .article-item {
     flex: 1;

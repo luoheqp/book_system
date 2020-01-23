@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { Action } from "vuex-class";
+import { Action, Mutation } from "vuex-class";
 import Cookie from "js-cookie";
 
 @Component({})
@@ -41,6 +41,7 @@ export default class BasicGroup extends Vue {
 
   @Action("user/postUserCollect") postUserCollect!: Function;
   @Action("user/postUserLike") postUserLike!: Function;
+  @Mutation("normal/toggleSignInState") toggleSignInState!: Function;
 
   private mounted() {
     this.bookId = this.$route.params.id;
@@ -73,6 +74,13 @@ export default class BasicGroup extends Vue {
   private handleWrite() {
     const token = Cookie.get("token");
     const { bookId } = this;
+
+    if (!token) {
+      this.toggleSignInState();
+      return false;
+    }
+
+    this.$router.push(`/write/${bookId}`);
   }
 }
 </script>

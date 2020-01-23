@@ -8,6 +8,7 @@ import Reader from "../views/Reader/index.vue";
 import User from "../views/User/index.vue";
 import Write from "../views/Write/index.vue";
 import AddBook from "../views/AddBook/index.vue";
+import Article from "../views/Article/index.vue";
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,11 @@ const routes = [
     path: "/addBook",
     name: "addBook",
     component: AddBook
+  },
+  {
+    path: "/article/:articleId",
+    name: "article",
+    component: Article
   }
 ];
 

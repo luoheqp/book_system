@@ -11,6 +11,9 @@
       <li class="item"><router-link to="/user">Help</router-link></li>
       <li class="item"><a href="#" @click="handleSignOut">Sign out</a></li>
     </ul>
+    <ul class="card">
+      <li class="item"><router-link to="/addBook">Add book</router-link></li>
+    </ul>
   </div>
 </template>
 
@@ -66,7 +69,24 @@ export default class Operate extends Vue {
   }
 
   .card {
+    .flex-center();
+    flex-direction: column;
     padding: 10px 0;
+
+    .item {
+      width: 100%;
+      margin: 0;
+
+      a {
+        color: rgba(0, 0, 0, 0.6);
+        padding: 7px 25px;
+
+        &:hover {
+          cursor: pointer;
+          color: @mainColor;
+        }
+      }
+    }
 
     &:not(:last-child) {
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -87,26 +107,6 @@ export default class Operate extends Vue {
 
     .name-part {
       font-weight: bold;
-    }
-  }
-
-  .base-opt {
-    .flex-center();
-    flex-direction: column;
-
-    .item {
-      width: 100%;
-      margin: 0;
-
-      a {
-        color: rgba(0, 0, 0, 0.6);
-        padding: 7px 25px;
-
-        &:hover {
-          cursor: pointer;
-          color: @mainColor;
-        }
-      }
     }
   }
 }

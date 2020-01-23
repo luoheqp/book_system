@@ -1,66 +1,71 @@
 <template>
-  <div class="su-wrap">
-    <h3>Sign in to enjoy yourself</h3>
-    <div class="step-wrap" v-show="step === 1">
-      <p class="sub-title">
-        Enter your email address
-      </p>
-      <div class="input-wrap">
-        <p>Your Email</p>
-        <input
-          v-model="userInfo.account"
-          :class="['su-input', infoError ? 'error' : '']"
-          type="text"
-          @blur="e => handleCheck(e.target.value, 'email')"
-        />
-        <span class="error-msg">please enter right email</span>
+  <Popup @toggleShowState="toggleSignIn">
+    <div class="su-wrap">
+      <h3>Sign in to enjoy yourself</h3>
+      <div class="step-wrap" v-show="step === 1">
+        <p class="sub-title">
+          Enter your email address
+        </p>
+        <div class="input-wrap">
+          <p>Your Email</p>
+          <input
+            v-model="userInfo.account"
+            :class="['su-input', infoError ? 'error' : '']"
+            type="text"
+            @blur="e => handleCheck(e.target.value, 'email')"
+          />
+          <span class="error-msg">please enter right email</span>
+        </div>
       </div>
-    </div>
-    <div class="step-wrap" v-show="step === 2">
-      <p class="sub-title">
-        Enter your password
-      </p>
-      <div class="input-wrap">
-        <p>Your Password</p>
-        <input
-          v-model="userInfo.password"
-          :class="['su-input', infoError ? 'error' : '']"
-          type="password"
-          @blur="e => handleCheck(e.target.value, 'pwd')"
-        />
-        <span class="error-msg">please enter right password</span>
+      <div class="step-wrap" v-show="step === 2">
+        <p class="sub-title">
+          Enter your password
+        </p>
+        <div class="input-wrap">
+          <p>Your Password</p>
+          <input
+            v-model="userInfo.password"
+            :class="['su-input', infoError ? 'error' : '']"
+            type="password"
+            @blur="e => handleCheck(e.target.value, 'pwd')"
+          />
+          <span class="error-msg">please enter right password</span>
+        </div>
       </div>
+      <div class="operate">
+        <input
+          @click="handleStep('back')"
+          class="back"
+          type="button"
+          v-show="step !== 1"
+          value="Back"
+        />
+        <input
+          @click="handleStep('next')"
+          class="continue"
+          type="button"
+          :value="step === 2 ? 'Submit' : 'Continue'"
+        />
+      </div>
+      <span class="no-account" v-show="step === 1"
+        >No Account? <em @click="handleToSignUp">Create One</em></span
+      >
     </div>
-    <div class="operate">
-      <input
-        @click="handleStep('back')"
-        class="back"
-        type="button"
-        v-show="step !== 1"
-        value="Back"
-      />
-      <input
-        @click="handleStep('next')"
-        class="continue"
-        type="button"
-        :value="step === 2 ? 'Submit' : 'Continue'"
-      />
-    </div>
-    <span class="no-account" v-show="step === 1"
-      >No Account? <em @click="handleToSignUp">Create One</em></span
-    >
-  </div>
+  </Popup>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
 import { regularCheck } from "@/utils/func_tool";
-import { Action } from "vuex-class";
+import { Action, Mutation } from "vuex-class";
 
 // interface
 import { IUserSignInInfo } from "@/types/user";
 
-@Component({})
+// components
+import Popup from "@/components/common/Popup.vue";
+
+@Component({ components: { Popup } })
 export default class SignIn extends Vue {
   // sign up data
   private infoError: boolean = false;
@@ -71,6 +76,7 @@ export default class SignIn extends Vue {
   };
 
   @Action("user/signin") signin!: Function;
+  @Mutation("normal/toggleSignIn") toggleSignIn!: Function;
 
   // input func
   private handleCheck(value: string, reg: string) {
