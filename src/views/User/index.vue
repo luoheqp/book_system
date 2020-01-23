@@ -15,22 +15,18 @@
     <div class="read">
       <ul class="nav">
         <li
-          :class="['nav-item', nav === 'read' ? 'active' : '']"
-          @click="() => handleChangeNav('read')"
+          v-for="item in navList"
+          :key="item"
+          :class="['nav-item', nav === item ? 'active' : '']"
+          @click="() => handleChangeNav(item)"
         >
-          Reading
-        </li>
-        <li
-          :class="['nav-item', nav === 'write' ? 'active' : '']"
-          @click="() => handleChangeNav('write')"
-        >
-          Writing
+          {{ item }}
         </li>
       </ul>
-      <div :class="['read-box-wrap', nav === 'read' ? 'active' : '']">
+      <div :class="['read-box-wrap', nav === 'Collection' ? 'active' : '']">
         <BookList></BookList>
       </div>
-      <div :class="['write-box-wrap', nav === 'write' ? 'active' : '']">
+      <div :class="['write-box-wrap', nav === 'Writing' ? 'active' : '']">
         write box
       </div>
       <Popup v-if="popState" @toggleShowState="togglePopState">
@@ -59,8 +55,9 @@ import { IUserInfo } from "../../types/user";
   }
 })
 export default class User extends Vue {
-  private nav: string = "read";
   private popState: boolean = false;
+  private navList: string[] = ["Collection", "Writing"];
+  private nav: string = this.navList[0];
 
   @State(state => state.user.info) userInfo!: IUserInfo;
 
@@ -134,8 +131,8 @@ export default class User extends Vue {
       background-color: #ccc;
 
       img {
-        max-width: 100%;
-        max-height: 100%;
+        width: 100%;
+        height: 100%;
         object-fit: contain;
       }
     }

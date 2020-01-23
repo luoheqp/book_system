@@ -1,6 +1,8 @@
 <template>
   <div id="app">
     <Header :path="path"></Header>
+    <SignIn v-if="isSignInShow" />
+    <SignUp v-if="isSignUpShow" />
     <div class="container">
       <router-view />
     </div>
@@ -13,17 +15,21 @@ import { Vue, Component } from "vue-property-decorator";
 import Cookie from "js-cookie";
 
 // components
+import SignIn from "@/components/global/SignIn.vue";
+import SignUp from "@/components/global/SignUp.vue";
 import Header from "@/components/Header/index.vue";
 import Footer from "@/components/Footer.vue";
 import { State, Mutation, Action } from "vuex-class";
 
-@Component({ components: { Header, Footer } })
+@Component({ components: { Header, Footer, SignIn, SignUp } })
 export default class App extends Vue {
   get path(): string {
     return this.$route.path.split("/")[1];
   }
 
   @State(state => state.user.token) vuexToken!: string;
+  @State(state => state.normal.isSignInShow) isSignInShow!: boolean;
+  @State(state => state.normal.isSignUpShow) isSignUpShow!: boolean;
   @Mutation("user/saveToken") saveToken!: Function;
   @Action("user/getUserInfo") getUserInfo!: Function;
 

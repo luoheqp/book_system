@@ -30,7 +30,12 @@ import Popup from "@/components/common/Popup.vue";
   }
 })
 export default class CatalogPop extends Vue {
-  @Prop({ default: [] }) catalogInfo!: string[];
+  @Prop({
+    default: () => {
+      return [];
+    }
+  })
+  catalogInfo!: string[];
   public title: string = "Catalog";
 
   togglePopState() {
@@ -48,6 +53,7 @@ export default class CatalogPop extends Vue {
 
 .catalog-wrap {
   max-height: 500px;
+  max-width: 500px;
   overflow-y: scroll;
 
   .main-list {
@@ -59,8 +65,8 @@ export default class CatalogPop extends Vue {
         padding-bottom: 5px;
         margin-bottom: 10px;
         width: fit-content;
-        height: 25px;
         box-sizing: border-box;
+        border-bottom: 2px solid transparent;
 
         &:hover {
           border-bottom: 2px solid @mainColor;
@@ -73,8 +79,8 @@ export default class CatalogPop extends Vue {
           padding-bottom: 5px;
           margin-bottom: 10px;
           width: fit-content;
-          height: 21px;
           box-sizing: border-box;
+          border-bottom: 2px solid transparent;
 
           &:hover {
             border-bottom: 2px solid @mainColor;

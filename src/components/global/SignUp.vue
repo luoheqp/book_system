@@ -158,7 +158,7 @@ export default class SignUp extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/styles/index.less";
+@import "../../assets/styles/index.less";
 
 .su-wrap {
   .flex-center();

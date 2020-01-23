@@ -2,7 +2,9 @@ import axiosInstance from "./request";
 import {
   IUserSignUpInfo,
   IUserSignInInfo,
-  IUserChangeInfo
+  IUserChangeInfo,
+  IUserChangeCollection,
+  IUserChangeLike
 } from "@/types/user";
 // import { IUserSignUpSuccess } from "@/store/user/types";
 
@@ -34,5 +36,29 @@ export function postChangeUserInfo(changeInfo: IUserChangeInfo) {
     url: "user",
     method: "patch",
     data: changeInfo
+  });
+}
+
+export function postChangeUserCollection(changeInfo: IUserChangeCollection) {
+  return axiosInstance({
+    url: "user/collect",
+    method: "patch",
+    data: changeInfo
+  });
+}
+
+export function postChangeUserLike(changeInfo: IUserChangeLike) {
+  return axiosInstance({
+    url: "user/like",
+    method: "patch",
+    data: changeInfo
+  });
+}
+
+export function postToSaveReadSetting(changeInfo: any) {
+  return axiosInstance({
+    url: "user/readSet",
+    method: "patch",
+    data: { setting: changeInfo }
   });
 }

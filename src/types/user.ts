@@ -1,3 +1,5 @@
+import { IReaderSet } from "./book";
+
 export interface IUserInfo {
   account: string;
   avatar: string;
@@ -5,7 +7,7 @@ export interface IUserInfo {
   likeBook: number;
   article: string;
   readBook: number;
-  readSet: Object;
+  readSet: IReaderSet;
   collectBook: Object[];
   uploadBook: Object[];
 }
@@ -14,7 +16,7 @@ export interface IUserSignUpInfo {
   name?: string;
   account: string;
   password: string;
-  avatar: Blob;
+  avatar: Blob | string;
 }
 
 export interface IUserSignInInfo {
@@ -25,4 +27,14 @@ export interface IUserSignInInfo {
 export interface IUserChangeInfo {
   avatar?: Blob;
   password?: string;
+}
+
+export interface IUserChangeCollection {
+  bookId: string;
+  type: 0 | 1; // 0 - 去除; 1 - 添加
+}
+
+export interface IUserChangeLike {
+  bookId: string;
+  type: 0 | 1;
 }

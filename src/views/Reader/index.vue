@@ -3,12 +3,13 @@
     <div class="ebook-wrap">
       <div id="ebook" ref="ebook"></div>
       <div class="mask">
-        <div class="left" @click="prevPage"></div>
-        <div class="right" @click="nextPage"></div>
+        <div class="left" @click="changePage(0)"></div>
+        <div class="right" @click="changePage(1)"></div>
       </div>
     </div>
     <div class="opt-wrap">
-      <SettingGroup :rendition="rendition" :navigation="navigation" />
+      <BasicGroup class="basic-group" />
+      <SettingGroup :rendition="rendition" />
     </div>
   </div>
 </template>
@@ -19,42 +20,46 @@ import { IEbookSet } from "@/types/reader";
 import Epub from "epubjs";
 
 // components
-import CatalogPop from "./components/CatalogPop.vue";
 import SettingGroup from "./components/SettingGroup.vue";
-import { State } from "vuex-class";
+import BasicGroup from "./components/BasicGroup.vue";
+import { State, Mutation, Action } from "vuex-class";
+import { IBook } from "../../types/book";
 
 @Component({
   components: {
-    CatalogPop,
-    SettingGroup
+    SettingGroup,
+    BasicGroup
   }
 })
 export default class Reader extends Vue {
-  public EPUB_ADDRESS = "http://www.resource.com:8000/book/";
+  public EPUB_ADDRESS = "http://www.resource.com:8001/book/";
 
   // === 电子书相关 data ===
   public book!: any;
   public rendition: any = "";
   public navigation: any = "";
+  public locations: any = "";
+
+  @Action("book/getBookInfo") getBookInfo!: Function;
+  @Mutation("book/setEbook") setEbook!: Function;
 
   created() {
     // 监听键盘 , 触发翻页
     document.addEventListener("keyup", (e: any) => {
       let key = e.keyCode;
       if (key === 37) {
-        this.prevPage();
+        this.changePage(0);
       } else if (key === 39) {
-        this.nextPage();
+        this.changePage(1);
       }
     });
   }
 
-  mounted() {
+  async mounted() {
     // 加载电子书
-    const bookId = this.$route.params.id;
-    this.EPUB_ADDRESS = `${this.EPUB_ADDRESS}${bookId}.epub`;
+    await this.loadingEpub();
 
-    this.initEpub();
+    // TODO: 存在 token 则记录用户阅读过
 
     // 页面缩放时改变大小
     const ebook = this.$refs.ebook as any;
@@ -62,6 +67,13 @@ export default class Reader extends Vue {
     window.addEventListener("resize", () => {
       this.rendition.resize(ebook.offsetWidth, ebook.offsetHeight);
     });
+  }
+
+  async loadingEpub() {
+    const bookId = this.$route.params.id;
+    let bookInfo = await this.getBookInfo(bookId);
+    this.EPUB_ADDRESS += `${bookInfo.md5}.epub`;
+    this.initEpub();
   }
 
   // 初始化解析电子书
@@ -77,24 +89,28 @@ export default class Reader extends Vue {
     // 通过 Redition.display 渲染电子书
     this.rendition.display();
     // 生成 navigation
-    this.book.ready.then(() => {
-      this.navigation = this.book.navigation;
-      // 生成 locations
-      // return this.book.locations.generate();
-    });
+    this.book.ready
+      .then(() => {
+        this.setEbook(this.book);
+      })
+      .then(() => {
+        this.locations = this.book.locations;
+        const locations = this.book.locations;
+        console.log(locations.epubcfi);
+      });
   }
 
-  // 向前翻页
-  prevPage() {
+  // 0 - 向前翻页
+  // 1 - 向后翻页
+  changePage(type: 0 | 1) {
     if (this.rendition) {
-      this.rendition.prev();
-    }
-  }
+      if (type) {
+        this.rendition.next();
+      } else {
+        this.rendition.prev();
+      }
 
-  // 向后翻页
-  nextPage() {
-    if (this.rendition) {
-      this.rendition.next();
+      const epubCfi = this.locations.epubcfi;
     }
   }
 }
@@ -135,12 +151,6 @@ export default class Reader extends Vue {
       .right {
         flex: 1;
       }
-
-      .left {
-      }
-
-      .right {
-      }
     }
   }
 
@@ -150,6 +160,10 @@ export default class Reader extends Vue {
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
+
+    .basic-group {
+      margin-bottom: @defMargin;
+    }
   }
 }
 </style>

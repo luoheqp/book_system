@@ -51,8 +51,7 @@ export default class PicEdit extends Vue {
   public isCropperShow: boolean = false;
   private avatar: string = "";
 
-  @Prop({ default: "www.resource.com:8000/user/avatar/default.png" })
-  defImg!: string;
+  @Prop({ default: "" }) defImg!: string;
 
   @Watch("defImg", { immediate: true })
   onDefImgChange() {

@@ -1,6 +1,6 @@
 <template>
   <div class="su-wrap">
-    <h3>Sign up to join us</h3>
+    <h3>Sign in to enjoy yourself</h3>
     <div class="step-wrap" v-show="step === 1">
       <p class="sub-title">
         Enter your email address
@@ -31,17 +31,6 @@
         <span class="error-msg">please enter right password</span>
       </div>
     </div>
-    <div class="step-wrap" v-show="step === 3">
-      <p class="sub-title">
-        Select your avatar
-      </p>
-      <div class="avatar-wrap">
-        <PicEdit @getBlob="getAvatar" />
-        <span class="error-msg" v-if="infoError">
-          please select a pictrue as avatar
-        </span>
-      </div>
-    </div>
     <div class="operate">
       <input
         @click="handleStep('back')"
@@ -54,12 +43,12 @@
         @click="handleStep('next')"
         class="continue"
         type="button"
-        :value="step === 3 ? 'Submit' : 'Continue'"
+        :value="step === 2 ? 'Submit' : 'Continue'"
       />
     </div>
-    <span class="have-account" v-show="step === 1">
-      Have Account? <em @click="handleToSignIn">Sign In</em>
-    </span>
+    <span class="no-account" v-show="step === 1"
+      >No Account? <em @click="handleToSignUp">Create One</em></span
+    >
   </div>
 </template>
 
@@ -69,27 +58,19 @@ import { regularCheck } from "@/utils/func_tool";
 import { Action } from "vuex-class";
 
 // interface
-import { IUserSignUpInfo } from "@/types/user";
+import { IUserSignInInfo } from "@/types/user";
 
-// components
-import PicEdit from "@/components/common/PicEdit.vue";
-
-@Component({
-  components: {
-    PicEdit
-  }
-})
-export default class SignUp extends Vue {
+@Component({})
+export default class SignIn extends Vue {
   // sign up data
   private infoError: boolean = false;
   private step: number = 1;
-  private userInfo: IUserSignUpInfo = {
+  private userInfo: IUserSignInInfo = {
     account: "",
-    password: "",
-    avatar: ""
+    password: ""
   };
 
-  @Action("user/signup") signup!: Function;
+  @Action("user/signin") signin!: Function;
 
   // input func
   private handleCheck(value: string, reg: string) {
@@ -108,57 +89,45 @@ export default class SignUp extends Vue {
     if (type === "next") {
       switch (step) {
         case 1:
-          flag = this.handleCheck(this.userInfo.account, "email");
+          // flag = this.handleCheck(this.userInfo.account, "email");
           break;
         case 2:
-          flag = this.handleCheck(this.userInfo.password, "pwd");
-          break;
-        case 3:
       }
 
-      if (flag && step === 3) {
-        // 判断输入内容是否有误
-        if (this.userInfo.avatar) {
-          this.infoError = false;
-          this.handleSubmit();
-        } else {
-          this.infoError = true;
-        }
+      if (flag && step === 2) {
+        this.handleSubmit();
+        return true;
       } else if (flag) {
         this.step = step + 1;
+        return true;
       }
     } else {
       this.step = step - 1;
     }
   }
 
-  // 提交注册
   private async handleSubmit() {
     let userData = new FormData();
-    let { account, password, avatar } = this.userInfo;
+    let { account, password } = this.userInfo;
     userData.append("account", account);
     userData.append("password", password);
-    userData.append("avatar", avatar);
-
-    this.signup(userData).then((res: any) => {
-      this.$router.go(0);
-    });
+    this.signin(userData)
+      .then((res: any) => {
+        this.$router.go(0);
+      })
+      .catch((err: string) => {
+        this.$toast.show(err);
+      });
   }
 
-  // 已有账号 , 直接登录
-  private handleToSignIn() {
-    this.$emit("toSignIn", "signup");
-  }
-
-  private getAvatar(avatar: Blob) {
-    this.userInfo.avatar = avatar;
-    this.infoError = false;
+  private handleToSignUp() {
+    this.$emit("toSignUp", "signup");
   }
 }
 </script>
 
 <style lang="less" scoped>
-@import "../../../assets/styles/index.less";
+@import "../../assets/styles/index.less";
 
 .su-wrap {
   .flex-center();
@@ -231,17 +200,6 @@ export default class SignUp extends Vue {
         display: none;
       }
     }
-
-    .avatar-wrap {
-      margin: 25px 0 45px;
-      font-size: 14px;
-      color: red;
-
-      .error-msg {
-        margin-top: 5px;
-        display: inline-block;
-      }
-    }
   }
 
   .operate {
@@ -259,7 +217,11 @@ export default class SignUp extends Vue {
     }
   }
 
-  .have-account {
+  .continue {
+    margin-bottom: @defMargin;
+  }
+
+  .no-account {
     em {
       color: @mainColor;
     }

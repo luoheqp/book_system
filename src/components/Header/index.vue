@@ -10,12 +10,17 @@
         <div class="user-wrap">
           <span class="icon"><i class="iconfont icon-search"></i></span>
           <ul v-if="!token">
-            <li class="item" @click="togglePopState('signup')">Sign up</li>
-            <li class="item" @click="togglePopState('signin')">Sign in</li>
+            <li class="item" @click="toggleSignUp">Sign up</li>
+            <li class="item" @click="toggleSignIn">Sign in</li>
           </ul>
           <ul v-else>
-            <li class="avatar">
-              <img :src="info.avatar" alt="" />
+            <li class="avatar-wrap">
+              <div class="avatar">
+                <img :src="info.avatar" alt="" />
+              </div>
+              <div class="operate-wrap">
+                <Operate />
+              </div>
             </li>
           </ul>
         </div>
@@ -43,7 +48,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
+import { State, Mutation } from "vuex-class";
 import { INavItem } from "../../types/header";
 import VueRouter from "vue-router";
 
@@ -52,6 +57,7 @@ import Icon from "@/components/Icon.vue";
 import Popup from "@/components/common/Popup.vue";
 import SignUp from "./components/SignUp.vue";
 import SignIn from "./components/SignIn.vue";
+import Operate from "./components/Operate.vue";
 import { IUserInfo } from "../../types/user";
 
 @Component({
@@ -59,7 +65,8 @@ import { IUserInfo } from "../../types/user";
     Icon,
     Popup,
     SignUp,
-    SignIn
+    SignIn,
+    Operate
   }
 })
 export default class Header extends Vue {
@@ -74,16 +81,6 @@ export default class Header extends Vue {
       name: "random",
       content: "RANDOM",
       path: "/random"
-    },
-    {
-      name: "user",
-      content: "USER",
-      path: "/user"
-    },
-    {
-      name: "reader",
-      content: "READER",
-      path: "/reader"
     },
     {
       name: "write",
@@ -107,6 +104,8 @@ export default class Header extends Vue {
   // state
   @State(state => state.user.token) token!: String;
   @State(state => state.user.info) info!: IUserInfo;
+  @Mutation("normal/toggleSignIn") toggleSignIn!: Function;
+  @Mutation("normal/toggleSignUp") toggleSignUp!: Function;
 
   private mounted() {
     window.addEventListener("scroll", this.handleScrollEvent);
@@ -152,6 +151,7 @@ export default class Header extends Vue {
 
       .user-wrap {
         .flex-center();
+        height: 100%;
 
         .icon {
           .flex-center();
@@ -163,6 +163,7 @@ export default class Header extends Vue {
 
         ul {
           display: flex;
+          height: 100%;
 
           .item {
             .flex-align-center();
@@ -177,16 +178,36 @@ export default class Header extends Vue {
             }
           }
 
-          .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #ccc;
-            overflow: hidden;
+          .avatar-wrap {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
 
-            img {
-              max-width: 100%;
-              max-height: 100%;
+            &:hover {
+              .operate-wrap {
+                display: block;
+              }
+            }
+
+            .avatar {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              background: #ccc;
+              overflow: hidden;
+
+              img {
+                max-width: 100%;
+                max-height: 100%;
+              }
+            }
+
+            .operate-wrap {
+              position: absolute;
+              right: 0;
+              top: 30px;
+              display: none;
             }
           }
         }

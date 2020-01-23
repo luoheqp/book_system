@@ -31,13 +31,21 @@
         <span class="error-msg">please enter right password</span>
       </div>
     </div>
-    <input
-      @click="handleNext"
-      @keyup.enter="handleNext"
-      class="continue"
-      type="button"
-      :value="step === 2 ? 'Submit' : 'Continue'"
-    />
+    <div class="operate">
+      <input
+        @click="handleStep('back')"
+        class="back"
+        type="button"
+        v-show="step !== 1"
+        value="Back"
+      />
+      <input
+        @click="handleStep('next')"
+        class="continue"
+        type="button"
+        :value="step === 2 ? 'Submit' : 'Continue'"
+      />
+    </div>
     <span class="no-account" v-show="step === 1"
       >No Account? <em @click="handleToSignUp">Create One</em></span
     >
@@ -58,8 +66,8 @@ export default class SignIn extends Vue {
   private infoError: boolean = false;
   private step: number = 1;
   private userInfo: IUserSignInInfo = {
-    account: "61442@qq.com",
-    password: "12345"
+    account: "",
+    password: ""
   };
 
   @Action("user/signin") signin!: Function;
@@ -75,26 +83,26 @@ export default class SignIn extends Vue {
   }
 
   // 下一步或执行提交
-  private handleNext() {
+  private handleStep(type: string) {
     let flag: boolean = true;
     let { step } = this;
-    switch (step) {
-      case 1:
-        // flag = this.handleCheck(this.userInfo.account, "email");
-        break;
-      case 2:
-        // flag = this.handleCheck(this.userInfo.password, "pwd");
-        break;
-    }
+    if (type === "next") {
+      switch (step) {
+        case 1:
+          // flag = this.handleCheck(this.userInfo.account, "email");
+          break;
+        case 2:
+      }
 
-    if (step === 2) {
-      this.handleSubmit();
-      return true;
-    }
-
-    if (flag) {
-      this.step = step + 1;
-      return true;
+      if (flag && step === 2) {
+        this.handleSubmit();
+        return true;
+      } else if (flag) {
+        this.step = step + 1;
+        return true;
+      }
+    } else {
+      this.step = step - 1;
     }
   }
 
@@ -105,7 +113,7 @@ export default class SignIn extends Vue {
     userData.append("password", password);
     this.signin(userData)
       .then((res: any) => {
-        // this.$router.go(0);
+        this.$router.go(0);
       })
       .catch((err: string) => {
         this.$toast.show(err);
@@ -124,8 +132,8 @@ export default class SignIn extends Vue {
 .su-wrap {
   .flex-center();
   flex-direction: column;
-  width: 600px;
-  height: 550px;
+  width: 585px;
+  height: 535px;
   padding: 44px 56px;
   box-sizing: border-box;
   text-align: center;
@@ -191,6 +199,21 @@ export default class SignIn extends Vue {
       .error-msg {
         display: none;
       }
+    }
+  }
+
+  .operate {
+    margin-bottom: @defMargin;
+
+    .back {
+      background: #fff;
+      color: #333;
+      border: 1px solid #333;
+      margin-right: @defMargin;
+    }
+
+    .continue {
+      border: 1px solid #333;
     }
   }
 

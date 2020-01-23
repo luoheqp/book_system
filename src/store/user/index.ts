@@ -4,9 +4,17 @@ import {
   postUserInfoToSignUp,
   postUserInfoToSignIn,
   getUserInfo,
-  postChangeUserInfo
+  postChangeUserInfo,
+  postChangeUserCollection,
+  postChangeUserLike,
+  postToSaveReadSetting
 } from "@/apis/user";
-import { IUserInfo, IUserChangeInfo } from "@/types/user";
+import {
+  IUserInfo,
+  IUserChangeInfo,
+  IUserChangeCollection,
+  IUserChangeLike
+} from "@/types/user";
 
 class State {
   public token: string = "";
@@ -19,6 +27,11 @@ const mutations = <MutationTree<State>>{
   },
   saveUserInfo(state, userInfo) {
     state.info = userInfo;
+  },
+  signOut(state) {
+    state.token = "";
+    state.info = {};
+    Cookies.remove("token");
   }
 };
 
@@ -60,15 +73,9 @@ const actions = <ActionTree<State, any>>{
   getUserInfo({ commit }) {
     return new Promise((resolve, reject) => {
       getUserInfo().then((res: any) => {
-        const { code } = res;
-        if (code === 0) {
-          const { data } = res;
-          commit("saveUserInfo", data);
-          resolve({ code: 0 });
-        } else if (code === 2) {
-          Cookies.remove("token");
-          resolve({ code: 0 });
-        }
+        const { data } = res;
+        commit("saveUserInfo", data);
+        resolve(data);
       });
     });
   },
@@ -78,6 +85,27 @@ const actions = <ActionTree<State, any>>{
         if (res.code === 0) {
           resolve({ code: 0 });
         }
+      });
+    });
+  },
+  postUserCollect({ commit }, data: IUserChangeCollection) {
+    return new Promise(resolve => {
+      postChangeUserCollection(data).then((res: any) => {
+        resolve();
+      });
+    });
+  },
+  postUserLike({ commit }, data: IUserChangeLike) {
+    return new Promise(resolve => {
+      postChangeUserLike(data).then((res: any) => {
+        resolve();
+      });
+    });
+  },
+  saveSetting({ commit }, data: any) {
+    return new Promise(resolve => {
+      postToSaveReadSetting(data).then((res: any) => {
+        console.log(res);
       });
     });
   }

@@ -11,7 +11,8 @@ export function regularCheck(target: string, reg: string) {
   const regList: regObj = {
     email: new RegExp(
       "^([A-Za-z0-9\\_\\-\\.])+@([A-Za-z0-9\\_\\-\\.])+.([A-Za-z]{2,4})$"
-    )
+    ),
+    pwd: new RegExp("^[a-zA-Z0-9]{5,}$")
   };
 
   if (!regList[reg]) {

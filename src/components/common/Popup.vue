@@ -48,6 +48,8 @@ export default class Popup extends Vue {
     max-height: 800px;
     max-width: 800px;
     overflow-x: hidden;
+    padding: @defMargin;
+    box-sizing: border-box;
 
     .title {
       font-size: 20px;
