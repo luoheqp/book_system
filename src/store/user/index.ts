@@ -7,7 +7,9 @@ import {
   postChangeUserInfo,
   postChangeUserCollection,
   postChangeUserLike,
-  postToSaveReadSetting
+  postToSaveReadSetting,
+  getToGetCollection,
+  patchToUpdateBookRecord
 } from "@/apis/user";
 import {
   IUserInfo,
@@ -108,6 +110,17 @@ const actions = <ActionTree<State, any>>{
         console.log(res);
       });
     });
+  },
+  getCollect({ commit }) {
+    return new Promise(resolve => {
+      getToGetCollection().then((res: any) => {
+        console.log(res);
+        resolve(res.data);
+      });
+    });
+  },
+  updateBookRecord({ commit }, data: any) {
+    patchToUpdateBookRecord(data);
   }
 };
 

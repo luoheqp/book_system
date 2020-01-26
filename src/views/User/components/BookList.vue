@@ -1,11 +1,16 @@
 <template>
   <div class="book-list-wrap">
-    <BookItem class="item"></BookItem>
+    <BookItem
+      v-for="item in info"
+      :info="item"
+      :key="item._id"
+      class="item"
+    ></BookItem>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 // components
 import BookItem from "@/views/User/components/BookItem.vue";
@@ -15,7 +20,14 @@ import BookItem from "@/views/User/components/BookItem.vue";
     BookItem
   }
 })
-export default class BookList extends Vue {}
+export default class BookList extends Vue {
+  @Prop({
+    default: () => {
+      return [{}];
+    }
+  })
+  info!: any;
+}
 </script>
 
 <style lang="less" scoped>

@@ -24,7 +24,10 @@
         </li>
       </ul>
       <div :class="['read-box-wrap', nav === 'Collection' ? 'active' : '']">
-        <BookList></BookList>
+        <BookList :info="collection"></BookList>
+      </div>
+      <div :class="['read-box-wrap', nav === 'Read History' ? 'active' : '']">
+        <BookList :info="collection"></BookList>
       </div>
       <div :class="['write-box-wrap', nav === 'Writing' ? 'active' : '']">
         write box
@@ -44,7 +47,7 @@ import BookList from "@/views/User/components/BookList.vue";
 import Popup from "@/components/common/Popup.vue";
 import UserInfoEdit from "./components/UserInfoEdit.vue";
 
-import { State } from "vuex-class";
+import { State, Action } from "vuex-class";
 import { IUserInfo } from "../../types/user";
 
 @Component({
@@ -56,10 +59,18 @@ import { IUserInfo } from "../../types/user";
 })
 export default class User extends Vue {
   private popState: boolean = false;
-  private navList: string[] = ["Collection", "Writing"];
+  private navList: string[] = ["Collection", "Read History", "Writing"];
   private nav: string = this.navList[0];
+  public collection: any = [];
 
   @State(state => state.user.info) userInfo!: IUserInfo;
+  @Action("user/getCollect") getCollect!: Function;
+
+  private mounted() {
+    this.getCollect().then(res => {
+      this.collection = res;
+    });
+  }
 
   handleChangeNav(nav: string) {
     this.nav = nav;
@@ -99,6 +110,7 @@ export default class User extends Vue {
 
       .user-name {
         .one-line();
+        width: unset;
         max-width: 400px;
         font-size: 30px;
         font-weight: bold;

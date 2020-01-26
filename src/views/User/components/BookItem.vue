@@ -1,20 +1,29 @@
 <template>
-  <div class="book-item-wrap">
-    <div class="pic"></div>
+  <router-link :to="`/reader/${info._id}`" class="book-item-wrap">
+    <div class="pic">
+      <img :src="info.cover" alt="" />
+    </div>
     <div class="info">
-      <p class="name">name</p>
-      <p class="author">author</p>
+      <p class="name">{{ info.name }}</p>
+      <p class="author">{{ info.author }}</p>
       <p class="progress">progress:</p>
       <p class="time">last time:</p>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
 
 @Component
-export default class BookItem extends Vue {}
+export default class BookItem extends Vue {
+  @Prop({
+    default: () => {
+      return {};
+    }
+  })
+  info!: any;
+}
 </script>
 
 <style lang="less" scoped>
@@ -39,6 +48,12 @@ export default class BookItem extends Vue {}
     background-color: #ccc;
     margin-right: @defMargin;
     border-radius: 10px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
   }
   .info {
     flex: 1;
@@ -61,8 +76,7 @@ export default class BookItem extends Vue {}
     }
 
     .author {
-      font-style: italic;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     .progress {

@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { IEbookSet } from "@/types/reader";
-import Epub from "epubjs";
+import ePub from "epubjs";
 
 // components
 import SettingGroup from "./components/SettingGroup.vue";
@@ -32,76 +32,91 @@ import { IBook } from "../../types/book";
   }
 })
 export default class Reader extends Vue {
-  public EPUB_ADDRESS = "http://www.resource.com:8001/book/";
+  public bookId: string = "";
 
   // === 电子书相关 data ===
   public book!: any;
   public rendition: any = "";
-  public navigation: any = "";
-  public locations: any = "";
+  public progress: any = { cfi: "", percent: 0 };
 
+  @State(state => state.user.token) token: string;
   @Action("book/getBookInfo") getBookInfo!: Function;
+  @Action("user/updateBookRecord") updateBookRecord!: Function;
   @Mutation("book/setEbook") setEbook!: Function;
 
-  created() {
-    // 监听键盘 , 触发翻页
-    document.addEventListener("keyup", (e: any) => {
-      let key = e.keyCode;
-      if (key === 37) {
-        this.changePage(0);
-      } else if (key === 39) {
-        this.changePage(1);
-      }
-    });
-  }
-
-  async mounted() {
+  private async mounted() {
     // 加载电子书
     await this.loadingEpub();
 
-    // TODO: 存在 token 则记录用户阅读过
-
     // 页面缩放时改变大小
-    const ebook = this.$refs.ebook as any;
     // TODO: 节流
+    const ebook = this.$refs.ebook as any;
     window.addEventListener("resize", () => {
       this.rendition.resize(ebook.offsetWidth, ebook.offsetHeight);
     });
+
+    // 在页面刷新的时候触发事件
+    if (this.token) {
+      window.onbeforeunload = e => {
+        let { cfi, percent } = this.progress;
+        let { bookId } = this;
+
+        if (this.$route.name === "reader") {
+          this.updateBookRecord({ bookId, cfi, percent });
+        }
+      };
+    }
   }
 
   async loadingEpub() {
-    const bookId = this.$route.params.id;
-    let bookInfo = await this.getBookInfo(bookId);
-    this.EPUB_ADDRESS += `${bookInfo.md5}.epub`;
-    this.initEpub();
+    this.bookId = this.$route.params.id;
+    let bookInfo = await this.getBookInfo(this.bookId);
+    let EPUB_ADDRESS = `http://www.resource.com:8001/book/${bookInfo.md5}.epub`;
+    this.initEpub(EPUB_ADDRESS);
   }
 
   // 初始化解析电子书
-  initEpub() {
+  async initEpub(url: string) {
     const ebook = this.$refs.ebook as any;
+    this.book = ePub(url);
+    let { book } = this;
 
-    this.book = Epub(this.EPUB_ADDRESS);
     // 通过 book.renderTo 生成 Rendition
-    this.rendition = this.book.renderTo("ebook", {
+    this.rendition = book.renderTo("ebook", {
       width: ebook.offsetWidth,
       height: ebook.offsetHeight
     });
+
+    this.bandingKeyToRendition();
+
     // 通过 Redition.display 渲染电子书
     this.rendition.display();
-    // 生成 navigation
-    this.book.ready
-      .then(() => {
-        this.setEbook(this.book);
-      })
-      .then(() => {
-        this.locations = this.book.locations;
-        const locations = this.book.locations;
-        console.log(locations.epubcfi);
-      });
+
+    // 监听进度变化
+    book.ready.then(() => {
+      this.setEbook(book);
+      this.book = book;
+
+      this.locationListener();
+    });
   }
 
-  // 0 - 向前翻页
-  // 1 - 向后翻页
+  // 监听按键
+  bandingKeyToRendition() {
+    this.rendition.on("keyup", this.keyListener);
+    document.addEventListener("keyup", this.keyListener, false);
+  }
+
+  keyListener(e) {
+    let key = e.keyCode;
+    if (key == 37) {
+      this.changePage(0);
+    } else if (key == 39) {
+      this.changePage(1);
+    }
+  }
+
+  // 0 - 向前翻页 1 - 向后翻页
   changePage(type: 0 | 1) {
     if (this.rendition) {
       if (type) {
@@ -109,9 +124,22 @@ export default class Reader extends Vue {
       } else {
         this.rendition.prev();
       }
-
-      const epubCfi = this.locations.epubcfi;
     }
+  }
+
+  locationListener() {
+    if (this.progress.cfi) {
+      this.book.locations.generate();
+      this.rendition.display(this.progress.cfi);
+    }
+
+    this.rendition.on("relocated", location => {
+      let cfi = location.start.cfi;
+      this.progress.cfi = cfi;
+      let percent = this.book.locations.percentageFromCfi(cfi);
+      let percentage = Math.floor(percent * 100);
+      this.progress.percentage;
+    });
   }
 }
 </script>

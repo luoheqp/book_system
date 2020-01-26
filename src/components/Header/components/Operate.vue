@@ -96,6 +96,7 @@ export default class Operate extends Vue {
   .user-card {
     .flex-center();
     justify-content: flex-start;
+    flex-direction: row;
     padding: 25px;
 
     > img {

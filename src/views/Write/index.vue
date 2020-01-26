@@ -68,8 +68,8 @@ import { Vue, Component } from "vue-property-decorator";
 import marked from "marked";
 import hljs from "highlight.js"; // 高亮
 import DOMPurify from "dompurify"; // DOM 化 , 防止 XSS 攻击
-import "@/assets/styles/markdown/github-markdown.css";
 import { Action } from "vuex-class";
+import "@/assets/styles/markdown/github-markdown.css";
 
 @Component({})
 export default class Write extends Vue {

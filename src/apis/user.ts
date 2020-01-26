@@ -62,3 +62,18 @@ export function postToSaveReadSetting(changeInfo: any) {
     data: { setting: changeInfo }
   });
 }
+
+export function getToGetCollection() {
+  return axiosInstance({
+    url: "/user/collection",
+    method: "get"
+  });
+}
+
+export function patchToUpdateBookRecord(data: any) {
+  return axiosInstance({
+    url: "/user/updateRecord",
+    method: "patch",
+    data
+  });
+}
