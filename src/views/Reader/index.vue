@@ -24,6 +24,9 @@ import SettingGroup from "./components/SettingGroup.vue";
 import BasicGroup from "./components/BasicGroup.vue";
 import { State, Mutation, Action } from "vuex-class";
 import { IBook } from "../../types/book";
+import { Route } from "vue-router";
+
+Component.registerHooks(["beforeRouteLeave"]);
 
 @Component({
   components: {
@@ -39,7 +42,7 @@ export default class Reader extends Vue {
   public rendition: any = "";
   public progress: any = { cfi: "", percent: 0 };
 
-  @State(state => state.user.token) token: string;
+  @State(state => state.user.token) token!: string;
   @Action("book/getBookInfo") getBookInfo!: Function;
   @Action("user/updateBookRecord") updateBookRecord!: Function;
   @Mutation("book/setEbook") setEbook!: Function;
@@ -57,7 +60,7 @@ export default class Reader extends Vue {
 
     // 在页面刷新的时候触发事件
     if (this.token) {
-      window.onbeforeunload = e => {
+      window.onbeforeunload = (e: any) => {
         let { cfi, percent } = this.progress;
         let { bookId } = this;
 
@@ -68,10 +71,23 @@ export default class Reader extends Vue {
     }
   }
 
+  private beforeRouteLeave(to: Route, from: Route, next: any) {
+    let { cfi, percent } = this.progress;
+    let { bookId } = this;
+    this.updateBookRecord({ bookId, cfi, percent });
+    next();
+  }
+
   async loadingEpub() {
     this.bookId = this.$route.params.id;
     let bookInfo = await this.getBookInfo(this.bookId);
     let EPUB_ADDRESS = `http://www.resource.com:8001/book/${bookInfo.md5}.epub`;
+
+    // 查询历史阅读进度
+    if (bookInfo.cfi) {
+      this.progress.cfi = bookInfo.cfi;
+    }
+
     this.initEpub(EPUB_ADDRESS);
   }
 
@@ -107,7 +123,7 @@ export default class Reader extends Vue {
     document.addEventListener("keyup", this.keyListener, false);
   }
 
-  keyListener(e) {
+  keyListener(e: KeyboardEvent) {
     let key = e.keyCode;
     if (key == 37) {
       this.changePage(0);
@@ -133,12 +149,12 @@ export default class Reader extends Vue {
       this.rendition.display(this.progress.cfi);
     }
 
-    this.rendition.on("relocated", location => {
+    this.rendition.on("relocated", (location: any) => {
       let cfi = location.start.cfi;
       this.progress.cfi = cfi;
       let percent = this.book.locations.percentageFromCfi(cfi);
       let percentage = Math.floor(percent * 100);
-      this.progress.percentage;
+      this.progress.percent = percentage;
     });
   }
 }

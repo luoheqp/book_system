@@ -6,7 +6,7 @@
     <div class="info">
       <p class="name">{{ info.name }}</p>
       <p class="author">{{ info.author }}</p>
-      <p class="progress">progress:</p>
+      <p class="progress">progress: {{ info.percent }} %</p>
       <p class="time">last time:</p>
     </div>
   </router-link>

@@ -131,7 +131,6 @@ export default class SettingGroup extends Vue {
   @State(state => state.user.info) userInfo!: IUserInfo;
   @Mutation("book/setEbookSet") setEbookSet!: Function;
   @Action("user/saveSetting") saveSetting!: Function;
-  @Action("user/getUserInfo") getUserInfo!: Function;
 
   get navigation() {
     const { book } = this;
@@ -143,9 +142,6 @@ export default class SettingGroup extends Vue {
 
     if (this.userInfo.readSet) {
       info = this.userInfo;
-    } else {
-      let userInfo = await this.getUserInfo();
-      info = userInfo;
     }
 
     let { readSet = { fontSize: 16, theme: "default" } } = info;

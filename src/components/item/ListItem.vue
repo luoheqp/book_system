@@ -18,9 +18,8 @@
       <div class="other">
         <div class="operate">
           <router-link class="item" :to="`/reader/${info._id}`">
-            Read
+            Read It !
           </router-link>
-          <router-link class="item" :to="`/book/${info._id}`">Like</router-link>
         </div>
         <div class="tag">
           <span v-for="item in info.tag" :key="item._id"

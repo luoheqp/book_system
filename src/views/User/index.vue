@@ -67,7 +67,7 @@ export default class User extends Vue {
   @Action("user/getCollect") getCollect!: Function;
 
   private mounted() {
-    this.getCollect().then(res => {
+    this.getCollect().then((res: any) => {
       this.collection = res;
     });
   }
