@@ -143,11 +143,8 @@ export default class Reader extends Vue {
     }
   }
 
-  locationListener() {
-    if (this.progress.cfi) {
-      this.book.locations.generate();
-      this.rendition.display(this.progress.cfi);
-    }
+  async locationListener() {
+    await this.book.locations.generate();
 
     this.rendition.on("relocated", (location: any) => {
       let cfi = location.start.cfi;
@@ -156,6 +153,10 @@ export default class Reader extends Vue {
       let percentage = Math.floor(percent * 100);
       this.progress.percent = percentage;
     });
+
+    if (this.progress.cfi) {
+      this.rendition.display(this.progress.cfi);
+    }
   }
 }
 </script>

@@ -69,9 +69,9 @@ export default class Header extends Vue {
       path: "/"
     },
     {
-      name: "random",
-      content: "RANDOM",
-      path: "/random"
+      name: "market",
+      content: "MARKET",
+      path: "/market"
     }
   ];
   // 是否固定副导航

@@ -9,7 +9,8 @@ import {
   postChangeUserLike,
   postToSaveReadSetting,
   getToGetCollection,
-  patchToUpdateBookRecord
+  patchToUpdateBookRecord,
+  getToGetReadHistory
 } from "@/apis/user";
 import {
   IUserInfo,
@@ -20,7 +21,7 @@ import {
 
 class State {
   public token: string = "";
-  public info: IUserInfo | Object = {};
+  public info: IUserInfo = {} as IUserInfo;
 }
 
 const mutations = <MutationTree<State>>{
@@ -121,6 +122,13 @@ const actions = <ActionTree<State, any>>{
   },
   updateBookRecord({ commit }, data: any) {
     patchToUpdateBookRecord(data);
+  },
+  getReadHistory({ commit }) {
+    return new Promise(resolve => {
+      getToGetReadHistory().then(res => {
+        resolve(res.data);
+      });
+    });
   }
 };
 

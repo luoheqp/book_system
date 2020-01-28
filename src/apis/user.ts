@@ -77,3 +77,10 @@ export function patchToUpdateBookRecord(data: any) {
     data
   });
 }
+
+export function getToGetReadHistory() {
+  return axiosInstance({
+    url: "/user/readHistory",
+    method: "get"
+  });
+}

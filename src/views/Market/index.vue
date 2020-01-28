@@ -1,6 +1,6 @@
 <template>
-  <div class="random-wrap">
-    <div class="random">
+  <div class="market-wrap">
+    <div class="market">
       <LineList
         v-for="item in randomBookGroupInfo"
         :key="item.id"
@@ -26,7 +26,7 @@ import { ITag } from "../../types/info";
     LineList
   }
 })
-export default class Random extends Vue {
+export default class Market extends Vue {
   public activeSwiper: number = -1;
 
   @State(state => state.book.randomBookGroupInfo)
@@ -47,8 +47,8 @@ export default class Random extends Vue {
 <style lang="less">
 @import "../../assets/styles/index.less";
 
-.random-wrap {
-  .random {
+.market-wrap {
+  .market {
   }
 }
 </style>

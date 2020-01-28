@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 
 // views
 import Home from "../views/Home/index.vue";
-import Random from "../views/Random/index.vue";
+import Market from "../views/Market/index.vue";
 import Reader from "../views/Reader/index.vue";
 import User from "../views/User/index.vue";
 import Write from "../views/Write/index.vue";
@@ -25,9 +25,9 @@ const routes = [
     component: Home
   },
   {
-    path: "/random",
-    name: "random",
-    component: Random
+    path: "/market",
+    name: "market",
+    component: Market
   },
   {
     path: "/reader/:id",

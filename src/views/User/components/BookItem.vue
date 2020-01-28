@@ -5,9 +5,9 @@
     </div>
     <div class="info">
       <p class="name">{{ info.name }}</p>
-      <p class="author">{{ info.author }}</p>
+      <p class="author">author: {{ info.author }}</p>
       <p class="progress">progress: {{ info.percent }} %</p>
-      <p class="time">last time:</p>
+      <p class="time">last time: {{ info.date }}</p>
     </div>
   </router-link>
 </template>

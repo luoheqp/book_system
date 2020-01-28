@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="user-pic">
-        <img :src="userInfo.avatar" alt="user-avatar" />
+        <img :src="userInfo.avatar" alt="" />
       </div>
     </div>
     <div class="read">
@@ -27,7 +27,7 @@
         <BookList :info="collection"></BookList>
       </div>
       <div :class="['read-box-wrap', nav === 'Read History' ? 'active' : '']">
-        <BookList :info="collection"></BookList>
+        <BookList :info="readHistory"></BookList>
       </div>
       <div :class="['write-box-wrap', nav === 'Writing' ? 'active' : '']">
         write box
@@ -62,13 +62,19 @@ export default class User extends Vue {
   private navList: string[] = ["Collection", "Read History", "Writing"];
   private nav: string = this.navList[0];
   public collection: any = [];
+  public readHistory: any = [];
 
   @State(state => state.user.info) userInfo!: IUserInfo;
   @Action("user/getCollect") getCollect!: Function;
+  @Action("user/getReadHistory") getReadHistory!: Function;
 
   private mounted() {
     this.getCollect().then((res: any) => {
-      this.collection = res;
+      this.collection = res.reverse();
+    });
+
+    this.getReadHistory().then((res: any) => {
+      this.readHistory = res.reverse();
     });
   }
 

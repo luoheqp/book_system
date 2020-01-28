@@ -20,6 +20,13 @@
           <router-link class="item" :to="`/reader/${info._id}`">
             Read It !
           </router-link>
+          <a
+            class="item"
+            :href="`http://www.resource.com:8001/book/${info._id}.epub`"
+            :download="`${info.name}.epub`"
+          >
+            Download
+          </a>
         </div>
         <div class="tag">
           <span v-for="item in info.tag" :key="item._id"
