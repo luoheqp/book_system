@@ -6,6 +6,9 @@
         <div class="left" @click="changePage(0)"></div>
         <div class="right" @click="changePage(1)"></div>
       </div>
+      <div class="load-wrap">
+        <Loading v-if="loadingText" :txt="loadingText" />
+      </div>
     </div>
     <div class="opt-wrap">
       <BasicGroup class="basic-group" />
@@ -22,6 +25,8 @@ import ePub from "epubjs";
 // components
 import SettingGroup from "./components/SettingGroup.vue";
 import BasicGroup from "./components/BasicGroup.vue";
+import Loading from "@/components/common/Loading.vue";
+
 import { State, Mutation, Action } from "vuex-class";
 import { IBook } from "../../types/book";
 import { Route } from "vue-router";
@@ -31,11 +36,13 @@ Component.registerHooks(["beforeRouteLeave"]);
 @Component({
   components: {
     SettingGroup,
-    BasicGroup
+    BasicGroup,
+    Loading
   }
 })
 export default class Reader extends Vue {
   public bookId: string = "";
+  private loadingText = "";
 
   // === 电子书相关 data ===
   public book!: any;
@@ -84,6 +91,7 @@ export default class Reader extends Vue {
     let EPUB_ADDRESS = `http://www.resource.com:8001/book/${bookInfo.md5}.epub`;
 
     // 查询历史阅读进度
+    this.loadingText = "searching reading history";
     if (bookInfo.cfi) {
       this.progress.cfi = bookInfo.cfi;
     }
@@ -94,10 +102,12 @@ export default class Reader extends Vue {
   // 初始化解析电子书
   async initEpub(url: string) {
     const ebook = this.$refs.ebook as any;
+    this.loadingText = "loading";
     this.book = ePub(url);
     let { book } = this;
 
     // 通过 book.renderTo 生成 Rendition
+    this.loadingText = "rendition";
     this.rendition = book.renderTo("ebook", {
       width: ebook.offsetWidth,
       height: ebook.offsetHeight
@@ -155,8 +165,10 @@ export default class Reader extends Vue {
     });
 
     if (this.progress.cfi) {
+      this.loadingText = "jump to history";
       this.rendition.display(this.progress.cfi);
     }
+    this.loadingText = "";
   }
 }
 </script>
@@ -185,17 +197,17 @@ export default class Reader extends Vue {
     }
 
     .mask {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      .abs-full();
       display: flex;
 
       .left,
       .right {
         flex: 1;
       }
+    }
+
+    .load-wrap {
+      .abs-center();
     }
   }
 

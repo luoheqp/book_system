@@ -4,8 +4,13 @@
       v-for="item in info"
       :info="item"
       :key="item._id"
+      :isCancel="isCancel"
+      @cancel="handleCancel"
       class="item"
     ></BookItem>
+    <div class="loading-wrap">
+      <Loading v-if="!info && !info[0]._id" txt="loading" />
+    </div>
   </div>
 </template>
 
@@ -14,10 +19,12 @@ import { Vue, Component, Prop } from "vue-property-decorator";
 
 // components
 import BookItem from "@/views/User/components/BookItem.vue";
+import Loading from "@/components/common/Loading.vue";
 
 @Component({
   components: {
-    BookItem
+    BookItem,
+    Loading
   }
 })
 export default class BookList extends Vue {
@@ -27,6 +34,11 @@ export default class BookList extends Vue {
     }
   })
   info!: any;
+  @Prop({ default: false }) isCancel!: boolean;
+
+  private handleCancel(id: string) {
+    this.$emit("cancel", id);
+  }
 }
 </script>
 
@@ -37,10 +49,15 @@ export default class BookList extends Vue {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  position: relative;
 
   .item {
     width: 49%;
     margin-bottom: @defMargin;
+  }
+
+  .loading-wrap {
+    .abs-center();
   }
 }
 </style>

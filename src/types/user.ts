@@ -34,6 +34,15 @@ export interface IUserChangeCollection {
   type: 0 | 1; // 0 - 去除; 1 - 添加
 }
 
+export interface IUserCollect {
+  _id: string;
+  author: string;
+  cover: string;
+  data: string;
+  name: string;
+  percent: number;
+}
+
 export interface IUserChangeLike {
   bookId: string;
   type: 0 | 1;

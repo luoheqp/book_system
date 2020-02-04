@@ -39,12 +39,12 @@
         </div>
       </div>
     </div>
-    <div class="article-cover hide-in-960">
-      <div
-        class="cover"
-        v-if="info.cover"
-        :style="`background-image: url(${info.cover})`"
-      ></div>
+    <div class="article-cover hide-in-960" v-if="info.cover">
+      <div class="cover" :style="`background-image: url(${info.cover})`"></div>
+    </div>
+    <div class="article-action" v-show="action">
+      <i class="iconfont icon-write1 edit" @click="handleEdit"></i>
+      <i class="iconfont icon-delete delete"></i>
     </div>
   </div>
 </template>
@@ -57,10 +57,15 @@ import moment from "moment";
 @Component
 export default class ArticleItem extends Vue {
   @Prop({ default: {} }) info!: IArticleItem;
+  @Prop({ default: false }) action!: boolean;
 
   get timeUntilNow(): string {
     let time: string = this.info.time;
     return moment(time).fromNow();
+  }
+
+  private handleEdit() {
+    this.$router.push("/write");
   }
 }
 </script>
@@ -71,6 +76,12 @@ export default class ArticleItem extends Vue {
 .article-item-wrap {
   display: flex;
   justify-content: space-between;
+
+  &:hover {
+    .article-action {
+      opacity: 1;
+    }
+  }
 
   .article-item {
     flex: 1;
@@ -128,6 +139,10 @@ export default class ArticleItem extends Vue {
       color: #333;
       font-family: marat !important;
       cursor: pointer;
+
+      &:hover a {
+        text-decoration: underline;
+      }
     }
 
     .desc {
@@ -173,6 +188,48 @@ export default class ArticleItem extends Vue {
       background-repeat: no-repeat;
       background-position-y: center;
       height: 100%;
+    }
+  }
+
+  .article-action {
+    .flex-center();
+    opacity: 0;
+    flex-direction: column;
+    width: 60px;
+    transition: opacity 0.1s linear;
+
+    i {
+      .flex-center();
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #333;
+      transition: all 0.1s linear;
+      cursor: pointer;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      &.delete {
+        border-color: red;
+        color: red;
+
+        &:hover {
+          background: red;
+          color: #fff;
+        }
+      }
+
+      &.edit {
+        border-color: @mainColor;
+        color: @mainColor;
+
+        &:hover {
+          background: @mainColor;
+          color: #fff;
+        }
+      }
     }
   }
 }

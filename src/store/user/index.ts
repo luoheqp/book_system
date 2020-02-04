@@ -10,18 +10,21 @@ import {
   postToSaveReadSetting,
   getToGetCollection,
   patchToUpdateBookRecord,
-  getToGetReadHistory
+  getToGetReadHistory,
+  getToGetArticle
 } from "@/apis/user";
 import {
   IUserInfo,
   IUserChangeInfo,
   IUserChangeCollection,
-  IUserChangeLike
+  IUserChangeLike,
+  IUserCollect
 } from "@/types/user";
 
 class State {
   public token: string = "";
   public info: IUserInfo = {} as IUserInfo;
+  public userCollect: IUserCollect[] = [];
 }
 
 const mutations = <MutationTree<State>>{
@@ -35,6 +38,17 @@ const mutations = <MutationTree<State>>{
     state.token = "";
     state.info = {};
     Cookies.remove("token");
+  },
+  saveUserCollect(state, userCollect) {
+    state.userCollect = userCollect;
+  },
+  deleteUserCollect(state, id) {
+    let temp = state.userCollect;
+    state.userCollect = temp.map((item: IUserCollect) => {
+      if (item._id !== id) {
+        return item;
+      }
+    });
   }
 };
 
@@ -94,6 +108,9 @@ const actions = <ActionTree<State, any>>{
   postUserCollect({ commit }, data: IUserChangeCollection) {
     return new Promise(resolve => {
       postChangeUserCollection(data).then((res: any) => {
+        if (!data.type) {
+          commit("deleteUserCollect", data.bookId);
+        }
         resolve();
       });
     });
@@ -115,8 +132,9 @@ const actions = <ActionTree<State, any>>{
   getCollect({ commit }) {
     return new Promise(resolve => {
       getToGetCollection().then((res: any) => {
-        console.log(res);
-        resolve(res.data);
+        const { data } = res;
+        commit("saveUserCollect", data);
+        resolve(data);
       });
     });
   },
@@ -126,6 +144,13 @@ const actions = <ActionTree<State, any>>{
   getReadHistory({ commit }) {
     return new Promise(resolve => {
       getToGetReadHistory().then(res => {
+        resolve(res.data);
+      });
+    });
+  },
+  getArticle({ commit }) {
+    return new Promise(resolve => {
+      getToGetArticle().then((res: any) => {
         resolve(res.data);
       });
     });

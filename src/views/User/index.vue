@@ -24,13 +24,23 @@
         </li>
       </ul>
       <div :class="['read-box-wrap', nav === 'Collection' ? 'active' : '']">
-        <BookList :info="collection"></BookList>
+        <BookList
+          :info="userCollect"
+          :isCancel="true"
+          @cancel="handleCancelCollect"
+        ></BookList>
       </div>
       <div :class="['read-box-wrap', nav === 'Read History' ? 'active' : '']">
         <BookList :info="readHistory"></BookList>
       </div>
-      <div :class="['write-box-wrap', nav === 'Writing' ? 'active' : '']">
-        write box
+      <div :class="['write-box-wrap', nav === 'Article' ? 'active' : '']">
+        <ArticleItem
+          class="article-item"
+          v-for="item in article"
+          :key="item._id"
+          :info="item"
+          :action="true"
+        />
       </div>
       <Popup v-if="popState" @toggleShowState="togglePopState">
         <UserInfoEdit />
@@ -46,6 +56,7 @@ import { Vue, Component } from "vue-property-decorator";
 import BookList from "@/views/User/components/BookList.vue";
 import Popup from "@/components/common/Popup.vue";
 import UserInfoEdit from "./components/UserInfoEdit.vue";
+import ArticleItem from "@/components/item/ArticleItem.vue";
 
 import { State, Action } from "vuex-class";
 import { IUserInfo } from "../../types/user";
@@ -54,36 +65,48 @@ import { IUserInfo } from "../../types/user";
   components: {
     BookList,
     Popup,
-    UserInfoEdit
+    UserInfoEdit,
+    ArticleItem
   }
 })
 export default class User extends Vue {
   private popState: boolean = false;
-  private navList: string[] = ["Collection", "Read History", "Writing"];
+  private navList: string[] = ["Collection", "Read History", "Article"];
   private nav: string = this.navList[0];
-  public collection: any = [];
   public readHistory: any = [];
+  public article: any = [];
 
   @State(state => state.user.info) userInfo!: IUserInfo;
+  @State(state => state.user.userCollect) userCollect!: any;
   @Action("user/getCollect") getCollect!: Function;
+  @Action("user/postUserCollect") postUserCollect!: Function;
   @Action("user/getReadHistory") getReadHistory!: Function;
+  @Action("user/getArticle") getArticle!: Function;
 
   private mounted() {
-    this.getCollect().then((res: any) => {
-      this.collection = res.reverse();
-    });
+    this.getCollect();
 
     this.getReadHistory().then((res: any) => {
       this.readHistory = res.reverse();
     });
+
+    this.getArticle().then((res: any) => {
+      this.article = res.reverse();
+    });
   }
 
-  handleChangeNav(nav: string) {
+  private handleChangeNav(nav: string) {
     this.nav = nav;
   }
 
-  togglePopState() {
+  private togglePopState() {
     this.popState = !this.popState;
+  }
+
+  private handleCancelCollect(bookId: string) {
+    this.postUserCollect({ type: 0, bookId }).then(() => {
+      this.getCollect();
+    });
   }
 }
 </script>
@@ -195,6 +218,11 @@ export default class User extends Vue {
     }
 
     .write-box-wrap {
+      .article-item {
+        &:not(:last-child) {
+          margin-bottom: 48px;
+        }
+      }
     }
   }
 }

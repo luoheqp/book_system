@@ -84,3 +84,10 @@ export function getToGetReadHistory() {
     method: "get"
   });
 }
+
+export function getToGetArticle() {
+  return axiosInstance({
+    url: "/user/article",
+    method: "get"
+  });
+}

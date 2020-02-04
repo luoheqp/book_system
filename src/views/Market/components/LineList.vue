@@ -2,7 +2,8 @@
   <div class="line-list-wrap">
     <div class="head">
       <h3 class="title">{{ listInfo.name }}</h3>
-      <span class="more">MORE></span>
+      <!-- TODO: more page ? -->
+      <!-- <span class="more">MORE></span> -->
     </div>
     <swiper :options="swiperOption" :data-key="listInfo.id">
       <swiper-slide

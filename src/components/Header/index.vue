@@ -1,20 +1,20 @@
 <template>
   <div class="header-wrap">
     <div class="header">
-      <div class="nav-main-wrap">
+      <div :class="['nav-main-wrap', isNeedFixed ? 'fixed' : '']">
         <div class="icon-wrap">
           <router-link to="/">
             <Icon class="icon"></Icon>
           </router-link>
         </div>
         <div class="user-wrap">
-          <span class="icon"><i class="iconfont icon-search"></i></span>
+          <Search />
           <ul v-if="!token">
             <li class="item" @click="toggleSignUp">Sign up</li>
             <li class="item" @click="toggleSignIn">Sign in</li>
           </ul>
           <ul v-else>
-            <li class="avatar-wrap">
+            <li class="avatar-wrap item">
               <div class="avatar">
                 <img :src="info.avatar" alt="" />
               </div>
@@ -51,13 +51,16 @@ import VueRouter from "vue-router";
 import Icon from "@/components/Icon.vue";
 import Popup from "@/components/common/Popup.vue";
 import Operate from "./components/Operate.vue";
+import Search from "./components/Search.vue";
+
 import { IUserInfo } from "../../types/user";
 
 @Component({
   components: {
     Icon,
     Popup,
-    Operate
+    Operate,
+    Search
   }
 })
 export default class Header extends Vue {
@@ -119,17 +122,13 @@ export default class Header extends Vue {
       height: 65px;
       justify-content: space-between;
 
+      &.fixed {
+        margin-bottom: 50px;
+      }
+
       .user-wrap {
         .flex-center();
         height: 100%;
-
-        .icon {
-          .flex-center();
-
-          width: 25px;
-          height: 25px;
-          margin-right: 16px;
-        }
 
         ul {
           display: flex;
@@ -138,13 +137,10 @@ export default class Header extends Vue {
           .item {
             .flex-align-center();
             cursor: pointer;
+            margin-left: @defMargin;
 
             &:hover {
               .txt-hover();
-            }
-
-            &:not(:first-child) {
-              margin-left: @defMargin;
             }
           }
 

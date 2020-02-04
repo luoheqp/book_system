@@ -14,7 +14,7 @@ class State {
   public bookInfo: IBook | object = {};
   public bookList: any[] = [];
   public tagList: ITag[] = [];
-  public randomBookGroupInfo: ILineListItem[] = [];
+  public bookGroupInfo: ILineListItem[] = [];
   public ebookSet: IEbookSet = {
     fontSize: 12,
     theme: "default",
@@ -27,7 +27,7 @@ const mutations = <MutationTree<State>>{
     state.tagList = tagList;
   },
   saveBookGroupInfo(state, bookGroupInfo) {
-    state.randomBookGroupInfo = bookGroupInfo;
+    state.bookGroupInfo = bookGroupInfo;
   },
   setEbookSet(state, data) {
     // TODO: 枚举类型解决 ?

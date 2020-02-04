@@ -11,6 +11,8 @@ export interface IBook {
   cover: string;
   path: string;
   md5: string;
+  isCollect?: boolean;
+  isLike?: boolean;
 }
 
 export interface IBookUploadInfo {

@@ -22,7 +22,7 @@
           </router-link>
           <a
             class="item"
-            :href="`http://www.resource.com:8001/book/${info._id}.epub`"
+            :href="`/book/${info._id}.epub`"
             :download="`${info.name}.epub`"
           >
             Download

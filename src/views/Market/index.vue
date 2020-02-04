@@ -2,7 +2,7 @@
   <div class="market-wrap">
     <div class="market">
       <LineList
-        v-for="item in randomBookGroupInfo"
+        v-for="item in bookGroupInfo"
         :key="item.id"
         :listInfo="item"
         :nowSwiper="activeSwiper"
@@ -29,8 +29,8 @@ import { ITag } from "../../types/info";
 export default class Market extends Vue {
   public activeSwiper: number = -1;
 
-  @State(state => state.book.randomBookGroupInfo)
-  randomBookGroupInfo!: ILineListItem[];
+  @State(state => state.book.bookGroupInfo)
+  bookGroupInfo!: ILineListItem[];
 
   @Action("book/getBookGroupInfo") getBookGroupInfo!: Function;
 

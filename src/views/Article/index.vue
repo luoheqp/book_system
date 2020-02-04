@@ -43,6 +43,8 @@ export default class Article extends Vue {
   public articleInfo: IArticleInfo = {} as IArticleInfo;
   public authorInfo: any = {};
   public article: string = "";
+  public isCollection: boolean = false;
+  public isLike: boolean = false;
 
   @Action("article/getArticle") getArticle!: Function;
 

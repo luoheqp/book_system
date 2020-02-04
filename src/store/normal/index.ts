@@ -1,4 +1,5 @@
-import { MutationTree } from "vuex";
+import { MutationTree, ActionTree } from "vuex";
+import { postSearchInfo } from "@/apis/common";
 
 class State {
   public isSignInShow: boolean = false;
@@ -16,10 +17,22 @@ const mutations = <MutationTree<State>>{
   }
 };
 
+const actions = <ActionTree<State, any>>{
+  search({ commit }, searchKey: string[]) {
+    return new Promise(resolve => {
+      let search: string = JSON.stringify(searchKey);
+      postSearchInfo(search).then((res: any) => {
+        resolve(res.data);
+      });
+    });
+  }
+};
+
 const NormalModule = {
   namespaced: true,
   state: new State(),
-  mutations: mutations
+  mutations: mutations,
+  actions: actions
 };
 
 export default NormalModule;
