@@ -59,7 +59,7 @@ export default class BasicGroup extends Vue {
     const { isCollection, bookId } = this;
 
     if (!bookId) {
-      this.$toast.show("missing book id");
+      // this.$toast.show("missing book id");
     }
 
     this.postUserCollect({ bookId: bookId, type: +!isCollection }).then(() => {
@@ -71,7 +71,7 @@ export default class BasicGroup extends Vue {
     const { isLike, bookId } = this;
 
     if (!bookId) {
-      this.$toast.show("missing book id");
+      // this.$toast.show("missing book id");
     }
 
     this.postUserLike({ bookId: bookId, type: +!isLike }).then(() => {

@@ -26,7 +26,7 @@ const actions = <ActionTree<State, any>>{
   createArticle({ commit }, data) {
     return new Promise((resolve, reject) => {
       postTocreateArticle(data).then((res: any) => {
-        console.log(res);
+        resolve();
       });
     });
   },

@@ -10,7 +10,7 @@
         ></ArticleItem>
       </div>
       <div class="commend-wrap">
-        <Commend />
+        <Commend :info="top10" />
       </div>
     </div>
   </div>
@@ -35,6 +35,10 @@ import { IArticleInfo } from "../../types/article";
 export default class Home extends Vue {
   @State(state => state.article.articleList) articleList!: IArticleInfo[];
   @Action("article/getArticleList") getArticleList!: Function;
+
+  public get top10(): IArticleInfo[] {
+    return this.articleList.slice(0, 10);
+  }
 
   private mounted() {
     this.getArticleList();

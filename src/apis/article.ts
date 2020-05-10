@@ -19,7 +19,7 @@ export function getArticleList(data: IGetArticleListInfo) {
 
 export function getArticleById(data: string) {
   return axiosInstance({
-    url: `/article/${data}`,
+    url: `/article/get/${data}`,
     method: "get"
   });
 }

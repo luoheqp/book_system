@@ -1,15 +1,18 @@
 <template>
   <div class="commend">
-    <h2>Commend For You</h2>
+    <h2>为你推荐</h2>
     <ol class="commend-list">
-      <li class="item" v-for="(item, index) in 10" :key="index">
+      <li class="item" v-for="(item, index) in info" :key="index">
         <div class="order">{{ 10 > ++index ? `0${index}` : index }}</div>
         <div class="content">
           <h3>
-            How My Startup Got Acquired After Six Months
+            {{ item.title }}
           </h3>
-          <p class="info"><span>Leoljustsave</span>in<span>Flipe</span></p>
-          <p class="time">Dec 3 · 13 min</p>
+          <p class="info">
+            <span>{{ item.author }}</span>
+            in<span>{{ item.book }}</span>
+          </p>
+          <p class="time">{{ item.time }}</p>
         </div>
       </li>
     </ol>
@@ -17,10 +20,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Prop } from "vue-property-decorator";
+import { IArticleInfo } from "../../../types/article";
 
 @Component({})
-export default class Commend extends Vue {}
+export default class Commend extends Vue {
+  @Prop({ type: Array, default: () => [] }) info!: IArticleInfo[];
+}
 </script>
 
 <style lang="less" scoped>

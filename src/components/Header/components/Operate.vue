@@ -11,9 +11,9 @@
       <li class="item"><router-link to="/user">Help</router-link></li>
       <li class="item"><a href="#" @click="handleSignOut">Sign out</a></li>
     </ul>
-    <ul class="card">
+    <!-- <ul class="card">
       <li class="item"><router-link to="/addBook">Add book</router-link></li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 

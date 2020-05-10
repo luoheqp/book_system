@@ -10,6 +10,9 @@ import Write from "../views/Write/index.vue";
 import AddBook from "../views/AddBook/index.vue";
 import Article from "../views/Article/index.vue";
 
+// admin
+import MUser from "../views/Admin/user.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -53,6 +56,11 @@ const routes = [
     path: "/article/:articleId",
     name: "article",
     component: Article
+  },
+  {
+    path: "/admin/user",
+    name: "adminUser",
+    component: MUser
   }
 ];
 

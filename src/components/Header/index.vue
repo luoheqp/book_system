@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator";
+import { Vue, Component, Prop, Watch } from "vue-property-decorator";
 import { State, Mutation } from "vuex-class";
 import { INavItem } from "../../types/header";
 import VueRouter from "vue-router";
@@ -68,12 +68,12 @@ export default class Header extends Vue {
   private nav: Array<INavItem> = [
     {
       name: "home",
-      content: "HOME",
+      content: "书评",
       path: "/"
     },
     {
       name: "market",
-      content: "MARKET",
+      content: "看书",
       path: "/market"
     }
   ];
@@ -86,11 +86,32 @@ export default class Header extends Vue {
   // state
   @State(state => state.user.token) token!: String;
   @State(state => state.user.info) info!: IUserInfo;
+  @State(state => state.user.isAdmin) isAdmin!: Boolean;
   @Mutation("normal/toggleSignIn") toggleSignIn!: Function;
   @Mutation("normal/toggleSignUp") toggleSignUp!: Function;
 
   private mounted() {
     window.addEventListener("scroll", this.handleScrollEvent);
+  }
+
+  @Watch("isAdmin", { immediate: true })
+  changeIsAdmin(val) {
+    if (val) {
+      let otherRouter = [
+        {
+          name: "addBook",
+          content: "添加图书",
+          path: "/addBook"
+        },
+        {
+          name: "M-User",
+          content: "用户管理",
+          path: "/admin/user"
+        }
+      ];
+
+      this.nav.push(...otherRouter);
+    }
   }
 
   // 滚动触发

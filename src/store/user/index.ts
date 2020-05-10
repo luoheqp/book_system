@@ -25,6 +25,7 @@ class State {
   public token: string = "";
   public info: IUserInfo = {} as IUserInfo;
   public userCollect: IUserCollect[] = [];
+  public isAdmin: Boolean = false;
 }
 
 const mutations = <MutationTree<State>>{
@@ -36,7 +37,7 @@ const mutations = <MutationTree<State>>{
   },
   signOut(state) {
     state.token = "";
-    state.info = {};
+    state.info = {} as IUserInfo;
     Cookies.remove("token");
   },
   saveUserCollect(state, userCollect) {
@@ -48,7 +49,10 @@ const mutations = <MutationTree<State>>{
       if (item._id !== id) {
         return item;
       }
-    });
+    }) as IUserCollect[];
+  },
+  setIsAdmin(state, type) {
+    state.isAdmin = type;
   }
 };
 
@@ -92,6 +96,8 @@ const actions = <ActionTree<State, any>>{
       getUserInfo().then((res: any) => {
         const { data } = res;
         commit("saveUserInfo", data);
+        // 设置是否为管理员
+        commit("setIsAdmin", !!data.isAdmin);
         resolve(data);
       });
     });

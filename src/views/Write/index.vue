@@ -152,7 +152,9 @@ export default class Write extends Vue {
       data.append("cover", this.cover);
     }
 
-    this.createArticle(data);
+    this.createArticle(data).then(() => {
+      this.$router.push("/home");
+    });
   }
 }
 </script>

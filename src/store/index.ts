@@ -7,6 +7,7 @@ import normal from "./normal/index";
 import user from "./user/index";
 import article from "./article/index";
 import book from "./book/index";
+import admin from "./admin/index";
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ const store: StoreOptions<RootState> = {
     normal,
     user,
     article,
-    book
+    book,
+    admin
   }
 };
 
