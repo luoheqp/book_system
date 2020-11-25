@@ -19,7 +19,7 @@
     "dompurify": "^2.0.7",
     "element-ui": "^2.13.1",
     "epubjs": "^0.3.85",
-    "highlight.js": "^9.17.1",
+    "highlight.js": "^10.1.2",
     "js-cookie": "^2.2.1",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
